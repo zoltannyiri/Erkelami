@@ -8,9 +8,22 @@ datasource db {
 }
 
 model Page {
-  id        String    @id @default(uuid())
-  title     String
-  slug      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id                String    @id @default(uuid())
+  title             String
+  slug              String    @unique
+  navigationItems   NavigationItem[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model NavigationItem {
+  id                String  @id @default(uuid())
+  label             String
+  sortOrder         Int     @default(0)
+  visible           Boolean @default(true)
+  pageId            String?
+  page              Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
+  externalUrl       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
