@@ -1,13 +1,17 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
+import Navbar from './components/Navbar.jsx'
 
 function App() {
 
   return (
-    <>
-      <h1 class="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<h1>Welcome to the App</h1>} />
+      </Routes>
+    </Router>
   )
 }
 
