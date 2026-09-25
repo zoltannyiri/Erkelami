@@ -20,8 +20,12 @@ model NavigationItem {
   label             String
   sortOrder         Int     @default(0)
   visible           Boolean @default(true)
+  menuKey           String  @default("TOP_LEVEL")
+  parentId          String?
+  parent            NavigationItem?  @relation("NavigationChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children          NavigationItem[] @relation("NavigationChildren")
   pageId            String?
-  page              Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
+  page              Page?   @relation(fields: [pageId],  references: [id],  onDelete: SetNull)
   externalUrl       String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
