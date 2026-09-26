@@ -30,3 +30,30 @@ model NavigationItem {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
+
+model HomeSection {
+  id                String    @id @default(uuid())
+  key               String?   @unique
+  title             String?
+  type              String
+  sortOrder         Int       @default(0)
+  visible           Boolean   @default(true)
+  items             HomeSectionItem[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model HomeSectionItem {
+  id                String    @id @default(uuid())
+  sectionId         String
+  section           HomeSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  title             String
+  description       String?
+  imageUrl          String?
+  linkUrl           String?
+  buttonText       String?
+  sortOrder         Int       @default(0)
+  visible           Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
