@@ -29,17 +29,19 @@ export default function Navbar() {
 
   return (
     <header className="relative z-50 border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-8">
+      <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center px-8">
 
-        <Link to="/" className="flex flex-col">
-          <span className="text-xl font-semibold tracking-tight text-slate-950">
-            Erkel Ferenc
-          </span>
+        <div className="justify-self-center">
+          <Link to="/" className="flex flex-col">
+            <span className="text-xl font-semibold tracking-tight text-slate-950">
+              Erkel Ferenc
+            </span>
 
-          <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
-            Alapfokú Művészeti Iskola
-          </span>
-        </Link>
+            <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
+              Alapfokú Művészeti Iskola
+            </span>
+          </Link>
+        </div>
 
         <nav className="flex items-center gap-9">
           <Link to="/" className={navClass}>
@@ -86,7 +88,10 @@ export default function Navbar() {
           <Link to="/kapcsolat" className={navClass}>
             Kapcsolat
           </Link>
+
+
         </nav>
+        <div />
       </div>
     </header>
   );
