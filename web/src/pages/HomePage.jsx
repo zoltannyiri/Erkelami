@@ -3,9 +3,8 @@ import axios from "axios";
 
 import Hero from "../components/home/Hero";
 import HomeHighlights from "../components/home/HomeHighlights";
-import HomeFeatured from "../components/home/HomeFeatured";
 
-export default function Home() {
+export default function HomePage() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,30 +26,19 @@ export default function Home() {
     (section) => section.key === "HIGHLIGHTS"
   );
 
-  const featured = sections.find(
-    (section) => section.key === "FEATURED"
-  );
-
   if (loading) {
     return null;
   }
 
   return (
     <main>
-      {/* FIX FRONTEND KOMPONENS */}
       <Hero />
 
-      {/* ADMINBÓL SZERKESZTHETŐ */}
       {highlights && (
         <HomeHighlights
           title={highlights.title}
           items={highlights.items}
         />
-      )}
-
-      {/* ADMINBÓL SZERKESZTHETŐ */}
-      {featured && (
-        <HomeFeatured items={featured.items} />
       )}
     </main>
   );

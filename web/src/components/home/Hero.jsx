@@ -1,43 +1,36 @@
-import { Link } from "react-router-dom";
-
 export default function Hero() {
   return (
-    <section className="bg-slate-50">
-      <div className="mx-auto grid min-h-[520px] max-w-[1400px] grid-cols-2 items-center gap-16 px-8 py-20">
+    <section
+      className="
+        relative flex min-h-[520px] w-full
+        items-center justify-center
+        bg-cover bg-center
+      "
+      style={{
+        backgroundImage: "url('/public/zongora.jpg')",
+      }}
+    >
+      {/* sötétítés */}
+      <div className="absolute inset-0 bg-black/40" />
 
-        <div>
-          <span className="mb-4 block text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
-            Tatabánya
-          </span>
+      <div className="relative z-10 mx-auto max-w-5xl px-8 text-center text-white">
+        <p className="mb-4 text-sm font-medium uppercase tracking-[0.35em] text-white/80">
+          Tatabánya
+        </p>
 
-          <h1 className="max-w-xl text-5xl font-semibold leading-tight tracking-tight text-slate-950">
-            Erkel Ferenc Alapfokú Művészeti Iskola
-          </h1>
+        <h1 className="text-5xl font-semibold tracking-tight md:text-6xl">
+          Erkel Ferenc
+        </h1>
 
-          <div className="mt-8 flex gap-4">
-            <Link
-              to="/iskolank"
-              className="bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
-            >
-              Ismerje meg iskolánkat
-            </Link>
+        <p className="mt-3 text-xl font-light tracking-wide md:text-2xl">
+          Alapfokú Művészeti Iskola
+        </p>
 
-            <Link
-              to="/kapcsolat"
-              className="border border-slate-300 px-6 py-3 text-sm font-medium text-slate-800 transition hover:bg-white"
-            >
-              Kapcsolat
-            </Link>
-          </div>
-        </div>
+        <div className="mx-auto mt-7 h-[1px] w-20 bg-white/60" />
 
-        <div className="h-[400px] overflow-hidden bg-slate-200">
-          {/* később Supabase Storage kép */}
-          <div className="flex h-full items-center justify-center text-slate-400">
-            Iskolai hero kép
-          </div>
-        </div>
-
+        <p className="mt-7 text-sm uppercase tracking-[0.25em] text-white/90">
+          Zene • Közösség • Hagyomány
+        </p>
       </div>
     </section>
   );
