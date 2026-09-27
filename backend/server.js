@@ -4,6 +4,7 @@ import "dotenv/config";
 
 import navigationRoutes from './src/routes/navigationRoutes.js';
 import homeRoutes from './src/routes/homeRoutes.js';
+import pageRoutes from './src/routes/pageRoutes.js';
 
 const app = express();
 app.set('trust proxy', 1)
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/api/navigation', navigationRoutes);
 app.use('/api/home', homeRoutes);
+app.use('/api/pages', pageRoutes);
 
 const port = 3000;
 app.listen(port, () => {

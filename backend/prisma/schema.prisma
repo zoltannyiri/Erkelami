@@ -10,7 +10,23 @@ model Page {
   id                String    @id @default(uuid())
   title             String
   slug              String    @unique
+  published         Boolean   @default(false)
+  metaTitle         String?
+  metaDescription   String?
+  sections          PageSection[]
   navigationItems   NavigationItem[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model PageSection {
+  id                String    @id @default(uuid())
+  pageId            String
+  page              Page      @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type              String
+  content           Json
+  sortOrder         Int       @default(0)
+  visible           Boolean   @default(true)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }
