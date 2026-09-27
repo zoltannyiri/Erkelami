@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import PageSectionRenderer from "../components/page/PageSectionRenderer";
+
 export default function DynamicPage() {
   const { slug } = useParams();
   const [page, setPage] = useState(null);
@@ -33,12 +35,17 @@ export default function DynamicPage() {
 
   return (
     <main>
-      <h1>{page.title}</h1>
+      <div className="mx-auto max-w-[1200px] px-8 pt-16">
+        <h1 className="text-4xl font-semibold tracking-tight text-slate-950">
+          {page.title}
+        </h1>
+      </div>
 
-      {page.sections.map((section) => (
-        <div key={section.id}>
-          {section.type}
-        </div>
+      {page.sections?.map((section) => (
+        <PageSectionRenderer
+          key={section.id}
+          section={section}
+        />
       ))}
     </main>
   );
