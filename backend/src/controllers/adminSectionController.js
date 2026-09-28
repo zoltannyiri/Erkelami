@@ -108,3 +108,57 @@ export const deleteSection = async (req, res) => {
     res.status(500).json({ error: "Hiba történt a szekció törlésekor." });
   }
 };
+
+export const reorderSections = async (req, res) => {
+  try {
+    const { pageId } = req.params;
+    const { sectionIds } = req.body;
+
+    if (!Array.isArray(sectionIds)) {
+      return res.status(400).json({
+        message: "A sectionIds mezőnek tömbnek kell lennie.",
+      });
+    }
+
+    const sections = await prisma.pageSection.findMany({
+      where: {
+        pageId,
+        id: {
+          in: sectionIds,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (sections.length !== sectionIds.length) {
+      return res.status(400).json({
+        message: "Érvénytelen section lista.",
+      });
+    }
+
+    await prisma.$transaction(
+      sectionIds.map((sectionId, index) =>
+        prisma.pageSection.update({
+          where: {
+            id: sectionId,
+          },
+          data: {
+            sortOrder: index,
+          },
+        })
+      )
+    );
+
+    res.json({
+      message: "Sorrend frissítve.",
+    });
+  } catch (error) {
+    console.error("Section sorrend módosítási hiba:", error);
+
+    res.status(500).json({
+      message: "Hiba történt a sorrend módosításakor.",
+    });
+  }
+};

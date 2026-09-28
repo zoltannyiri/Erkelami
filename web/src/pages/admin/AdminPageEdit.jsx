@@ -70,6 +70,45 @@ export default function AdminPageEdit() {
     });
   };
 
+  const handleMoveSection = async (index, direction) => {
+    const sections = [...page.sections];
+
+    const targetIndex =
+      direction === "up"
+        ? index - 1
+        : index + 1;
+
+    if (
+      targetIndex < 0 ||
+      targetIndex >= sections.length
+    ) {
+      return;
+    }
+
+    [sections[index], sections[targetIndex]] = [
+      sections[targetIndex],
+      sections[index],
+    ];
+
+    setPage((current) => ({
+      ...current,
+      sections,
+    }));
+
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/api/admin/pages/${id}/sections/reorder`,
+        {
+          sectionIds: sections.map((section) => section.id),
+        }
+      );
+    } catch (error) {
+      console.error("Sorrend módosítási hiba:", error);
+
+      await refreshPage();
+    }
+  };
+
   const handlePageChange = (event) => {
     const { name, value, type, checked } = event.target;
 
@@ -461,11 +500,41 @@ export default function AdminPageEdit() {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleMoveSection(index, "up")}
+                    disabled={index === 0}
+                    className="
+                      border border-slate-300
+                      px-3 py-2 text-sm
+                      disabled:cursor-not-allowed
+                      disabled:opacity-30
+                    "
+                    title="Mozgatás felfelé"
+                  >
+                    ↑
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleMoveSection(index, "down")}
+                    disabled={index === page.sections.length - 1}
+                    className="
+                      border border-slate-300
+                      px-3 py-2 text-sm
+                      disabled:cursor-not-allowed
+                      disabled:opacity-30
+                    "
+                    title="Mozgatás lefelé"
+                  >
+                    ↓
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setEditingSection(section)}
-                    className="cursor-pointer border border-slate-300 px-4 py-2 text-sm"
+                    className="border border-slate-300 px-4 py-2 text-sm"
                   >
                     Szerkesztés
                   </button>
@@ -473,7 +542,7 @@ export default function AdminPageEdit() {
                   <button
                     type="button"
                     onClick={() => handleDeleteSection(section)}
-                    className="cursor-pointer px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    className="px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                   >
                     Törlés
                   </button>
