@@ -48,14 +48,6 @@ export default function Navbar() {
             Kezdőlap
           </Link>
 
-          <Link to="/iskolank" className={navClass}>
-            Iskolánk
-          </Link>
-
-          <Link to="/oktatas" className={navClass}>
-            Oktatás
-          </Link>
-
           <div className="group relative">
             <button className={`${navClass} flex items-center gap-1`}>
               Sikereink
@@ -80,6 +72,16 @@ export default function Navbar() {
               <RecursiveMenu items={successItems} />
             </div>
           </div>
+
+          <Link to="/aktualis" className={navClass}>
+            Oktatás
+          </Link>
+
+          <Link to="/iskolank" className={navClass}>
+            Iskolánkról
+          </Link>
+
+          
 
           <Link to="/galeria" className={navClass}>
             Galéria
