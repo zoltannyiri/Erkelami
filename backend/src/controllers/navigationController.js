@@ -35,13 +35,6 @@ export const getNavigation = async (req, res) => {
 
     const tree = buildTree(items);
 
-    // const navigation = items.map((item) => ({
-    //   id: item.id,
-    //   label: item.label,
-    //   url: item.externalUrl ? item.externalUrl : item.page ? `/${item.page.slug}` : null,
-    //   external: Boolean(item.externalUrl),
-    // }));
-
     res.json(tree);
   } catch (error) {
       console.error("Navigation error:", error);
