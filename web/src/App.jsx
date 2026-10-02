@@ -8,6 +8,7 @@ import AdminPages from './pages/admin/AdminPages.jsx'
 import AdminPageCreate from './pages/admin/AdminPageCreate.jsx'
 import AdminPageEdit from './pages/admin/AdminPageEdit.jsx'
 import AdminHome from './pages/admin/AdminHome.jsx'
+import AdminNavigation from './pages/admin/AdminNavigation.jsx'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/admin/pages/new" element={<AdminPageCreate />} />
         <Route path="/admin/pages/:id" element={<AdminPageEdit />} />
         <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/navigation" element={<AdminNavigation />} />
       </Routes>
     </Router>
   )
