@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 import SectionEditForm from "../../components/admin/SectionEditForm.jsx";
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
 export default function AdminPageEdit() {
   const { id } = useParams();
@@ -227,24 +228,22 @@ export default function AdminPageEdit() {
 
   return (
     <main className="min-h-screen bg-slate-50 py-12">
-      <div className="mx-auto max-w-5xl px-8">
-
-        <div className="mb-8">
+      <AdminPageHeader
+        title={page.title}
+        description={`/${page.slug}`}
+        backTo="/admin/pages"
+        backLabel="Vissza az oldalakhoz"
+      >
+        {page.published && (
           <Link
-            to="/admin/pages"
-            className="text-sm text-slate-500 hover:text-slate-950"
+            to={`/${page.slug}`}
+            target="_blank"
+            className="border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
           >
-            ← Vissza az oldalakhoz
+            Oldal megtekintése ↗
           </Link>
-
-          <h1 className="mt-4 text-3xl font-semibold text-slate-950">
-            {page.title}
-          </h1>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Oldal szerkesztése
-          </p>
-        </div>
+        )}
+      </AdminPageHeader>
 
         {/* OLDAL BEÁLLÍTÁSAI */}
 
@@ -563,7 +562,6 @@ export default function AdminPageEdit() {
           )}
         </div>
 
-      </div>
     </main>
   );
 }

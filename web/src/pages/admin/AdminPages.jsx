@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import axios from 'axios';
 
 export default function AdminPages() {
@@ -41,31 +42,20 @@ export default function AdminPages() {
   };
 
   if (loading) {
-    return <div classsName="pp-8">Betöltés...</div>;
+    return <div classsName="p-8">Betöltés...</div>;
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 py-12">
-      <div className="mx-auto max-w-6xl px-8">
+    <main className="mx-auto max-w-7xl">
 
-        <div className="mb-10 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-              Adminisztráció
-            </p>
-
-            <h1 className="mt-2 text-3xl font-semibold text-slate-950">
-              Oldalak
-            </h1>
-          </div>
-
-          <Link
-            to="/admin/pages/new"
-            className="bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
-          >
+        <AdminPageHeader
+          title="Oldalak"
+          description="A weboldal dinamikus oldalainak létrehozása és szerkesztése."
+        >
+          <Link to="/admin/pages/new">
             + Új oldal
           </Link>
-        </div>
+        </AdminPageHeader>
 
         <div className="overflow-hidden border border-slate-200 bg-white">
           {pages.length === 0 ? (
@@ -136,7 +126,6 @@ export default function AdminPages() {
           )}
         </div>
 
-      </div>
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
 export default function AdminPageCreate() {
   const navigate = useNavigate();
@@ -43,23 +44,18 @@ export default function AdminPageCreate() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 py-12">
-      <div className="mx-auto max-w-3xl px-8">
+    <main className="mx-auto max-w-4xl">
+      <AdminPageHeader
+        title="Új oldal"
+        description="Új dinamikus oldal létrehozása."
+        backTo="/admin/pages"
+        backLabel="Vissza az oldalakhoz"
+      />
 
-        <div className="mb-10">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-            Oldalak
-          </p>
-
-          <h1 className="mt-2 text-3xl font-semibold text-slate-950">
-            Új oldal
-          </h1>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="border border-slate-200 bg-white p-8"
-        >
+      <form
+        onSubmit={handleSubmit}
+        className="border border-slate-200 bg-white p-8"
+      >
           <div className="space-y-7">
 
             <div>
@@ -163,7 +159,6 @@ export default function AdminPageCreate() {
           </div>
         </form>
 
-      </div>
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import NavigationItemForm from "../../components/admin/NavigationItemForm";
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
 const flattenItems = (items) =>
   items.flatMap((item) => [
@@ -209,20 +210,10 @@ export default function AdminNavigation() {
 
   return (
     <main className="min-h-screen bg-slate-50 py-12">
-      <div className="mx-auto max-w-6xl px-8">
-        <div className="mb-10">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-            Adminisztráció
-          </p>
-
-          <h1 className="mt-2 text-3xl font-semibold">
-            Navigáció
-          </h1>
-
-          <p className="mt-2 text-slate-500">
-            Menüstruktúra és almenük kezelése.
-          </p>
-        </div>
+      <AdminPageHeader
+        title="Navigáció"
+        description="A weboldal menüpontjainak, almenüinek és oldalhozzárendeléseinek kezelése."
+      />
 
         <div className="space-y-10">
           {groups.map((group) => (
@@ -309,7 +300,6 @@ export default function AdminNavigation() {
             </section>
           ))}
         </div>
-      </div>
     </main>
   );
 }
