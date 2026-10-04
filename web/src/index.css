@@ -1,1 +1,63 @@
 @import "tailwindcss";
+
+@layer components {
+  .rich-text {
+    color: inherit;
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .rich-text > * + * {
+    margin-top: 1rem;
+  }
+
+  .rich-text h2 {
+    margin-top: 1.75rem;
+    font-size: 1.75rem;
+    font-weight: 650;
+    line-height: 1.25;
+  }
+
+  .rich-text h3 {
+    margin-top: 1.5rem;
+    font-size: 1.35rem;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    padding-left: 1.5rem;
+  }
+
+  .rich-text ul { list-style: disc; }
+  .rich-text ol { list-style: decimal; }
+  .rich-text li + li { margin-top: 0.35rem; }
+
+  .rich-text blockquote {
+    border-left: 3px solid currentColor;
+    padding-left: 1.25rem;
+    font-style: italic;
+    opacity: 0.82;
+  }
+
+  .rich-text a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .rich-text-editor {
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .rich-text-editor p.is-editor-empty:first-child::before {
+    color: #94a3b8;
+    content: "Írd ide a szöveget…";
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+}

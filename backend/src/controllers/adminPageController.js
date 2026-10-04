@@ -1,4 +1,8 @@
 import prisma from "../lib/prisma.js";
+import {
+  isValidPageTemplateKey,
+  PAGE_TEMPLATES,
+} from "../config/pageTemplates.js";
 
 const slugify = (value) => {
   return value
@@ -61,7 +65,14 @@ export const getPage = async (req, res) => {
 
 export const createPage = async (req, res) => {
   try {
-    const { title, slug, published = false, metaTitle, metaDescription } = req.body;
+    const {
+      title,
+      slug,
+      published = false,
+      metaTitle,
+      metaDescription,
+      templateKey = "EMPTY",
+    } = req.body;
 
     if (!title?.trim()) {
       return res.status(400).json({ message: "A cím megadása kötelező." });
@@ -71,6 +82,10 @@ export const createPage = async (req, res) => {
 
     if (!finalSlug) {
       return res.status(400).json({ message: "Érvénytelen slug." });
+    }
+
+    if (!isValidPageTemplateKey(templateKey)) {
+      return res.status(400).json({ message: "Érvénytelen oldalsablon." });
     }
 
     const existingPage = await prisma.page.findUnique({
@@ -83,18 +98,39 @@ export const createPage = async (req, res) => {
       return res.status(400).json({ message: "Már létezik oldal ezzel a sluggal." });
     }
 
-    const page = await prisma.page.create({
-      data: {
-        title: title.trim(),
-        slug: finalSlug,
-        published,
-        metaTitle: metaTitle?.trim() || null,
-        metaDescription: metaDescription?.trim() || null,
-      },
+    const page = await prisma.$transaction(async (transaction) => {
+      const createdPage = await transaction.page.create({
+        data: {
+          title: title.trim(),
+          slug: finalSlug,
+          published,
+          metaTitle: metaTitle?.trim() || null,
+          metaDescription: metaDescription?.trim() || null,
+        },
+      });
+
+      const template = PAGE_TEMPLATES[templateKey];
+
+      if (template.sections.length > 0) {
+        await transaction.pageSection.createMany({
+          data: template.sections.map((section, sortOrder) => ({
+            pageId: createdPage.id,
+            type: section.type,
+            content: section.content,
+            sortOrder,
+            visible: true,
+          })),
+        });
+      }
+
+      return createdPage;
     });
 
     res.status(201).json(page);
   } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(409).json({ message: "Már létezik oldal ezzel a sluggal." });
+    }
     console.error("Oldal létrehozási hiba:", error);
     res.status(500).json({ error: "Hiba történt az oldal létrehozásakor." });
   }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import PageTemplateSelector from "../../components/admin/PageTemplateSelector";
 
 export default function AdminPageCreate() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function AdminPageCreate() {
     published: false,
     metaTitle: '',
     metaDescription: '',
+    templateKey: 'SIMPLE_INFO',
   });
 
   const [saving, setSaving] = useState(false);
@@ -36,7 +38,9 @@ export default function AdminPageCreate() {
     } catch (error) {
       console.error(error);
       setError(
-        error.response?.data?.error || 'Hiba történt az oldal létrehozásakor.'
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          'Hiba történt az oldal létrehozásakor.'
       );
     } finally {
       setSaving(false);
@@ -90,6 +94,13 @@ export default function AdminPageCreate() {
                 Például: hegedu-tanszak
               </p>
             </div>
+
+            <PageTemplateSelector
+              value={form.templateKey}
+              onChange={(templateKey) =>
+                setForm((current) => ({ ...current, templateKey }))
+              }
+            />
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">

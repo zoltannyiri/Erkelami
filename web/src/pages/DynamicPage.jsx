@@ -33,18 +33,24 @@ export default function DynamicPage() {
     return <div>{error}</div>
   }
 
-  return (
-    <main>
-      <div className="mx-auto max-w-[1200px] px-8 pt-16">
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-950">
-          {page.title}
-        </h1>
-      </div>
+  const startsWithHero = page.sections?.[0]?.type === "HERO";
 
-      {page.sections?.map((section) => (
+  return (
+    <main className="bg-white">
+      {!startsWithHero && (
+        <header className="border-b border-slate-200 bg-gradient-to-br from-stone-50 to-white py-12 sm:py-16">
+          <div className="mx-auto max-w-5xl px-5 sm:px-8">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Erkel Ferenc Alapfokú Művészeti Iskola</p>
+            <h1 className="text-4xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">{page.title}</h1>
+          </div>
+        </header>
+      )}
+
+      {page.sections?.map((section, index) => (
         <PageSectionRenderer
           key={section.id}
           section={section}
+          pageTitle={index === 0 ? page.title : undefined}
         />
       ))}
     </main>

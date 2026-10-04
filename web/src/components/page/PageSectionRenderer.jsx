@@ -1,15 +1,31 @@
 import TextSection from "./TextSection";
 import ImageSection from "./ImageSection";
+import TextImageSection from "./TextImageSection";
+import CardGridSection from "./CardGridSection";
+import GallerySection from "./GallerySection";
+import HeroSection from "./HeroSection";
+import CtaSection from "./CtaSection";
 
-export default function PageSectionRenderer({ section }) {
-  switch (section.type) {
-    case "TEXT":
-      return <TextSection content={section.content} />;
+const renderers = {
+  TEXT: TextSection,
+  IMAGE: ImageSection,
+  TEXT_IMAGE: TextImageSection,
+  CARD_GRID: CardGridSection,
+  GALLERY: GallerySection,
+  HERO: HeroSection,
+  CTA: CtaSection,
+};
 
-    case "IMAGE":
-      return <ImageSection content={section.content} />;
+export default function PageSectionRenderer({ section, pageTitle, editorMode = false, onContentChange }) {
+  const Renderer = renderers[section.type];
+  if (!Renderer) return null;
 
-    default:
-      return null;
-  }
+  return (
+    <Renderer
+      content={section.content || {}}
+      pageTitle={pageTitle}
+      editorMode={editorMode}
+      onContentChange={onContentChange}
+    />
+  );
 }
