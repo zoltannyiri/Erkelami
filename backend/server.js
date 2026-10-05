@@ -9,6 +9,7 @@ import adminPageRoutes from './src/routes/adminPageRoutes.js';
 import adminSectionRoutes from './src/routes/adminSectionRoutes.js';
 import adminHomeRoutes from './src/routes/adminHomeRoutes.js';
 import adminNavigationRoutes from './src/routes/adminNavigationRoutes.js';
+import adminUploadRoutes from './src/routes/adminUploadRoutes.js';
 
 const app = express();
 app.set('trust proxy', 1)
@@ -22,6 +23,7 @@ app.use('/api/admin/pages', adminPageRoutes);
 app.use('/api/admin', adminSectionRoutes);
 app.use('/api/admin/home', adminHomeRoutes);
 app.use('/api/admin/navigation', adminNavigationRoutes);
+app.use('/api/admin/uploads', adminUploadRoutes);
 
 const port = 3000;
 app.listen(port, () => {
