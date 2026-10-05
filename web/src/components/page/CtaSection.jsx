@@ -1,6 +1,7 @@
 import { sanitizeLinkUrl } from "../../config/pageSectionStyles";
 import PageSectionContainer from "./PageSectionContainer";
 import RichTextContent from "./RichTextContent";
+import SmartLink from "../common/SmartLink";
 
 const defaults = { width: "wide", spacing: "large" };
 const variants = {
@@ -26,7 +27,7 @@ export default function CtaSection({ content = {}, previewMode }) {
           <RichTextContent document={content.richText} fallbackText={content.text} className={`mt-4 ${variant === "dark" ? "text-slate-300" : "text-slate-600"}`} />
         </div>
         {content.buttonText && href && (
-          <a href={href} className={`mt-7 inline-flex shrink-0 items-center px-6 py-3 font-semibold transition ${buttonClasses} ${!centered ? "md:mt-0" : ""}`}>{content.buttonText}</a>
+          <SmartLink to={href} className={`mt-7 inline-flex shrink-0 items-center px-6 py-3 font-semibold transition ${buttonClasses} ${!centered ? "md:mt-0" : ""}`}>{content.buttonText}</SmartLink>
         )}
       </div>
     </PageSectionContainer>

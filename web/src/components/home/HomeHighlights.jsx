@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import SmartLink from "../common/SmartLink";
 
 export default function HomeHighlights({ title, items }) {
   return (
@@ -55,23 +55,8 @@ export default function HomeHighlights({ title, items }) {
               </>
             );
 
-            return item.linkUrl?.startsWith("http") ? (
-              <a
-                key={item.id}
-                href={item.linkUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="
-                  group overflow-hidden
-                  border border-slate-200 bg-white
-                  transition duration-300
-                  hover:-translate-y-1 hover:shadow-xl
-                "
-              >
-                {content}
-              </a>
-            ) : (
-              <Link
+            return (
+              <SmartLink
                 key={item.id}
                 to={item.linkUrl || "#"}
                 className="
@@ -82,7 +67,7 @@ export default function HomeHighlights({ title, items }) {
                 "
               >
                 {content}
-              </Link>
+              </SmartLink>
             );
           })}
         </div>

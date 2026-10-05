@@ -6,6 +6,7 @@ import HeroEditor from "./page-editor/editors/HeroEditor";
 import ImageEditor from "./page-editor/editors/ImageEditor";
 import TextEditor from "./page-editor/editors/TextEditor";
 import TextImageEditor from "./page-editor/editors/TextImageEditor";
+import DownloadsEditor from "./page-editor/editors/DownloadsEditor";
 
 const editors = {
   TEXT: TextEditor,
@@ -15,6 +16,7 @@ const editors = {
   GALLERY: GalleryEditor,
   HERO: HeroEditor,
   CTA: CtaEditor,
+  DOWNLOADS: DownloadsEditor,
 };
 
 export default function SectionFields({ type, content = {}, onChange }) {

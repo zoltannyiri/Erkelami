@@ -1,5 +1,6 @@
 import { getImageClassNames, getSectionTone, sanitizeLinkUrl } from "../../config/pageSectionStyles";
 import PageSectionContainer from "./PageSectionContainer";
+import SmartLink from "../common/SmartLink";
 
 const defaults = { background: "soft", width: "wide", spacing: "large" };
 const columnClasses = {
@@ -32,7 +33,7 @@ function StandardCard({ card, cardStyle, imageRatio, imageClasses }) {
   );
 
   return href
-    ? <a href={href} className={`group flex h-full cursor-pointer flex-col overflow-hidden transition duration-300 hover:-translate-y-0.5 ${styles[cardStyle]}`}>{body}</a>
+    ? <SmartLink to={href} className={`group flex h-full cursor-pointer flex-col overflow-hidden transition duration-300 hover:-translate-y-0.5 ${styles[cardStyle]}`}>{body}</SmartLink>
     : <article className={`flex h-full flex-col overflow-hidden ${styles[cardStyle]}`}>{body}</article>;
 }
 
@@ -49,7 +50,7 @@ function OverlayCard({ card, imageRatio, imageClasses }) {
     </div>
   );
 
-  return href ? <a href={href} className="block h-full cursor-pointer transition duration-300 hover:-translate-y-0.5">{body}</a> : <article className="h-full">{body}</article>;
+  return href ? <SmartLink to={href} className="block h-full cursor-pointer transition duration-300 hover:-translate-y-0.5">{body}</SmartLink> : <article className="h-full">{body}</article>;
 }
 
 export default function CardGridSection({ content = {}, previewMode }) {

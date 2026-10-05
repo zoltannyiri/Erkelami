@@ -39,6 +39,7 @@ export const SECTION_STYLE_DEFAULTS_BY_TYPE = {
   GALLERY: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
   HERO: { background: "dark", width: "full", spacing: "compact", textAlign: "left" },
   CTA: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
+  DOWNLOADS: { background: "soft", width: "normal", spacing: "normal", textAlign: "left" },
 };
 
 const sectionClasses = {

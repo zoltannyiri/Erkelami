@@ -1,4 +1,5 @@
 import SectionFields from "../../admin/SectionFields";
+import { getSectionTypeLabel } from "../../../config/pageSectionTypes";
 
 export default function VisualEditorPanel({ section, onContentChange, onVisibleChange, onSave, saving, dirty, statusText, error }) {
   if (!section) {
@@ -16,7 +17,7 @@ export default function VisualEditorPanel({ section, onContentChange, onVisibleC
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">Kijelölt blokk</p>
-              <h2 className="mt-1 font-semibold text-slate-950">{section.type}</h2>
+              <h2 className="mt-1 font-semibold text-slate-950">{getSectionTypeLabel(section.type)}</h2>
             </div>
             <button type="submit" disabled={!dirty || saving} className="bg-slate-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">
               {saving ? "Mentés..." : "Mentés"}

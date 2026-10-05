@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
+import SmartLink from "../common/SmartLink";
 
 export default function HomeFeatured({ items }) {
   return (
     <section className="bg-slate-50 py-20">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-2 gap-8 px-8">
-
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-8 px-8 md:grid-cols-2">
         {items.map((item, index) => (
           <article
             key={item.id}
@@ -37,7 +36,7 @@ export default function HomeFeatured({ items }) {
             )}
 
             {item.linkUrl && (
-              <Link
+              <SmartLink
                 to={item.linkUrl}
                 className={
                   index === 0
@@ -46,11 +45,10 @@ export default function HomeFeatured({ items }) {
                 }
               >
                 {item.buttonText || "Tovább"}
-              </Link>
+              </SmartLink>
             )}
           </article>
         ))}
-
       </div>
     </section>
   );

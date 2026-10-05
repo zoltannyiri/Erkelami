@@ -1,5 +1,6 @@
 import { sanitizeLinkUrl } from "../../config/pageSectionStyles";
 import PageSectionContainer from "./PageSectionContainer";
+import SmartLink from "../common/SmartLink";
 
 const defaults = { background: "dark", width: "full", spacing: "compact" };
 const heights = {
@@ -41,7 +42,7 @@ export default function HeroSection({ content = {}, pageTitle }) {
           )}
           {content.subheading && <p className={`mt-6 text-lg leading-8 text-slate-200 sm:text-xl ${textPosition === "center" ? "mx-auto max-w-3xl" : "max-w-2xl"}`}>{content.subheading}</p>}
           {content.buttonText && href && (
-            <a href={href} className="mt-8 inline-flex bg-white px-6 py-3 font-semibold text-slate-950 shadow-sm transition hover:bg-amber-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">{content.buttonText}</a>
+            <SmartLink to={href} className="mt-8 inline-flex bg-white px-6 py-3 font-semibold text-slate-950 shadow-sm transition hover:bg-amber-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">{content.buttonText}</SmartLink>
           )}
         </div>
       </div>

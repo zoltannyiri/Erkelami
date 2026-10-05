@@ -5,6 +5,7 @@ import CardGridSection from "./CardGridSection";
 import GallerySection from "./GallerySection";
 import HeroSection from "./HeroSection";
 import CtaSection from "./CtaSection";
+import DownloadsSection from "./DownloadsSection";
 
 const renderers = {
   TEXT: TextSection,
@@ -14,6 +15,7 @@ const renderers = {
   GALLERY: GallerySection,
   HERO: HeroSection,
   CTA: CtaSection,
+  DOWNLOADS: DownloadsSection,
 };
 
 export default function PageSectionRenderer({ section, pageTitle, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {

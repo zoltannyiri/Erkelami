@@ -1,4 +1,5 @@
 import PageSectionRenderer from "../../page/PageSectionRenderer";
+import { getSectionTypeLabel } from "../../../config/pageSectionTypes";
 
 export default function VisualSectionWrapper({
   section,
@@ -33,7 +34,7 @@ export default function VisualSectionWrapper({
     >
       <div className={`absolute right-2 top-2 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center justify-end gap-1 border bg-white/90 p-1 shadow-sm backdrop-blur transition ${selected ? "border-amber-600 opacity-100" : "border-slate-200 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"}`}>
         <span className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-600">
-          {section.type}{section.visible ? "" : " · rejtett"}
+          {getSectionTypeLabel(section.type)}{section.visible ? "" : " · rejtett"}
         </span>
         <button type="button" onClick={(event) => { event.stopPropagation(); onSelect(); }} className="bg-slate-950 px-2.5 py-1.5 text-xs font-medium text-white">Kijelölés</button>
         <button type="button" disabled={first} onClick={(event) => { event.stopPropagation(); onMove("up"); }} className="border border-slate-200 px-2 py-1 text-sm disabled:opacity-30">↑</button>

@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import SmartLink from "./common/SmartLink";
 
 export default function RecursiveMenu({ items }) {
+  if (!items || items.length === 0) return null;
+
   return (
     <>
       {items.map((item) => {
@@ -9,7 +11,7 @@ export default function RecursiveMenu({ items }) {
         return (
           <div key={item.id} className="group/item relative">
             {item.url ? (
-              <Link
+              <SmartLink
                 to={item.url}
                 className="
                   flex min-w-[240px] items-center justify-between
@@ -23,7 +25,7 @@ export default function RecursiveMenu({ items }) {
                 {hasChildren && (
                   <span className="ml-6 text-slate-400">›</span>
                 )}
-              </Link>
+              </SmartLink>
             ) : (
               <div
                 className="

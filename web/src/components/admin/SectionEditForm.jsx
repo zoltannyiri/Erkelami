@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
+import { getSectionTypeLabel } from "../../config/pageSectionTypes";
 import SectionFields from "./SectionFields";
 
 export default function SectionEditForm({ section, onClose, onSaved }) {
@@ -31,7 +32,7 @@ export default function SectionEditForm({ section, onClose, onSaved }) {
     <form onSubmit={handleSubmit} className="mt-6 border border-slate-300 bg-slate-50 p-6">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-lg font-semibold">Blokk szerkesztése</h3>
-        <span className="text-xs font-medium uppercase tracking-wider text-slate-400">{section.type}</span>
+        <span className="text-xs font-medium uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type)}</span>
       </div>
 
       <SectionFields type={section.type} content={content} onChange={setContent} />

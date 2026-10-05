@@ -1,4 +1,4 @@
-import { getSectionDisplayName } from "../../config/pageSectionTypes";
+import { getSectionDisplayName, getSectionTypeLabel } from "../../config/pageSectionTypes";
 
 export default function SectionList({ sections, onMove, onEdit, onDelete }) {
   if (sections.length === 0) {
@@ -11,7 +11,7 @@ export default function SectionList({ sections, onMove, onEdit, onDelete }) {
         <div className="flex h-9 w-9 shrink-0 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">{index + 1}</div>
         <div className="min-w-0">
           <p className="truncate font-medium text-slate-950">{getSectionDisplayName(section)}</p>
-          <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{section.type}{section.visible ? "" : " · rejtett"}</p>
+          <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type)}{section.visible ? "" : " · rejtett"}</p>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2 sm:mt-0 sm:flex-nowrap">
