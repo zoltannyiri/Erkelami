@@ -35,13 +35,19 @@ export default function HomePage() {
       <Hero />
 
       {loading ? (
-        <section className="bg-white py-20">
-          <div className="mx-auto max-w-[1400px] px-8 animate-pulse">
-            <div className="mx-auto mb-12 h-8 w-64 rounded bg-slate-200 text-center" />
-            <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
-              <div className="aspect-[4/3] rounded bg-slate-100" />
-              <div className="aspect-[4/3] rounded bg-slate-100" />
-              <div className="aspect-[4/3] rounded bg-slate-100" />
+        <section className="bg-[#f4f1eb] py-16 sm:py-20 lg:py-24" aria-label="Tartalom betöltése">
+          <div className="mx-auto max-w-7xl animate-pulse px-5 sm:px-8">
+            <div className="mb-10 border-t border-slate-300/80 pt-6 sm:mb-12">
+              <div className="h-3 w-36 bg-stone-300" />
+              <div className="mt-4 h-12 w-full max-w-md bg-stone-300/80" />
+            </div>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+              {[0, 1, 2].map((item) => (
+                <div key={item} className="overflow-hidden border border-stone-200 bg-[#fffefa]">
+                  <div className="aspect-[4/3] bg-slate-300" />
+                  <div className="h-28 border-t border-stone-300" />
+                </div>
+              ))}
             </div>
           </div>
         </section>

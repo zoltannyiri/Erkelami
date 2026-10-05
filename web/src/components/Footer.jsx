@@ -24,9 +24,9 @@ export default function Footer() {
                 Alapfokú Művészeti Iskola
               </span>
             </SmartLink>
-            <p className="mt-3 max-w-sm text-sm leading-6 text-slate-400">
+            {/* <p className="mt-3 max-w-sm text-sm leading-6 text-slate-400">
               Tatabánya zenei és művészeti oktatásának patinás intézménye.
-            </p>
+            </p> */}
           </div>
 
           <div>
