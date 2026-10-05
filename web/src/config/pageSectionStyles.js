@@ -33,21 +33,21 @@ export const DEFAULT_SECTION_STYLE = {
 
 export const SECTION_STYLE_DEFAULTS_BY_TYPE = {
   TEXT: { background: "white", width: "narrow", spacing: "normal", textAlign: "left" },
-  IMAGE: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
-  TEXT_IMAGE: { background: "soft", width: "wide", spacing: "large", textAlign: "left" },
-  CARD_GRID: { background: "soft", width: "wide", spacing: "large", textAlign: "left" },
-  GALLERY: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+  IMAGE: { background: "white", width: "wide", spacing: "compact", textAlign: "left" },
+  TEXT_IMAGE: { background: "soft", width: "wide", spacing: "normal", textAlign: "left" },
+  CARD_GRID: { background: "soft", width: "wide", spacing: "normal", textAlign: "left" },
+  GALLERY: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
   HERO: { background: "dark", width: "full", spacing: "compact", textAlign: "left" },
-  CTA: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+  CTA: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
 };
 
 const sectionClasses = {
   background: {
-    white: "bg-white",
-    soft: "bg-stone-50",
-    muted: "bg-slate-100",
+    white: "bg-[#fffefa]",
+    soft: "bg-stone-50/80",
+    muted: "bg-slate-100/75",
     dark: "bg-slate-950 text-white",
-    accent: "bg-amber-50",
+    accent: "bg-amber-50/70",
   },
   width: {
     narrow: "max-w-3xl",
@@ -56,10 +56,10 @@ const sectionClasses = {
     full: "max-w-none",
   },
   spacing: {
-    compact: "py-6 sm:py-8",
-    normal: "py-10 sm:py-12",
-    large: "py-14 sm:py-18",
-    extraLarge: "py-18 sm:py-24",
+    compact: "py-5 sm:py-7",
+    normal: "py-8 sm:py-10",
+    large: "py-11 sm:py-14",
+    extraLarge: "py-14 sm:py-20",
   },
   textAlign: {
     left: "text-left",
@@ -124,8 +124,8 @@ const imageClasses = {
   height: {
     auto: "max-h-none",
     small: "max-h-64",
-    medium: "max-h-[30rem]",
-    large: "max-h-[42rem]",
+    medium: "max-h-[28rem]",
+    large: "max-h-[38rem]",
   },
   fit: {
     cover: "object-cover",

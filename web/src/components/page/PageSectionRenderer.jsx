@@ -16,7 +16,7 @@ const renderers = {
   CTA: CtaSection,
 };
 
-export default function PageSectionRenderer({ section, pageTitle, editorMode = false, onContentChange }) {
+export default function PageSectionRenderer({ section, pageTitle, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {
   const Renderer = renderers[section.type];
   if (!Renderer) return null;
 
@@ -25,6 +25,8 @@ export default function PageSectionRenderer({ section, pageTitle, editorMode = f
       content={section.content || {}}
       pageTitle={pageTitle}
       editorMode={editorMode}
+      imageResizeEnabled={imageResizeEnabled}
+      previewMode={previewMode}
       onContentChange={onContentChange}
     />
   );

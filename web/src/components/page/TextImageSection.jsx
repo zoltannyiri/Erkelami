@@ -36,8 +36,10 @@ function SectionCopy({ content, tone, inverse = false }) {
   );
 }
 
-function SectionImage({ content, editorMode, onContentChange }) {
+function SectionImage({ content, editorMode, imageResizeEnabled, onContentChange }) {
   const classes = getImageClassNames(content.imageStyle, imageDefaults);
+
+  if (!content.imageUrl && !editorMode) return null;
 
   const updateSize = (dimensions) => {
     onContentChange?.({
@@ -48,7 +50,7 @@ function SectionImage({ content, editorMode, onContentChange }) {
 
   return (
     <ResizableImageFrame
-      editorMode={editorMode}
+      editorMode={imageResizeEnabled}
       onResize={updateSize}
       widthPercent={content.imageStyle?.widthPercent}
       heightPx={content.imageStyle?.heightPx}
@@ -63,7 +65,7 @@ function SectionImage({ content, editorMode, onContentChange }) {
   );
 }
 
-export default function TextImageSection({ content = {}, editorMode = false, onContentChange }) {
+export default function TextImageSection({ content = {}, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {
   const legacyLayout = content.imagePosition === "left" ? "imageLeft" : "imageRight";
   const layout = ["imageLeft", "imageRight", "imageTop", "imageBackground"].includes(content.layout)
     ? content.layout
@@ -72,6 +74,8 @@ export default function TextImageSection({ content = {}, editorMode = false, onC
     ? String(content.imageWidth)
     : "50";
   const tone = getSectionTone(content.style, sectionDefaults);
+  const hasImage = Boolean(content.imageUrl) || editorMode;
+  const forceMobile = previewMode === "mobile";
 
   if (layout === "imageBackground") {
     const backgroundStyle = content.imageUrl
@@ -90,8 +94,8 @@ export default function TextImageSection({ content = {}, editorMode = false, onC
   if (layout === "imageTop") {
     return (
       <PageSectionContainer content={content} defaults={sectionDefaults}>
-        <div className="space-y-8">
-          <SectionImage content={content} editorMode={editorMode} onContentChange={onContentChange} />
+        <div className={hasImage ? "space-y-8" : ""}>
+          {hasImage && <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} />}
           <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} /></div>
         </div>
       </PageSectionContainer>
@@ -101,11 +105,19 @@ export default function TextImageSection({ content = {}, editorMode = false, onC
   const imageFirst = layout === "imageLeft";
   const alignClass = content.verticalAlign === "top" ? "items-start" : "items-center";
 
+  if (!hasImage) {
+    return (
+      <PageSectionContainer content={content} defaults={sectionDefaults}>
+        <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} /></div>
+      </PageSectionContainer>
+    );
+  }
+
   return (
     <PageSectionContainer content={content} defaults={sectionDefaults}>
-      <div className={`grid gap-8 md:gap-12 ${alignClass} ${columnClasses[layout][imageWidth]}`}>
-        <div className={imageFirst ? "md:order-1" : "md:order-2"}><SectionImage content={content} editorMode={editorMode} onContentChange={onContentChange} /></div>
-        <div className={imageFirst ? "md:order-2" : "md:order-1"}><SectionCopy content={content} tone={tone} /></div>
+      <div className={`grid gap-8 ${forceMobile ? "" : `md:gap-12 ${columnClasses[layout][imageWidth]}`} ${alignClass}`}>
+        <div className={forceMobile ? "" : imageFirst ? "md:order-1" : "md:order-2"}><SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} /></div>
+        <div className={forceMobile ? "" : imageFirst ? "md:order-2" : "md:order-1"}><SectionCopy content={content} tone={tone} /></div>
       </div>
     </PageSectionContainer>
   );

@@ -29,7 +29,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Bevezető",
           text: "",
-          style: style("accent", "narrow", "large", "center"),
+          style: style("white", "narrow", "normal", "left"),
         },
       },
       {
@@ -37,7 +37,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "További információk",
           text: "",
-          style: style("white", "narrow", "normal"),
+          style: style("soft", "narrow", "normal"),
         },
       },
     ],
@@ -51,7 +51,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Bemutatkozás",
           text: "",
-          style: style("white", "narrow", "large", "center"),
+          style: style("white", "narrow", "normal", "center"),
         },
       },
       {
@@ -65,7 +65,7 @@ export const PAGE_TEMPLATES = {
           layout: "imageRight",
           imageWidth: "50",
           verticalAlign: "center",
-          style: style("soft", "wide", "large"),
+          style: style("soft", "wide", "normal"),
           imageStyle: imageStyle({ aspectRatio: "4:3", radius: "large" }),
         },
       },
@@ -109,7 +109,7 @@ export const PAGE_TEMPLATES = {
           layout: "imageRight",
           imageWidth: "50",
           verticalAlign: "top",
-          style: style("white", "wide", "large"),
+          style: style("white", "wide", "normal"),
           imageStyle: imageStyle({ aspectRatio: "4:3", radius: "medium" }),
         },
       },
@@ -122,7 +122,7 @@ export const PAGE_TEMPLATES = {
           cardStyle: "elevated",
           imageRatio: "1:1",
           imageStyle: imageStyle({ aspectRatio: "1:1", height: "auto", radius: "small" }),
-          style: style("soft", "wide", "large"),
+          style: style("soft", "wide", "normal"),
         },
       },
     ],
@@ -145,7 +145,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Esemény",
           text: "",
-          style: style("white", "narrow", "normal"),
+          style: style("white", "narrow", "compact"),
         },
       },
       {
@@ -153,7 +153,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Beszámoló",
           text: "",
-          style: style("soft", "narrow", "large"),
+          style: style("soft", "narrow", "normal"),
         },
       },
       {
@@ -166,7 +166,7 @@ export const PAGE_TEMPLATES = {
           imageRatio: "4:3",
           gap: "normal",
           imageStyle: imageStyle({ aspectRatio: "4:3", height: "auto", radius: "small" }),
-          style: style("white", "wide", "large"),
+          style: style("white", "wide", "normal"),
         },
       },
     ],
@@ -195,7 +195,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Bemutatkozás",
           text: "",
-          style: style("accent", "narrow", "large", "center"),
+          style: style("accent", "narrow", "normal", "center"),
         },
       },
       {
@@ -207,7 +207,7 @@ export const PAGE_TEMPLATES = {
           cardStyle: "imageOverlay",
           imageRatio: "16:9",
           imageStyle: imageStyle({ aspectRatio: "16:9", height: "auto", radius: "small" }),
-          style: style("white", "wide", "large"),
+          style: style("white", "wide", "normal"),
         },
       },
       {
@@ -221,7 +221,7 @@ export const PAGE_TEMPLATES = {
           layout: "imageLeft",
           imageWidth: "40",
           verticalAlign: "center",
-          style: style("soft", "wide", "large"),
+          style: style("soft", "wide", "normal"),
           imageStyle: imageStyle({ aspectRatio: "3:2", radius: "large" }),
         },
       },
@@ -235,7 +235,7 @@ export const PAGE_TEMPLATES = {
           variant: "accent",
           alignment: "center",
           buttonStyle: "primary",
-          style: style("white", "wide", "large", "center"),
+          style: style("white", "wide", "normal", "center"),
         },
       },
     ],

@@ -10,7 +10,7 @@ export default function TextSection({ content = {} }) {
   return (
     <PageSectionContainer content={content} defaults={defaults}>
       {content.heading && (
-        <h2 className={`mb-5 text-3xl font-semibold tracking-tight sm:text-4xl ${tone.heading}`}>
+        <h2 className={`mb-5 text-2xl font-semibold tracking-tight sm:text-4xl ${tone.heading}`}>
           {content.heading}
         </h2>
       )}

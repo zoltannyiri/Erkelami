@@ -2,7 +2,7 @@ import { EditorGroup, SelectField, TextAreaField, TextField } from "../FormContr
 
 export default function HeroEditor({ content, updateField }) {
   return (
-    <EditorGroup title="Hero tartalom és megjelenés">
+    <EditorGroup title="Kiemelt nyitóblokk tartalma és megjelenése">
       <TextField label="Cím" value={content.heading} onChange={(value) => updateField("heading", value)} />
       <TextAreaField label="Alcím" value={content.subheading} onChange={(value) => updateField("subheading", value)} />
       <TextField label="Háttérkép URL" value={content.imageUrl} onChange={(value) => updateField("imageUrl", value)} placeholder="/images/pages/pelda.jpg" />

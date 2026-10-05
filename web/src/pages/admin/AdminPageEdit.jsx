@@ -140,7 +140,7 @@ export default function AdminPageEdit() {
   if (error && !page) return <div className="p-8">{error}</div>;
 
   return (
-    <main className="min-h-screen bg-slate-50 py-12">
+    <main className="mx-auto max-w-7xl">
       <AdminPageHeader
         title={page.title}
         description={`/${page.slug}`}
@@ -178,11 +178,11 @@ export default function AdminPageEdit() {
             <input name="slug" value={form.slug} onChange={handlePageChange} className="w-full border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Meta title</label>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Meta cím</label>
             <input name="metaTitle" value={form.metaTitle} onChange={handlePageChange} className="w-full border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Meta description</label>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Meta leírás</label>
             <textarea name="metaDescription" value={form.metaDescription} onChange={handlePageChange} rows={3} className="w-full resize-none border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
           </div>
           <label className="flex items-center gap-3">

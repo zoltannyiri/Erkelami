@@ -60,7 +60,7 @@ export default function ResizableImageFrame({
     ...(safeWidth ? { "--image-editor-width": `${safeWidth}%` } : {}),
     ...(safeHeight ? { "--image-editor-height": `${safeHeight}px` } : {}),
   };
-  const dimensionClasses = `${safeWidth ? "w-full md:w-[var(--image-editor-width)]" : ""} ${safeHeight ? "h-[var(--image-editor-height)] max-h-[70vh]" : ""}`;
+  const dimensionClasses = `${safeWidth ? "w-full md:w-[var(--image-editor-width)]" : ""} ${safeHeight ? "md:h-[var(--image-editor-height)] md:max-h-[min(70vh,720px)]" : ""}`;
 
   const handleProps = (axis) => ({
     onPointerDown: (event) => startResize(event, axis),

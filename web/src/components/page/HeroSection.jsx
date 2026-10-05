@@ -3,9 +3,9 @@ import PageSectionContainer from "./PageSectionContainer";
 
 const defaults = { background: "dark", width: "full", spacing: "compact" };
 const heights = {
-  medium: "min-h-[26rem]",
-  large: "min-h-[38rem]",
-  viewport: "min-h-[calc(100vh-5rem)]",
+  medium: "min-h-[22rem] sm:min-h-[26rem]",
+  large: "min-h-[28rem] sm:min-h-[34rem] lg:min-h-[38rem]",
+  viewport: "min-h-[32rem] sm:min-h-[calc(100vh-8rem)]",
 };
 const overlays = {
   light: [0.28, 0.42],
@@ -32,16 +32,16 @@ export default function HeroSection({ content = {}, pageTitle }) {
       innerClassName="!max-w-none !px-0"
       sectionStyle={sectionStyle}
     >
-      <div className={`mx-auto flex max-w-7xl items-center px-5 py-16 sm:px-8 ${heights[height]}`}>
+      <div className={`mx-auto flex max-w-7xl items-center px-5 py-12 sm:px-8 sm:py-16 ${heights[height]}`}>
         <div className={`w-full max-w-4xl ${textPosition === "center" ? "mx-auto text-center" : ""}`}>
           {(content.heading || pageTitle) && (
-            <h1 className="text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-semibold tracking-[-0.035em] text-white sm:text-6xl lg:text-7xl">
               {content.heading || pageTitle}
             </h1>
           )}
           {content.subheading && <p className={`mt-6 text-lg leading-8 text-slate-200 sm:text-xl ${textPosition === "center" ? "mx-auto max-w-3xl" : "max-w-2xl"}`}>{content.subheading}</p>}
           {content.buttonText && href && (
-            <a href={href} className="mt-8 inline-flex bg-white px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-50">{content.buttonText}</a>
+            <a href={href} className="mt-8 inline-flex bg-white px-6 py-3 font-semibold text-slate-950 shadow-sm transition hover:bg-amber-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">{content.buttonText}</a>
           )}
         </div>
       </div>

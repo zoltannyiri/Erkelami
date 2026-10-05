@@ -6,11 +6,15 @@ import RichTextContent from "./RichTextContent";
 const sectionDefaults = { width: "wide", spacing: "normal" };
 const imageDefaults = { aspectRatio: "16:9", height: "medium", radius: "medium" };
 
-export default function ImageSection({ content = {}, editorMode = false, onContentChange }) {
+export default function ImageSection({ content = {}, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {
   const imageClasses = getImageClassNames(content.imageStyle, imageDefaults);
   const adjacentItems = Array.isArray(content.adjacentItems) ? content.adjacentItems : [];
   const hasCustomWidth = Number.isFinite(Number(content.imageStyle?.widthPercent));
   const tone = getSectionTone(content.style, sectionDefaults);
+  const showMainImage = Boolean(content.imageUrl) || editorMode;
+  const forceMobile = previewMode === "mobile";
+
+  if (!showMainImage && adjacentItems.length === 0) return null;
 
   const updateSize = (dimensions) => {
     onContentChange?.({
@@ -21,23 +25,25 @@ export default function ImageSection({ content = {}, editorMode = false, onConte
 
   return (
     <PageSectionContainer content={content} defaults={sectionDefaults}>
-      <div className={adjacentItems.length > 0 ? "flex flex-col gap-6 md:flex-row md:items-stretch" : ""}>
-        <ResizableImageFrame
-          editorMode={editorMode}
-          onResize={updateSize}
-          widthPercent={content.imageStyle?.widthPercent}
-          heightPx={content.imageStyle?.heightPx}
-          className={`mx-auto shrink-0 overflow-hidden bg-slate-100 ${imageClasses.wrapper} ${adjacentItems.length > 0 && !hasCustomWidth ? "md:w-1/2" : ""}`}
-        >
-          {content.imageUrl ? (
-            <img src={content.imageUrl} alt={content.alt || ""} className={`h-full w-full ${imageClasses.image}`} />
-          ) : (
-            <div className="flex h-full min-h-52 items-center justify-center text-sm text-slate-400">Kép helye</div>
-          )}
-        </ResizableImageFrame>
+      <div className={adjacentItems.length > 0 ? `flex flex-col gap-6 ${forceMobile ? "" : "md:flex-row md:items-stretch"}` : ""}>
+        {showMainImage && (
+          <ResizableImageFrame
+            editorMode={imageResizeEnabled}
+            onResize={updateSize}
+            widthPercent={content.imageStyle?.widthPercent}
+            heightPx={content.imageStyle?.heightPx}
+            className={`mx-auto shrink-0 overflow-hidden bg-slate-100 ${imageClasses.wrapper} ${adjacentItems.length > 0 && !hasCustomWidth ? "md:w-1/2" : ""}`}
+          >
+            {content.imageUrl ? (
+              <img src={content.imageUrl} alt={content.alt || ""} className={`h-full w-full ${imageClasses.image}`} />
+            ) : (
+              <div className="flex h-full min-h-52 items-center justify-center text-sm text-slate-400">Kép helye</div>
+            )}
+          </ResizableImageFrame>
+        )}
 
         {adjacentItems.length > 0 && (
-          <div className={`grid min-w-0 flex-1 gap-6 ${adjacentItems.length > 1 ? "sm:grid-cols-2" : ""}`}>
+          <div className={`grid min-w-0 flex-1 gap-6 ${adjacentItems.length > 1 && !forceMobile ? "sm:grid-cols-2" : ""} ${showMainImage ? "" : "mx-auto w-full max-w-5xl"}`}>
             {adjacentItems.map((item, index) =>
               item.type === "IMAGE" ? (
                 <div key={index} className={`overflow-hidden bg-slate-100 ${imageClasses.radius}`}>

@@ -1,26 +1,39 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import VisualEditorPanel from "../../components/admin/page-editor/VisualEditorPanel";
 import VisualSectionWrapper from "../../components/admin/page-editor/VisualSectionWrapper";
 
+const sectionState = (section) => ({
+  content: section?.content || {},
+  visible: Boolean(section?.visible),
+});
+
+const sectionFingerprint = (section) => JSON.stringify(sectionState(section));
+const savedStateMap = (sections = []) => Object.fromEntries(
+  sections.map((section) => [section.id, sectionState(section)])
+);
+
 export default function AdminPageVisualEditor() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [page, setPage] = useState(null);
+  const [savedSections, setSavedSections] = useState({});
   const [selectedId, setSelectedId] = useState(null);
+  const [previewMode, setPreviewMode] = useState("desktop");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveFeedback, setSaveFeedback] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let ignore = false;
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/admin/pages/${id}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/admin/pages/${id}`)
       .then((response) => {
         if (ignore) return;
         setPage(response.data);
+        setSavedSections(savedStateMap(response.data.sections));
         setSelectedId(response.data.sections?.[0]?.id || null);
       })
       .catch((requestError) => {
@@ -36,44 +49,91 @@ export default function AdminPageVisualEditor() {
   }, [id]);
 
   const selectedSection = page?.sections?.find((section) => section.id === selectedId) || null;
+  const isSectionDirty = (section) => Boolean(
+    section && sectionFingerprint(section) !== JSON.stringify(savedSections[section.id] || {})
+  );
+  const selectedDirty = isSectionDirty(selectedSection);
+  const isDirty = Boolean(page?.sections?.some(isSectionDirty));
+
+  useEffect(() => {
+    if (!isDirty) return undefined;
+    const warnBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeUnload);
+    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
+  }, [isDirty]);
+
+  const markChanged = () => {
+    setSaveFeedback(false);
+    setError(null);
+  };
 
   const updateSelected = (updates) => {
+    markChanged();
     setPage((current) => ({
       ...current,
-      sections: current.sections.map((section) =>
-        section.id === selectedId ? { ...section, ...updates } : section
-      ),
+      sections: current.sections.map((section) => section.id === selectedId ? { ...section, ...updates } : section),
     }));
   };
 
   const updateSectionContent = (sectionId, content) => {
+    markChanged();
     setPage((current) => ({
       ...current,
-      sections: current.sections.map((section) =>
-        section.id === sectionId ? { ...section, content } : section
-      ),
+      sections: current.sections.map((section) => section.id === sectionId ? { ...section, content } : section),
     }));
   };
 
   const refreshSections = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/pages/${id}`);
     setPage(response.data);
+    setSavedSections(savedStateMap(response.data.sections));
     if (!response.data.sections.some((section) => section.id === selectedId)) {
       setSelectedId(response.data.sections?.[0]?.id || null);
     }
   };
 
+  const restoreSelected = () => {
+    const saved = savedSections[selectedId];
+    if (!saved) return;
+    setPage((current) => ({
+      ...current,
+      sections: current.sections.map((section) => section.id === selectedId ? { ...section, ...saved } : section),
+    }));
+  };
+
+  const confirmDiscard = () => window.confirm(
+    "A kijelölt blokk nem mentett módosításokat tartalmaz. Eldobod ezeket a változtatásokat?"
+  );
+
+  const handleSelect = (nextId) => {
+    if (nextId === selectedId) return;
+    if (selectedDirty && !confirmDiscard()) return;
+    if (selectedDirty) restoreSelected();
+    setSelectedId(nextId);
+    setSaveFeedback(false);
+    setError(null);
+  };
+
+  const handleBack = () => {
+    if (isDirty && !confirmDiscard()) return;
+    navigate(`/admin/pages/${id}`);
+  };
+
   const handleSave = async (event) => {
-    event.preventDefault();
-    if (!selectedSection) return;
+    event?.preventDefault();
+    if (!selectedSection || !selectedDirty) return;
     setSaving(true);
     setError(null);
     try {
       await axios.patch(
         `${import.meta.env.VITE_API_URL}/api/admin/sections/${selectedSection.id}`,
-        { content: selectedSection.content, visible: selectedSection.visible }
+        sectionState(selectedSection)
       );
-      await refreshSections();
+      setSavedSections((current) => ({ ...current, [selectedSection.id]: sectionState(selectedSection) }));
+      setSaveFeedback(true);
     } catch (requestError) {
       console.error(requestError);
       setError(requestError.response?.data?.message || requestError.response?.data?.error || "A blokk nem menthető.");
@@ -99,11 +159,19 @@ export default function AdminPageVisualEditor() {
   };
 
   const handleDelete = async (section) => {
-    if (!window.confirm("Biztosan törölni szeretnéd ezt a blokkot?")) return;
+    const message = isSectionDirty(section)
+      ? "Ez a blokk nem mentett módosításokat tartalmaz. Biztosan törlöd a blokkot?"
+      : "Biztosan törölni szeretnéd ezt a blokkot?";
+    if (!window.confirm(message)) return;
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/sections/${section.id}`);
       const remaining = page.sections.filter((item) => item.id !== section.id);
       setPage((current) => ({ ...current, sections: remaining }));
+      setSavedSections((current) => {
+        const next = { ...current };
+        delete next[section.id];
+        return next;
+      });
       if (selectedId === section.id) setSelectedId(remaining[0]?.id || null);
     } catch (requestError) {
       console.error(requestError);
@@ -115,40 +183,65 @@ export default function AdminPageVisualEditor() {
   if (!page) return <div className="p-8">{error || "Az oldal nem található."}</div>;
 
   const startsWithHero = page.sections?.[0]?.type === "HERO";
+  const statusText = selectedDirty ? "Nem mentett módosítások" : saveFeedback ? "Mentve" : "Nincs módosítás";
 
   return (
-    <main className="min-h-screen bg-slate-100 py-8">
-      <AdminPageHeader title="Vizuális szerkesztés" description={`${page.title} · /${page.slug}`} backTo={`/admin/pages/${id}`} backLabel="Vissza a strukturált szerkesztőhöz">
-        {page.published && <Link to={`/${page.slug}`} target="_blank" className="border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700">Publikus oldal ↗</Link>}
-      </AdminPageHeader>
+    <main className="-m-8 min-h-[calc(100vh-4rem)] bg-slate-100">
+      <div className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 px-6 py-4 shadow-sm backdrop-blur">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
+            <button type="button" onClick={handleBack} className="shrink-0 text-sm font-medium text-slate-600 transition hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">← Vissza</button>
+            <div className="min-w-0 border-l border-slate-200 pl-4">
+              <p className="truncate font-semibold text-slate-950">{page.title}</p>
+              <p className="truncate text-xs text-slate-500">/{page.slug}</p>
+            </div>
+          </div>
 
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
-        <div className="min-w-0 overflow-hidden border border-slate-300 bg-white shadow-sm">
-          {!startsWithHero && (
-            <header className="border-b border-slate-200 bg-gradient-to-br from-stone-50 to-white py-12">
-              <div className="mx-auto max-w-5xl px-8">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">Erkel Ferenc Alapfokú Művészeti Iskola</p>
-                <h1 className="text-4xl font-semibold tracking-tight text-slate-950">{page.title}</h1>
-              </div>
-            </header>
-          )}
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <div className="flex border border-slate-300 bg-slate-50 p-1" aria-label="Előnézet szélessége">
+              {[["desktop", "Asztali"], ["mobile", "Mobil"]].map(([value, label]) => (
+                <button key={value} type="button" aria-pressed={previewMode === value} onClick={() => setPreviewMode(value)} className={`px-3 py-1.5 text-xs font-semibold transition ${previewMode === value ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>{label}</button>
+              ))}
+            </div>
+            {page.published ? (
+              <Link to={`/${page.slug}`} target="_blank" className="border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">Publikus előnézet ↗</Link>
+            ) : (
+              <span title="Az oldal még nincs publikálva" className="cursor-not-allowed border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-400">Nincs publikálva</span>
+            )}
+            <span aria-live="polite" className={`text-sm font-medium ${selectedDirty ? "text-amber-700" : saveFeedback ? "text-emerald-700" : "text-slate-500"}`}>{statusText}</span>
+            <button type="button" onClick={handleSave} disabled={!selectedDirty || saving} className="bg-slate-950 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">{saving ? "Mentés..." : "Mentés"}</button>
+          </div>
+        </div>
+      </div>
 
-          {page.sections.length === 0 && <div className="p-16 text-center text-slate-500">Az oldal még nem tartalmaz blokkot. Új blokkot a strukturált szerkesztőben adhatsz hozzá.</div>}
-
-          {page.sections.map((section, index) => (
-            <VisualSectionWrapper
-              key={section.id}
-              section={section}
-              pageTitle={index === 0 ? page.title : undefined}
-              selected={selectedId === section.id}
-              first={index === 0}
-              last={index === page.sections.length - 1}
-              onSelect={() => { setSelectedId(section.id); setError(null); }}
-              onMove={(direction) => handleMove(index, direction)}
-              onDelete={() => handleDelete(section)}
-              onContentChange={(content) => updateSectionContent(section.id, content)}
-            />
-          ))}
+      <div className="grid items-start gap-6 p-6 xl:grid-cols-[minmax(0,1fr)_390px]">
+        <div className="min-w-0 overflow-x-auto rounded-sm border border-slate-200 bg-slate-200/70 p-3 sm:p-6">
+          <div className={`mx-auto overflow-hidden bg-white shadow-[0_18px_55px_rgba(15,23,42,0.12)] transition-[max-width] duration-300 ${previewMode === "mobile" ? "max-w-[390px]" : "max-w-[1440px]"}`}>
+            {!startsWithHero && (
+              <header className="border-b border-stone-200 bg-gradient-to-br from-stone-50 via-white to-amber-50/30 py-9 sm:py-12">
+                <div className="mx-auto max-w-5xl px-5 sm:px-8">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">Erkel Ferenc Alapfokú Művészeti Iskola</p>
+                  <h1 className="max-w-4xl text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">{page.title}</h1>
+                </div>
+              </header>
+            )}
+            {page.sections.length === 0 && <div className="p-12 text-center text-sm leading-6 text-slate-500">Az oldal még nem tartalmaz blokkot. Új blokkot a strukturált szerkesztőben adhatsz hozzá.</div>}
+            {page.sections.map((section, index) => (
+              <VisualSectionWrapper
+                key={section.id}
+                section={section}
+                pageTitle={index === 0 ? page.title : undefined}
+                selected={selectedId === section.id}
+                first={index === 0}
+                last={index === page.sections.length - 1}
+                onSelect={() => handleSelect(section.id)}
+                onMove={(direction) => handleMove(index, direction)}
+                onDelete={() => handleDelete(section)}
+                onContentChange={(content) => updateSectionContent(section.id, content)}
+                previewMode={previewMode}
+              />
+            ))}
+          </div>
         </div>
 
         <VisualEditorPanel
@@ -158,6 +251,8 @@ export default function AdminPageVisualEditor() {
           onVisibleChange={(visible) => updateSelected({ visible })}
           onSave={handleSave}
           saving={saving}
+          dirty={selectedDirty}
+          statusText={statusText}
           error={error}
         />
       </div>

@@ -19,7 +19,7 @@ export default function CardGridEditor({ content, updateField }) {
             { value: "simple", label: "Egyszerű" },
             { value: "bordered", label: "Keretezett" },
             { value: "elevated", label: "Emelt" },
-            { value: "imageOverlay", label: "Képes overlay" },
+            { value: "imageOverlay", label: "Képre helyezett szöveg" },
           ]} />
           <SelectField label="Képarány" value={content.imageRatio || "4:3"} onChange={(value) => updateField("imageRatio", value)} options={["16:9", "4:3", "1:1"]} />
         </div>

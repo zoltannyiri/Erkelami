@@ -3,7 +3,7 @@ import RichTextEditor from "../LazyRichTextEditor";
 
 export default function CtaEditor({ content, updateField }) {
   return (
-    <EditorGroup title="CTA tartalom és megjelenés">
+    <EditorGroup title="Felhívás tartalma és megjelenése">
       <TextField label="Cím" value={content.heading} onChange={(value) => updateField("heading", value)} />
       <div>
         <span className="mb-2 block text-sm font-medium text-slate-700">Formázott szöveg</span>
