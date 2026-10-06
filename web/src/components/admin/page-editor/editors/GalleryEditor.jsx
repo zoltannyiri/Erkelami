@@ -1,5 +1,6 @@
 import { EditorGroup, SelectField, TextField } from "../FormControls";
 import ImageStyleControls from "../ImageStyleControls";
+import ImageUploadField from "../../ImageUploadField";
 
 export default function GalleryEditor({ content, updateField }) {
   const images = Array.isArray(content.images) ? content.images : [];
@@ -48,6 +49,13 @@ export default function GalleryEditor({ content, updateField }) {
               <button type="button" onClick={() => updateField("images", images.filter((_, itemIndex) => itemIndex !== index))} className="text-xs font-medium text-red-600">Törlés</button>
             </div>
             <div className="space-y-4">
+               <ImageUploadField
+                  value={image.imageUrl || ""}
+                  onChange={(url) =>
+                    updateImage(index, "imageUrl", url)
+                  }
+                  label="Kép feltöltése"
+                />
               <TextField label="Kép URL" value={image.imageUrl} onChange={(value) => updateImage(index, "imageUrl", value)} placeholder="/images/pages/pelda.jpg" />
               <TextField label="Alt szöveg" value={image.alt} onChange={(value) => updateImage(index, "alt", value)} />
             </div>

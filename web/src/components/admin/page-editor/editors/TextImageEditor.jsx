@@ -1,6 +1,7 @@
 import ImageStyleControls from "../ImageStyleControls";
 import { EditorGroup, SelectField, TextField } from "../FormControls";
 import RichTextEditor from "../LazyRichTextEditor";
+import ImageUploadField from "../../ImageUploadField";
 
 export default function TextImageEditor({ content, updateField }) {
   const legacyLayout = content.imagePosition === "left" ? "imageLeft" : "imageRight";
@@ -14,6 +15,13 @@ export default function TextImageEditor({ content, updateField }) {
           <span className="mb-2 block text-sm font-medium text-slate-700">Formázott szöveg</span>
           <RichTextEditor value={content.richText} fallbackText={content.text} onChange={(value) => updateField("richText", value)} />
         </div>
+        <ImageUploadField
+          value={content.imageUrl || ""}
+          onChange={(url) =>
+            updateField("imageUrl", url)
+          }
+          label="Kép feltöltése"
+        />
         <TextField label="Kép URL" value={content.imageUrl} onChange={(value) => updateField("imageUrl", value)} placeholder="/images/pages/pelda.jpg" />
         <TextField label="Kép alt szövege" value={content.imageAlt} onChange={(value) => updateField("imageAlt", value)} />
       </EditorGroup>

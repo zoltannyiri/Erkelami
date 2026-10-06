@@ -1,5 +1,6 @@
 import { EditorGroup, SelectField, TextAreaField, TextField } from "../FormControls";
 import ImageStyleControls from "../ImageStyleControls";
+import ImageUploadField from "../../ImageUploadField";
 
 export default function CardGridEditor({ content, updateField }) {
   const cards = Array.isArray(content.cards) ? content.cards : [];
@@ -41,6 +42,11 @@ export default function CardGridEditor({ content, updateField }) {
             <div className="space-y-4">
               <TextField label="Cím" value={card.title} onChange={(value) => updateCard(index, "title", value)} />
               <TextAreaField label="Leírás" value={card.description} onChange={(value) => updateCard(index, "description", value)} />
+                <ImageUploadField
+                  value={card.imageUrl || ""}
+                  onChange={(url) => updateCard(index, "imageUrl", url)}
+                  label="Kártyakép feltöltése"
+                />
               <TextField label="Kép URL" value={card.imageUrl} onChange={(value) => updateCard(index, "imageUrl", value)} placeholder="/images/pages/pelda.jpg" />
               <TextField label="Link URL" value={card.linkUrl} onChange={(value) => updateCard(index, "linkUrl", value)} />
             </div>
