@@ -1,4 +1,5 @@
 import { EditorGroup, SelectField, TextAreaField, TextField } from "../FormControls";
+import FileUploadField from "../../FileUploadField";
 
 const FILE_TYPE_OPTIONS = [
   { value: "PDF", label: "PDF" },
@@ -16,6 +17,12 @@ export default function DownloadsEditor({ content, updateField }) {
   const updateFile = (index, key, value) => {
     const nextFiles = [...files];
     nextFiles[index] = { ...nextFiles[index], [key]: value };
+    updateField("files", nextFiles);
+  };
+
+  const updateFileValues = (index, values) => {
+    const nextFiles = [...files];
+    nextFiles[index] = { ...nextFiles[index], ...values };
     updateField("files", nextFiles);
   };
 
@@ -81,6 +88,33 @@ export default function DownloadsEditor({ content, updateField }) {
                 rows={2}
                 placeholder="Rövid leírás a dokumentum tartalmáról"
               />
+              <FileUploadField
+                category="document"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
+                label="Fájl feltöltése"
+                onUploaded={(uploadedField) => {
+                  updateFileValues(index, {
+                    fileUrl: uploadedField.url,
+                    fileType: uploadedField.fileType || "OTHER",
+                  });
+                }}
+              />
+              {file.fileUrl?.startsWith("/uploads/") && (
+                <div className="flex items-center justify-between bg-green-50 px-4 py-3 text-sm">
+                  <span className="text-green-700">
+                    Fájl feltöltve
+                  </span>
+
+                  <a
+                    href={file.fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-green-700 underline"
+                  >
+                    Megnyitás
+                  </a>
+                </div>
+              )}
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="sm:col-span-2">
                   <TextField
