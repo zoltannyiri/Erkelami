@@ -1,15 +1,32 @@
+import { useState } from "react";
 import SmartLink from "./common/SmartLink";
 
 export default function RecursiveMenu({ items }) {
+  const [openItemId, setOpenItemId] = useState(null);
+
   if (!items || items.length === 0) return null;
 
   return (
     <>
       {items.map((item) => {
         const hasChildren = item.children?.length > 0;
+        const isOpen = openItemId === item.id;
 
         return (
-          <div key={item.id} className="group/item relative">
+          <div
+            key={item.id}
+            className="relative"
+            onMouseEnter={() => {
+              if (hasChildren) {
+                setOpenItemId(item.id);
+              }
+            }}
+            onMouseLeave={() => {
+              if (hasChildren) {
+                setOpenItemId(null);
+              }
+            }}
+          >
             {item.url ? (
               <SmartLink
                 to={item.url}
@@ -23,7 +40,9 @@ export default function RecursiveMenu({ items }) {
                 {item.label}
 
                 {hasChildren && (
-                  <span className="ml-6 text-slate-400">›</span>
+                  <span className="ml-6 text-slate-400">
+                    ›
+                  </span>
                 )}
               </SmartLink>
             ) : (
@@ -39,21 +58,20 @@ export default function RecursiveMenu({ items }) {
                 {item.label}
 
                 {hasChildren && (
-                  <span className="ml-6 text-slate-400">›</span>
+                  <span className="ml-6 text-slate-400">
+                    ›
+                  </span>
                 )}
               </div>
             )}
 
-            {hasChildren && (
+            {hasChildren && isOpen && (
               <div
                 className="
-                  invisible absolute left-full top-0
+                  absolute left-full top-0
                   ml-[1px] min-w-[240px]
                   border border-slate-200 bg-white
-                  py-2 opacity-0 shadow-xl
-                  transition-all duration-150
-                  group-hover/item:visible
-                  group-hover/item:opacity-100
+                  py-2 shadow-xl
                 "
               >
                 <RecursiveMenu items={item.children} />

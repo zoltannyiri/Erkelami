@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import FileUploadField from "./FileUploadField";
 
 export default function HomeItemForm({ sectionId, item = null, onClose, onSaved }) {
   const isEditing = Boolean(item);
@@ -81,16 +82,28 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
             Kép
           </label>
 
+          <FileUploadField
+            category="image"
+            accept=".jpg,.jpeg,.png,.webp"
+            label="Kép feltöltése"
+            onUploaded={(uploadedFile) => {
+              setForm((current) => ({
+                ...current,
+                imageUrl: uploadedFile.url,
+              }));
+            }}
+          />
+
           <input
             name="imageUrl"
             value={form.imageUrl}
             onChange={handleChange}
-            className="w-full border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-950"
-            placeholder="/images/home/szolfezs.jpg"
+            className="mt-4 w-full border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-950"
+            placeholder="/uploads/images/... vagy https://..."
           />
 
           <p className="mt-2 text-xs text-slate-500">
-            Egyelőre használhatsz a public mappából helyi képet.
+            Feltölthetsz képet, vagy megadhatsz egy kép URL-t kézzel.
           </p>
         </div>
 
