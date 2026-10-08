@@ -27,8 +27,8 @@ export default function Hero() {
           src={image.src}
           alt=""
           aria-hidden="true"
-          className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-[1600ms] motion-reduce:transition-none ${
-            index === activeIndex ? "scale-100 opacity-100" : "scale-[1.02] opacity-0"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1600ms] motion-reduce:transition-none ${
+            index === activeIndex ? "opacity-100" : "opacity-0"
           }`}
           style={{ objectPosition: image.position }}
         />
