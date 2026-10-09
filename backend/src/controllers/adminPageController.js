@@ -1,18 +1,9 @@
 import prisma from "../lib/prisma.js";
 import {
-  isValidPageTemplateKey,
-  PAGE_TEMPLATES,
-} from "../config/pageTemplates.js";
-
-const slugify = (value) => {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-};
+  createPageWithTemplate,
+  PageCreationValidationError,
+  slugifyPage,
+} from "../services/pageCreationService.js";
 
 export const getPages = async (req, res) => {
   try {
@@ -65,69 +56,16 @@ export const getPage = async (req, res) => {
 
 export const createPage = async (req, res) => {
   try {
-    const {
-      title,
-      slug,
-      published = false,
-      metaTitle,
-      metaDescription,
-      templateKey = "EMPTY",
-    } = req.body;
-
-    if (!title?.trim()) {
-      return res.status(400).json({ message: "A cím megadása kötelező." });
-    }
-
-    const finalSlug = slugify(slug?.trim() || title)
-
-    if (!finalSlug) {
-      return res.status(400).json({ message: "Érvénytelen slug." });
-    }
-
-    if (!isValidPageTemplateKey(templateKey)) {
-      return res.status(400).json({ message: "Érvénytelen oldalsablon." });
-    }
-
-    const existingPage = await prisma.page.findUnique({
-      where: {
-        slug: finalSlug,
-      },
-    });
-
-    if (existingPage) {
-      return res.status(400).json({ message: "Már létezik oldal ezzel a sluggal." });
-    }
-
-    const page = await prisma.$transaction(async (transaction) => {
-      const createdPage = await transaction.page.create({
-        data: {
-          title: title.trim(),
-          slug: finalSlug,
-          published,
-          metaTitle: metaTitle?.trim() || null,
-          metaDescription: metaDescription?.trim() || null,
-        },
-      });
-
-      const template = PAGE_TEMPLATES[templateKey];
-
-      if (template.sections.length > 0) {
-        await transaction.pageSection.createMany({
-          data: template.sections.map((section, sortOrder) => ({
-            pageId: createdPage.id,
-            type: section.type,
-            content: section.content,
-            sortOrder,
-            visible: true,
-          })),
-        });
-      }
-
-      return createdPage;
-    });
+    const page = await prisma.$transaction((transaction) =>
+      createPageWithTemplate(transaction, req.body)
+    );
 
     res.status(201).json(page);
   } catch (error) {
+    if (error instanceof PageCreationValidationError) {
+      return res.status(error.statusCode).json({ message: error.message });
+    }
+
     if (error.code === "P2002") {
       return res.status(409).json({ message: "Már létezik oldal ezzel a sluggal." });
     }
@@ -150,7 +88,7 @@ export const updatePage = async (req, res) => {
       return res.status(404).json({ message: "Az oldal nem található." });
     }
 
-    const finalSlug = slug !== undefined ? slugify(slug) : currentPage.slug;
+    const finalSlug = slug !== undefined ? slugifyPage(slug) : currentPage.slug;
     const page = await prisma.page.update({
       where: {
         id: req.params.id,

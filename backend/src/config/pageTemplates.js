@@ -42,6 +42,29 @@ export const PAGE_TEMPLATES = {
       },
     ],
   },
+  SUCCESS_RESULT: {
+    name: "Versenyeredmény",
+    description: "Sikerekhez, eredményekhez és a kapcsolódó PDF-ekhez.",
+    sections: [
+      {
+        type: "TEXT",
+        content: {
+          heading: "Eredmények",
+          text: "",
+          style: style("white", "narrow", "normal", "left"),
+        },
+      },
+      {
+        type: "DOWNLOADS",
+        content: {
+          heading: "Kapcsolódó dokumentumok",
+          description: "",
+          files: [],
+          style: style("soft", "normal", "normal", "left"),
+        },
+      },
+    ],
+  },
   INTRODUCTION: {
     name: "Bemutatkozó oldal",
     description: "Bemutatkozáshoz, történethez és képes-szöveges tartalmakhoz.",

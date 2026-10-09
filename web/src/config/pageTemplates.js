@@ -12,6 +12,12 @@ export const PAGE_TEMPLATE_OPTIONS = [
     previewSections: ["TEXT", "TEXT"],
   },
   {
+    key: "SUCCESS_RESULT",
+    name: "Versenyeredmény",
+    description: "Sikerekhez, eredményekhez és a kapcsolódó PDF-ekhez.",
+    previewSections: ["TEXT", "DOWNLOADS"],
+  },
+  {
     key: "INTRODUCTION",
     name: "Bemutatkozó oldal",
     description: "Bemutatkozáshoz, történethez és képes-szöveges tartalmakhoz.",

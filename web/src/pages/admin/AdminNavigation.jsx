@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavigationItemForm from "../../components/admin/NavigationItemForm";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
@@ -191,6 +192,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
 }
 
 export default function AdminNavigation() {
+  const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -210,6 +212,29 @@ export default function AdminNavigation() {
     );
 
     setGroups(response.data);
+  };
+
+  const refreshPages = async () => {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/admin/pages`
+    );
+
+    setPages(response.data);
+  };
+
+  const handleFormSaved = async (savedItem, options = {}) => {
+    setCreating(null);
+    setEditingItem(null);
+
+    if (options.openEditor && savedItem.page?.id) {
+      navigate(`/admin/pages/${savedItem.page.id}/visual`);
+      return;
+    }
+
+    await Promise.all([
+      refreshNavigation(),
+      options.pageCreated ? refreshPages() : Promise.resolve(),
+    ]);
   };
 
   useEffect(() => {
@@ -556,11 +581,7 @@ export default function AdminNavigation() {
                 onClose={() =>
                   setCreating(null)
                 }
-                onSaved={async () => {
-                  setCreating(null);
-
-                  await refreshNavigation();
-                }}
+                onSaved={handleFormSaved}
               />
             )}
 
@@ -575,11 +596,7 @@ export default function AdminNavigation() {
                 onClose={() =>
                   setEditingItem(null)
                 }
-                onSaved={async () => {
-                  setEditingItem(null);
-
-                  await refreshNavigation();
-                }}
+                onSaved={handleFormSaved}
               />
             )}
           </section>

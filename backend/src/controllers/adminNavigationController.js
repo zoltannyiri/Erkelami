@@ -1,4 +1,8 @@
 import prisma from "../lib/prisma.js";
+import {
+  createPageWithTemplate,
+  PageCreationValidationError,
+} from "../services/pageCreationService.js";
 
 const buildTree = (items, parentId = null) =>
   items
@@ -92,6 +96,7 @@ export const createNavigationItem = async (req, res) => {
       parentId = null,
       pageId = null,
       externalUrl = null,
+      newPage = null,
       visible = true,
     } = req.body;
 
@@ -101,10 +106,19 @@ export const createNavigationItem = async (req, res) => {
       });
     }
 
-    if (pageId && externalUrl?.trim()) {
+    if (newPage && (typeof newPage !== "object" || Array.isArray(newPage))) {
+      return res.status(400).json({
+        message: "Az új oldal adatai érvénytelenek.",
+      });
+    }
+
+    const finalExternalUrl = externalUrl?.trim() || null;
+    const targetCount = [pageId, finalExternalUrl, newPage].filter(Boolean).length;
+
+    if (targetCount > 1) {
       return res.status(400).json({
         message:
-          "Egy menüpont egyszerre nem mutathat oldalra és külső linkre.",
+          "Egy menüpontnak csak egy célja lehet: meglévő oldal, új oldal vagy külső link.",
       });
     }
 
@@ -141,39 +155,63 @@ export const createNavigationItem = async (req, res) => {
       }
     }
 
-    const lastItem = await prisma.navigationItem.findFirst({
-      where: {
-        menuKey: finalMenuKey,
-        parentId,
-      },
-      orderBy: {
-        sortOrder: "desc",
-      },
-    });
+    const item = await prisma.$transaction(async (transaction) => {
+      let finalPageId = pageId;
 
-    const item = await prisma.navigationItem.create({
-      data: {
-        label: label.trim(),
-        menuKey: finalMenuKey,
-        parentId,
-        pageId,
-        externalUrl: externalUrl?.trim() || null,
-        visible,
-        sortOrder: lastItem ? lastItem.sortOrder + 1 : 0,
-      },
-      include: {
-        page: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
+      if (newPage) {
+        const createdPage = await createPageWithTemplate(transaction, {
+          ...newPage,
+          title: newPage.title?.trim() || label.trim(),
+          published: Boolean(visible),
+        });
+
+        finalPageId = createdPage.id;
+      }
+
+      const lastItem = await transaction.navigationItem.findFirst({
+        where: {
+          menuKey: finalMenuKey,
+          parentId,
+        },
+        orderBy: {
+          sortOrder: "desc",
+        },
+      });
+
+      return transaction.navigationItem.create({
+        data: {
+          label: label.trim(),
+          menuKey: finalMenuKey,
+          parentId,
+          pageId: finalPageId,
+          externalUrl: finalExternalUrl,
+          visible,
+          sortOrder: lastItem ? lastItem.sortOrder + 1 : 0,
+        },
+        include: {
+          page: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+            },
           },
         },
-      },
+      });
     });
 
     res.status(201).json(item);
   } catch (error) {
+    if (error instanceof PageCreationValidationError) {
+      return res.status(error.statusCode).json({ message: error.message });
+    }
+
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        message: "Már létezik oldal ezzel a sluggal.",
+      });
+    }
+
     console.error("Navigation item létrehozási hiba:", error);
 
     res.status(500).json({
