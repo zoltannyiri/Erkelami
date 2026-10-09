@@ -1,0 +1,56 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy-backend.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy backend to VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+
+          script: |
+            set -e
+
+            echo "=== Erkel backend deploy indul ==="
+
+            cd /var/www/Erkelami
+
+            echo "=== Legfrissebb kód letöltése ==="
+            git fetch origin
+            git reset --hard origin/main
+
+            cd backend
+
+            echo "=== Függőségek telepítése ==="
+            npm ci
+
+            echo "=== Prisma client generálása ==="
+            npx prisma generate
+
+            echo "=== Prisma migrációk ==="
+            npx prisma migrate deploy
+
+            echo "=== Backend újraindítása ==="
+
+            if pm2 describe erkel-backend > /dev/null 2>&1; then
+              pm2 restart erkel-backend --update-env
+            else
+              pm2 start src/server.js --name erkel-backend
+            fi
+
+            pm2 save
+
+            echo "=== Deploy sikeresen befejezve ==="
