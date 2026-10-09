@@ -18,7 +18,7 @@ import adminHomeRoutes from './src/routes/adminHomeRoutes.js';
 import adminNavigationRoutes from './src/routes/adminNavigationRoutes.js';
 import adminUploadRoutes from './src/routes/adminUploadRoutes.js';
 
-const app = express();
+const app = express(); 
 app.set('trust proxy', 1);
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
