@@ -29,6 +29,7 @@ export const createPageWithTemplate = async (
     metaTitle,
     metaDescription,
     templateKey = "EMPTY",
+    pdfUrl,
   }
 ) => {
   if (!title?.trim()) {
@@ -70,13 +71,24 @@ export const createPageWithTemplate = async (
 
   if (template.sections.length > 0) {
     await database.pageSection.createMany({
-      data: template.sections.map((section, sortOrder) => ({
-        pageId: createdPage.id,
-        type: section.type,
-        content: section.content,
-        sortOrder,
-        visible: true,
-      })),
+      data: template.sections.map((section, sortOrder) => {
+        let content = { ...section.content };
+
+        if (section.type === "PDF_VIEWER") {
+          content.heading = content.heading || title.trim();
+          if (pdfUrl?.trim()) {
+            content.pdfUrl = pdfUrl.trim();
+          }
+        }
+
+        return {
+          pageId: createdPage.id,
+          type: section.type,
+          content,
+          sortOrder,
+          visible: true,
+        };
+      }),
     });
   }
 

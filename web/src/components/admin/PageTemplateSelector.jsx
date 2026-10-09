@@ -53,6 +53,24 @@ function PreviewSection({ type }) {
     );
   }
 
+  if (type === "PDF_VIEWER") {
+    return (
+      <div className="flex h-9 flex-col justify-between rounded-sm border border-current/20 bg-current/5 p-1 opacity-40">
+        <div className="h-1 w-1/3 rounded-full bg-current" />
+        <div className="flex items-center justify-center text-[8px] font-bold uppercase tracking-wider">PDF</div>
+      </div>
+    );
+  }
+
+  if (type === "DOWNLOADS") {
+    return (
+      <div className="flex items-center justify-between rounded-sm border border-current/20 p-1 opacity-30">
+        <div className="h-1 w-1/2 rounded-full bg-current" />
+        <div className="h-2 w-2.5 rounded-xs bg-current" />
+      </div>
+    );
+  }
+
   return <Lines />;
 }
 

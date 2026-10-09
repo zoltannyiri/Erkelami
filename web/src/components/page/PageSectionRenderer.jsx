@@ -6,6 +6,7 @@ import GallerySection from "./GallerySection";
 import HeroSection from "./HeroSection";
 import CtaSection from "./CtaSection";
 import DownloadsSection from "./DownloadsSection";
+import PdfViewerSection from "./PdfViewerSection";
 
 const renderers = {
   TEXT: TextSection,
@@ -16,6 +17,7 @@ const renderers = {
   HERO: HeroSection,
   CTA: CtaSection,
   DOWNLOADS: DownloadsSection,
+  PDF_VIEWER: PdfViewerSection,
 };
 
 export default function PageSectionRenderer({ section, pageTitle, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {

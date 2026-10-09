@@ -7,6 +7,7 @@ import ImageEditor from "./page-editor/editors/ImageEditor";
 import TextEditor from "./page-editor/editors/TextEditor";
 import TextImageEditor from "./page-editor/editors/TextImageEditor";
 import DownloadsEditor from "./page-editor/editors/DownloadsEditor";
+import PdfViewerEditor from "./page-editor/editors/PdfViewerEditor";
 
 const editors = {
   TEXT: TextEditor,
@@ -17,6 +18,7 @@ const editors = {
   HERO: HeroEditor,
   CTA: CtaEditor,
   DOWNLOADS: DownloadsEditor,
+  PDF_VIEWER: PdfViewerEditor,
 };
 
 export default function SectionFields({ type, content = {}, onChange }) {

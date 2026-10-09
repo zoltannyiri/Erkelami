@@ -42,6 +42,46 @@ export const PAGE_TEMPLATES = {
       },
     ],
   },
+  PDF_DOCUMENT: {
+    name: "PDF dokumentum oldal",
+    description: "Beágyazott PDF megjelenítő a dokumentum közvetlen olvasásához, fölötte a címmel.",
+    sections: [
+      {
+        type: "PDF_VIEWER",
+        content: {
+          heading: "",
+          description: "",
+          pdfUrl: "",
+          height: "large",
+          style: style("white", "wide", "normal", "left"),
+        },
+      },
+    ],
+  },
+  PDF_WITH_TEXT: {
+    name: "Versenykiírás / Eredmény (PDF)",
+    description: "Bevezető tájékoztató szöveg, alatta beágyazott PDF megjelenítővel.",
+    sections: [
+      {
+        type: "TEXT",
+        content: {
+          heading: "Tájékoztató",
+          text: "",
+          style: style("white", "wide", "normal", "left"),
+        },
+      },
+      {
+        type: "PDF_VIEWER",
+        content: {
+          heading: "Dokumentum",
+          description: "",
+          pdfUrl: "",
+          height: "large",
+          style: style("soft", "wide", "normal", "left"),
+        },
+      },
+    ],
+  },
   SUCCESS_RESULT: {
     name: "Versenyeredmény",
     description: "Sikerekhez, eredményekhez és a kapcsolódó PDF-ekhez.",

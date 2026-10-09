@@ -7,6 +7,7 @@ export const PAGE_SECTION_TYPES = [
   { value: "HERO", label: "Kiemelt nyitóblokk" },
   { value: "CTA", label: "Felhívás" },
   { value: "DOWNLOADS", label: "Dokumentumok / Letöltések" },
+  { value: "PDF_VIEWER", label: "PDF megjelenítő" },
 ];
 
 export function createEmptySectionContent(type) {
@@ -90,6 +91,14 @@ export function createEmptySectionContent(type) {
         files: [],
         style: { background: "soft", width: "normal", spacing: "normal", textAlign: "left" },
       };
+    case "PDF_VIEWER":
+      return {
+        heading: "",
+        description: "",
+        pdfUrl: "",
+        height: "large",
+        style: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
+      };
     default:
       return {};
   }
@@ -99,6 +108,9 @@ export function getSectionTypeLabel(type) {
   if (type === "DOWNLOADS") {
     return "Dokumentumok";
   }
+  if (type === "PDF_VIEWER") {
+    return "PDF megjelenítő";
+  }
   const option = PAGE_SECTION_TYPES.find(({ value }) => value === type);
   return option ? option.label : type;
 }
@@ -106,6 +118,9 @@ export function getSectionTypeLabel(type) {
 export function getSectionDisplayName(section) {
   if (section.type === "DOWNLOADS") {
     return section.content?.heading || "Dokumentumok";
+  }
+  if (section.type === "PDF_VIEWER") {
+    return section.content?.heading || "PDF megjelenítő";
   }
   const label = PAGE_SECTION_TYPES.find(({ value }) => value === section.type)?.label;
 

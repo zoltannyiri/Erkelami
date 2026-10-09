@@ -12,6 +12,18 @@ export const PAGE_TEMPLATE_OPTIONS = [
     previewSections: ["TEXT", "TEXT"],
   },
   {
+    key: "PDF_DOCUMENT",
+    name: "PDF dokumentum oldal",
+    description: "Beágyazott PDF megjelenítő a dokumentum közvetlen olvasásához, fölötte a címmel.",
+    previewSections: ["PDF_VIEWER"],
+  },
+  {
+    key: "PDF_WITH_TEXT",
+    name: "Versenykiírás / Eredmény (PDF)",
+    description: "Bevezető tájékoztató szöveg, alatta beágyazott PDF megjelenítővel.",
+    previewSections: ["TEXT", "PDF_VIEWER"],
+  },
+  {
     key: "SUCCESS_RESULT",
     name: "Versenyeredmény",
     description: "Sikerekhez, eredményekhez és a kapcsolódó PDF-ekhez.",

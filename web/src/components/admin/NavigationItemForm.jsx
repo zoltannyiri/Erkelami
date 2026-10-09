@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 
 import { PAGE_TEMPLATE_OPTIONS } from "../../config/pageTemplates";
+import FileUploadField from "./FileUploadField";
 
 const getInitialTargetType = (item) => {
   if (item?.pageId) return "existing";
@@ -21,14 +22,14 @@ const targetOptions = [
     description: "Egy már elkészített dinamikus oldalhoz kapcsolódik.",
   },
   {
-    value: "new",
-    label: "Új oldal",
-    description: "Az oldal és a menüpont egyszerre jön létre.",
-  },
-  {
     value: "external",
     label: "Külső hivatkozás",
     description: "Másik weboldalra vagy külső dokumentumra mutat.",
+  },
+  {
+    value: "new",
+    label: "Oldal létrehozása",
+    description: "Új oldal jön létre és automatikusan ehhez a menüponthoz kapcsolódik.",
   },
 ];
 
@@ -44,7 +45,7 @@ export default function NavigationItemForm({
   const isEditing = Boolean(item);
   const effectiveMenuKey = item?.menuKey || parent?.menuKey || menuKey;
   const defaultTemplateKey =
-    effectiveMenuKey === "SUCCESSES" ? "SUCCESS_RESULT" : "SIMPLE_INFO";
+    effectiveMenuKey === "SUCCESSES" ? "PDF_DOCUMENT" : "SIMPLE_INFO";
 
   const [form, setForm] = useState(() => ({
     label: item?.label || "",
@@ -61,6 +62,7 @@ export default function NavigationItemForm({
     title: item?.label || "",
     slug: "",
     templateKey: defaultTemplateKey,
+    pdfUrl: "",
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -113,6 +115,8 @@ export default function NavigationItemForm({
     setSaving(true);
     setError(null);
 
+    const isCreatingPage = targetType === "new";
+
     const payload = {
       label: form.label,
       menuKey: form.menuKey,
@@ -120,11 +124,12 @@ export default function NavigationItemForm({
       pageId: targetType === "existing" ? form.pageId : null,
       externalUrl: targetType === "external" ? form.externalUrl || null : null,
       visible: form.visible,
-      ...(!isEditing && targetType === "new" && {
+      ...(isCreatingPage && {
         newPage: {
           title: newPage.title,
           slug: newPage.slug,
           templateKey: newPage.templateKey,
+          pdfUrl: newPage.pdfUrl || null,
           published: form.visible,
         },
       }),
@@ -142,11 +147,8 @@ export default function NavigationItemForm({
           );
 
       await onSaved(response.data, {
-        pageCreated: !isEditing && targetType === "new",
-        openEditor:
-          !isEditing &&
-          targetType === "new" &&
-          submitIntent === "create-and-edit",
+        pageCreated: isCreatingPage,
+        openEditor: isCreatingPage && submitIntent === "create-and-edit",
       });
     } catch (requestError) {
       console.error("Navigáció mentési hiba:", requestError);
@@ -160,9 +162,9 @@ export default function NavigationItemForm({
     }
   };
 
-  const availableTargetOptions = isEditing
-    ? targetOptions.filter((option) => option.value !== "new")
-    : targetOptions;
+  const isPdfTemplate =
+    newPage.templateKey === "PDF_DOCUMENT" ||
+    newPage.templateKey === "PDF_WITH_TEXT";
 
   return (
     <form
@@ -241,7 +243,7 @@ export default function NavigationItemForm({
         <fieldset>
           <legend className="text-sm font-medium text-slate-800">Menüpont célja</legend>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {availableTargetOptions.map((option) => {
+            {targetOptions.map((option) => {
               const selected = targetType === option.value;
 
               return (
@@ -295,7 +297,7 @@ export default function NavigationItemForm({
           </div>
         )}
 
-        {!isEditing && targetType === "new" && (
+        {targetType === "new" && (
           <div className="space-y-5 border-l-2 border-amber-700 bg-white p-5">
             <div>
               <h4 className="font-semibold text-slate-950">Új oldal adatai</h4>
@@ -355,6 +357,69 @@ export default function NavigationItemForm({
                 )?.description}
               </p>
             </div>
+
+            {isPdfTemplate && (
+              <div className="space-y-3 rounded-sm border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-900">
+                    PDF feltöltése az oldalhoz (opcionális)
+                  </span>
+                  <span className="rounded bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800">
+                    PDF sablon
+                  </span>
+                </div>
+
+                <FileUploadField
+                  category="document"
+                  accept=".pdf"
+                  label="PDF fájl feltöltése"
+                  onUploaded={(uploaded) => {
+                    setNewPage((current) => ({
+                      ...current,
+                      pdfUrl: uploaded.url,
+                    }));
+                  }}
+                />
+
+                {newPage.pdfUrl && (
+                  <div className="flex items-center justify-between rounded border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+                    <span className="max-w-xs truncate sm:max-w-md">
+                      Feltöltve: {newPage.pdfUrl}
+                    </span>
+                    <a
+                      href={newPage.pdfUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="ml-2 font-semibold underline hover:text-emerald-950"
+                    >
+                      Megnyitás ↗
+                    </a>
+                  </div>
+                )}
+
+                <div>
+                  <label
+                    className="mb-1 block text-xs font-medium text-slate-600"
+                    htmlFor="new-page-pdf-url"
+                  >
+                    Vagy közvetlen PDF link:
+                  </label>
+                  <input
+                    id="new-page-pdf-url"
+                    name="pdfUrl"
+                    value={newPage.pdfUrl || ""}
+                    onChange={(event) =>
+                      setNewPage((current) => ({
+                        ...current,
+                        pdfUrl: event.target.value,
+                      }))
+                    }
+                    placeholder="/uploads/documents/... vagy https://..."
+                    className="w-full border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-slate-950"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -385,7 +450,7 @@ export default function NavigationItemForm({
             />
             <span className="text-sm font-medium">Menüpont látható</span>
           </label>
-          {!isEditing && targetType === "new" && (
+          {targetType === "new" && (
             <p className="mt-2 pl-7 text-xs leading-5 text-slate-500">
               {form.visible
                 ? "Az új oldal is publikált állapotban jön létre."
@@ -405,13 +470,13 @@ export default function NavigationItemForm({
             Mégse
           </button>
 
-          {!isEditing && targetType === "new" ? (
+          {targetType === "new" ? (
             <>
               <button
                 type="submit"
                 value="save"
                 disabled={saving}
-                className="border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 disabled:opacity-50"
+                className="cursor-pointer border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
               >
                 {saving ? "Mentés..." : "Csak létrehozás"}
               </button>
@@ -419,7 +484,7 @@ export default function NavigationItemForm({
                 type="submit"
                 value="create-and-edit"
                 disabled={saving}
-                className="bg-slate-950 px-6 py-3 text-sm font-medium text-white disabled:opacity-50"
+                className="cursor-pointer bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
               >
                 {saving ? "Létrehozás..." : "Létrehozás és szerkesztés"}
               </button>
@@ -428,7 +493,7 @@ export default function NavigationItemForm({
             <button
               type="submit"
               disabled={saving}
-              className="bg-slate-950 px-6 py-3 text-sm font-medium text-white disabled:opacity-50"
+              className="cursor-pointer bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
             >
               {saving
                 ? "Mentés..."

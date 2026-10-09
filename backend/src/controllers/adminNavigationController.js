@@ -350,38 +350,82 @@ export const updateNavigationItem = async (req, res) => {
         : 0;
     }
 
-    const item = await prisma.navigationItem.update({
-      where: {
-        id,
-      },
-      data: {
-        ...(req.body.label !== undefined && {
-          label: req.body.label.trim(),
-        }),
+    const hasNewPage = Boolean(
+      req.body.newPage &&
+      typeof req.body.newPage === "object" &&
+      !Array.isArray(req.body.newPage)
+    );
 
-        menuKey,
-        parentId,
-        pageId,
-        externalUrl,
-        sortOrder,
+    if (hasNewPage && ((hasPageId && pageId) || (hasExternalUrl && externalUrl))) {
+      return res.status(400).json({
+        message: "Egy menüpont egyszerre nem mutathat több célra.",
+      });
+    }
 
-        ...(req.body.visible !== undefined && {
-          visible: req.body.visible,
-        }),
-      },
-      include: {
-        page: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
+    const item = await prisma.$transaction(async (transaction) => {
+      let finalPageId = pageId;
+      let finalExternalUrl = externalUrl;
+
+      if (hasNewPage) {
+        const createdPage = await createPageWithTemplate(transaction, {
+          ...req.body.newPage,
+          title:
+            req.body.newPage.title?.trim() ||
+            req.body.label?.trim() ||
+            current.label,
+          published:
+            req.body.visible !== undefined
+              ? Boolean(req.body.visible)
+              : current.visible,
+        });
+
+        finalPageId = createdPage.id;
+        finalExternalUrl = null;
+      }
+
+      return transaction.navigationItem.update({
+        where: {
+          id,
+        },
+        data: {
+          ...(req.body.label !== undefined && {
+            label: req.body.label.trim(),
+          }),
+
+          menuKey,
+          parentId,
+          pageId: finalPageId,
+          externalUrl: finalExternalUrl,
+          sortOrder,
+
+          ...(req.body.visible !== undefined && {
+            visible: req.body.visible,
+          }),
+        },
+        include: {
+          page: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+            },
           },
         },
-      },
+      });
     });
 
     res.json(item);
   } catch (error) {
+    if (error instanceof PageCreationValidationError) {
+      return res.status(error.statusCode).json({ message: error.message });
+    }
+
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        message: "Már létezik oldal ezzel a sluggal.",
+      });
+    }
+
     console.error("Navigation item módosítási hiba:", error);
 
     res.status(500).json({
