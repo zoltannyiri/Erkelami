@@ -30,12 +30,7 @@ export default function RecursiveMenu({ items }) {
             {item.url ? (
               <SmartLink
                 to={item.url}
-                className="
-                  flex min-w-[240px] items-center justify-between
-                  px-5 py-3 text-sm text-slate-700
-                  transition-colors
-                  hover:bg-slate-50 hover:text-blue-700
-                "
+                className="flex min-w-[232px] items-center justify-between rounded-sm px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-stone-100 hover:text-amber-900 focus-visible:outline-2 focus-visible:outline-amber-700"
               >
                 {item.label}
 
@@ -47,13 +42,7 @@ export default function RecursiveMenu({ items }) {
               </SmartLink>
             ) : (
               <div
-                className="
-                  flex min-w-[240px] cursor-default
-                  items-center justify-between
-                  px-5 py-3 text-sm text-slate-700
-                  transition-colors
-                  hover:bg-slate-50 hover:text-blue-700
-                "
+                className="flex min-w-[232px] cursor-default items-center justify-between rounded-sm px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-stone-100 hover:text-amber-900"
               >
                 {item.label}
 
@@ -66,15 +55,10 @@ export default function RecursiveMenu({ items }) {
             )}
 
             {hasChildren && isOpen && (
-              <div
-                className="
-                  absolute left-full top-0
-                  ml-[1px] min-w-[240px]
-                  border border-slate-200 bg-white
-                  py-2 shadow-xl
-                "
-              >
-                <RecursiveMenu items={item.children} />
+              <div className="absolute left-full top-0 w-[358px] pl-2">
+                <div className="max-h-[calc(100vh-6rem)] overflow-y-auto overscroll-contain rounded-sm border border-stone-200 bg-[#fffefa] p-2 shadow-[0_20px_55px_rgba(15,23,42,0.14)]">
+                  <RecursiveMenu items={item.children} />
+                </div>
               </div>
             )}
           </div>
