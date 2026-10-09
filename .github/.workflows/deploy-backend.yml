@@ -48,7 +48,7 @@ jobs:
             if pm2 describe erkel-backend > /dev/null 2>&1; then
               pm2 restart erkel-backend --update-env
             else
-              pm2 start src/server.js --name erkel-backend
+              pm2 start server.js --name erkel-backend
             fi
 
             pm2 save
