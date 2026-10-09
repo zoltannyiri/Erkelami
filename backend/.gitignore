@@ -1,5 +1,17 @@
 node_modules/
 dist/
 .env
+.env.*
+.env.example
 
 /src/generated/prisma
+
+# Persistent uploads: ignore uploaded content, keep directory structure
+/uploads/*
+!/uploads/.gitkeep
+!/uploads/images/
+/uploads/images/*
+!/uploads/images/.gitkeep
+!/uploads/documents/
+/uploads/documents/*
+!/uploads/documents/.gitkeep

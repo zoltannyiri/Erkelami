@@ -1,6 +1,5 @@
 import { getSectionTone } from "../../config/pageSectionStyles";
 import PageSectionContainer from "./PageSectionContainer";
-import SmartLink from "../common/SmartLink";
 
 const defaults = {
   background: "white",

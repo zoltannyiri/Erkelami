@@ -1,4 +1,4 @@
-import * as localStorage from "./localStorage";
+import * as localStorage from "./localStorage.js";
 
 const getStorageProvider = () => {
   const driver = process.env.STORAGE_DRIVER || "local";
@@ -9,7 +9,7 @@ const getStorageProvider = () => {
 
     default:
       throw new Error(`Ismeretlen storage driver: ${driver}`);
-  };
+  }
 };
 
 export const uploadFile = async (options) => {
@@ -17,4 +17,3 @@ export const uploadFile = async (options) => {
 
   return provider.uploadFile(options);
 };
-

@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { uploadFile } from '../services/storage/localStorage.js';
+import { uploadFile } from '../services/storage/index.js';
 
 const FILE_RULES = {
   image: {

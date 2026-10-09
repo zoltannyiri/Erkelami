@@ -99,10 +99,10 @@ export default function DownloadsEditor({ content, updateField }) {
                   });
                 }}
               />
-              {file.fileUrl?.startsWith("/uploads/") && (
+              {Boolean(file.fileUrl) && (
                 <div className="flex items-center justify-between bg-green-50 px-4 py-3 text-sm">
                   <span className="text-green-700">
-                    Fájl feltöltve
+                    Fájl feltöltve / csatolva
                   </span>
 
                   <a
