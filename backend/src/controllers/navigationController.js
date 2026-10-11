@@ -1,4 +1,9 @@
 import prisma from "../lib/prisma.js";
+import {
+  DYNAMIC_NAVBAR_MENU_KEY,
+  NAVBAR_MENUS,
+  NAVBAR_MENU_KEYS,
+} from "../config/navigationMenus.js";
 
 const buildTree = (items, parentId = null) => {
   return items
@@ -15,11 +20,15 @@ const buildTree = (items, parentId = null) => {
 
 export const getNavigation = async (req, res) => {
   try {
-    const { menuKey } = req.query;
+    const { menuKey, grouped } = req.query;
     const items = await prisma.navigationItem.findMany({
       where: {
         visible: true,
-        ...(menuKey && { menuKey }),
+        ...(menuKey
+          ? { menuKey }
+          : grouped === "true"
+            ? { menuKey: { in: NAVBAR_MENU_KEYS } }
+            : {}),
       },
       include: {
         page: {
@@ -32,6 +41,23 @@ export const getNavigation = async (req, res) => {
         sortOrder: "asc",
       },
     });
+
+    if (grouped === "true") {
+      const menuGroups = Object.fromEntries(
+        NAVBAR_MENUS.map(({ menuKey: configuredMenuKey }) => [
+          configuredMenuKey,
+          buildTree(
+            items.filter((item) => item.menuKey === configuredMenuKey)
+          ),
+        ])
+      );
+
+      menuGroups[DYNAMIC_NAVBAR_MENU_KEY] = buildTree(
+        items.filter((item) => item.menuKey === DYNAMIC_NAVBAR_MENU_KEY)
+      );
+
+      return res.json(menuGroups);
+    }
 
     const tree = buildTree(items);
 

@@ -3,20 +3,18 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavigationItemForm from "../../components/admin/NavigationItemForm";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import {
+  DYNAMIC_NAVBAR_MENU_KEY,
+  getNavigationGroupLabel,
+  isDynamicNavbarMenu,
+  isFixedNavbarMenu,
+} from "../../config/navigationMenus";
 
 const flattenItems = (items) =>
   items.flatMap((item) => [
     item,
     ...flattenItems(item.children || []),
   ]);
-
-const getGroupLabel = (menuKey) => {
-  if (menuKey === "SUCCESSES") {
-    return "Sikereink";
-  }
-
-  return menuKey;
-};
 
 const getItemType = (item) => {
   if (item.page) {
@@ -54,12 +52,8 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
             : "border-transparent hover:bg-slate-50"
         }`}
       >
-        <button
-          type="button"
-          onClick={() => onSelect(item)}
-          className="min-w-0 flex-1 cursor-pointer text-left"
-        >
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start gap-2">
             {hasChildren && (
               <button
                 type="button"
@@ -77,36 +71,44 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
               <span className="h-7 w-7 shrink-0" />
             )}
 
-            <span
-              className={`font-medium ${
-                item.visible
-                  ? "text-slate-950"
-                  : "text-slate-400"
-              }`}
+            <button
+              type="button"
+              onClick={() => onSelect(item)}
+              className="min-w-0 flex-1 cursor-pointer text-left"
             >
-              {item.label}
-            </span>
-
-            {!item.visible && (
-              <span className="bg-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-500">
-                Rejtett
-              </span>
-            )}
-          </div>
-
-          <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
-            <span>{type.label}</span>
-
-            {type.target && (
-              <>
-                <span>•</span>
-                <span className="truncate">
-                  {type.target}
+              <span className="flex flex-wrap items-center gap-2">
+                <span
+                  className={`font-medium ${
+                    item.visible
+                      ? "text-slate-950"
+                      : "text-slate-400"
+                  }`}
+                >
+                  {item.label}
                 </span>
-              </>
-            )}
+
+                {!item.visible && (
+                  <span className="bg-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                    Rejtett
+                  </span>
+                )}
+              </span>
+
+              <span className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                <span>{type.label}</span>
+
+                {type.target && (
+                  <>
+                    <span>•</span>
+                    <span className="truncate">
+                      {type.target}
+                    </span>
+                  </>
+                )}
+              </span>
+            </button>
           </div>
-        </button>
+        </div>
 
         <div
           className={`flex shrink-0 items-center gap-1 transition ${
@@ -410,13 +412,15 @@ export default function AdminNavigation() {
                 }}
                 className="bg-slate-950 px-5 py-3 text-sm font-medium text-white"
               >
-                + Fő almenüpont
+                {isDynamicNavbarMenu(activeGroup.menuKey)
+                  ? "+ Új főmenüpont"
+                  : `+ ${getNavigationGroupLabel(activeGroup.menuKey)} almenüpont`}
               </button>
             </div>
           </div>
 
-          <div className="bg-slate-950 px-8">
-            <nav className="flex min-h-16 items-center gap-8">
+          <div className="overflow-x-auto bg-slate-950 px-5">
+            <nav className="flex min-h-16 min-w-max items-center gap-1">
               {groups.map((group) => {
                 const active =
                   group.menuKey ===
@@ -444,7 +448,7 @@ export default function AdminNavigation() {
                     }`}
                   >
                     <span className="flex items-center gap-2">
-                      {getGroupLabel(
+                        {getNavigationGroupLabel(
                         group.menuKey
                       )}
 
@@ -468,22 +472,28 @@ export default function AdminNavigation() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-slate-950">
-                      {getGroupLabel(
+                      {getNavigationGroupLabel(
                         activeGroup.menuKey
                       )}
                     </h3>
 
-                    {activeGroup.menuKey ===
-                      "SUCCESSES" && (
+                    {isFixedNavbarMenu(activeGroup.menuKey) && (
                       <span className="bg-slate-100 px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-slate-500">
                         Fix főmenüpont
+                      </span>
+                    )}
+
+                    {isDynamicNavbarMenu(activeGroup.menuKey) && (
+                      <span className="bg-amber-50 px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-amber-800">
+                        Dinamikus főmenük
                       </span>
                     )}
                   </div>
 
                   <p className="mt-1 text-xs text-slate-500">
-                    Az alatta lévő elemek
-                    szerkeszthetők.
+                    {isDynamicNavbarMenu(activeGroup.menuKey)
+                      ? "Az itt létrehozott elemek önálló főmenüpontként jelennek meg a navbarban."
+                      : "Az alatta lévő elemek szerkeszthetők."}
                   </p>
                 </div>
               </div>
@@ -538,8 +548,9 @@ export default function AdminNavigation() {
                   )
                 ) : (
                   <div className="p-8 text-center text-sm text-slate-500">
-                    Még nincs menüpont
-                    ebben a menüben.
+                    {activeGroup.menuKey === DYNAMIC_NAVBAR_MENU_KEY
+                      ? "Még nincs egyedi főmenüpont."
+                      : "Még nincs menüpont ebben a menüben."}
                   </div>
                 )}
               </div>
@@ -561,7 +572,9 @@ export default function AdminNavigation() {
                 {creating
                   ? creating.parent
                     ? `${creating.parent.label} / Új almenüpont`
-                    : "Új menüpont"
+                    : creating.menuKey === DYNAMIC_NAVBAR_MENU_KEY
+                      ? "Új főmenüpont"
+                      : "Új menüpont"
                   : editingItem.label}
               </h2>
             </div>

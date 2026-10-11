@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import {
+  DYNAMIC_NAVBAR_MENU_KEY,
+  NAVBAR_MENUS,
+} from "../config/navigationMenus";
 import RecursiveMenu from "./RecursiveMenu";
 import SmartLink from "./common/SmartLink";
 
-const mobileLinkClass = "rounded-sm px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-stone-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-700";
+const mobileLinkClass = "flex-1 rounded-sm px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-stone-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-700";
+const navClass = "rounded-full px-4 py-2.5 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-stone-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700";
 
 function MobileMenuItem({ item, onNavigate }) {
   const [open, setOpen] = useState(false);
@@ -45,16 +50,104 @@ function MobileMenuItem({ item, onNavigate }) {
   );
 }
 
+function DesktopNavbarItem({ menu, items }) {
+  const hasChildren = items.length > 0;
+  const content = (
+    <>
+      {menu.label}
+      {hasChildren && (
+        <span className="text-[9px] text-slate-400 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180">
+          ▼
+        </span>
+      )}
+    </>
+  );
+
+  if (!hasChildren) {
+    return menu.url ? (
+      <SmartLink to={menu.url} className={navClass}>{menu.label}</SmartLink>
+    ) : (
+      <span className={navClass}>{menu.label}</span>
+    );
+  }
+
+  return (
+    <div className="group relative">
+      {menu.url ? (
+        <SmartLink to={menu.url} className={`${navClass} flex items-center gap-2`}>
+          {content}
+        </SmartLink>
+      ) : (
+        <button type="button" className={`${navClass} flex cursor-pointer items-center gap-2`}>
+          {content}
+        </button>
+      )}
+
+      <div className="invisible absolute left-1/2 top-full min-w-[250px] -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        <div className="rounded-sm border border-stone-200 bg-[#fffefa] p-2 shadow-[0_20px_55px_rgba(15,23,42,0.14)]">
+          <RecursiveMenu items={items} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileNavbarItem({ menu, items, onNavigate }) {
+  const [open, setOpen] = useState(false);
+  const hasChildren = items.length > 0;
+
+  return (
+    <div className="border-b border-stone-200/80 py-1 last:border-b-0">
+      <div className="flex items-center justify-between gap-2">
+        {menu.url ? (
+          <SmartLink to={menu.url} onClick={onNavigate} className={mobileLinkClass}>
+            {menu.label}
+          </SmartLink>
+        ) : (
+          <span className={mobileLinkClass}>{menu.label}</span>
+        )}
+
+        {hasChildren && (
+          <button
+            type="button"
+            onClick={() => setOpen((current) => !current)}
+            aria-expanded={open}
+            aria-label={`${menu.label} almenü ${open ? "összecsukása" : "lenyitása"}`}
+            className="rounded-full p-2.5 text-slate-500 transition hover:bg-stone-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-amber-700"
+          >
+            <span className={`inline-block text-[10px] transition-transform duration-200 ${open ? "rotate-180" : ""}`}>▼</span>
+          </button>
+        )}
+      </div>
+
+      {hasChildren && open && (
+        <div className="mx-3 mb-2 border-l border-amber-700/25 pl-4">
+          {items.map((item) => (
+            <MobileMenuItem key={item.id} item={item} onNavigate={onNavigate} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Navbar() {
-  const [successItems, setSuccessItems] = useState([]);
+  const [menuItems, setMenuItems] = useState({});
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileSuccessesOpen, setMobileSuccessesOpen] = useState(false);
 
   useEffect(() => {
+    let ignore = false;
+
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/navigation?menuKey=SUCCESSES`)
-      .then((response) => setSuccessItems(response.data))
-      .catch((error) => console.error("Navigation betöltési hiba:", error));
+      .get(`${import.meta.env.VITE_API_URL}/api/navigation?grouped=true`)
+      .then((response) => {
+        if (!ignore) setMenuItems(response.data);
+      })
+      .catch((error) => console.error("Navigáció betöltési hiba:", error));
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -68,12 +161,8 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [mobileOpen]);
 
-  const closeMobile = () => {
-    setMobileOpen(false);
-    setMobileSuccessesOpen(false);
-  };
-
-  const navClass = "rounded-full px-4 py-2.5 text-sm font-semibold text-slate-600 transition duration-200 hover:bg-stone-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700";
+  const closeMobile = () => setMobileOpen(false);
+  const dynamicNavbarItems = menuItems[DYNAMIC_NAVBAR_MENU_KEY] || [];
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-200/90 bg-[#fffefa]/90 shadow-[0_1px_0_rgba(15,23,42,0.02)] backdrop-blur-xl">
@@ -87,25 +176,20 @@ export default function Navbar() {
         </SmartLink>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Fő navigáció">
-          <SmartLink to="/" className={navClass}>Kezdőlap</SmartLink>
-
-          <div className="group relative">
-            <button type="button" className={`${navClass} flex cursor-pointer items-center gap-2`}>
-              Sikereink
-              <span className="text-[9px] text-slate-400 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180">▼</span>
-            </button>
-
-            <div className="invisible absolute left-1/2 top-full min-w-[250px] -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-              <div className="rounded-sm border border-stone-200 bg-[#fffefa] p-2 shadow-[0_20px_55px_rgba(15,23,42,0.14)]">
-                <RecursiveMenu items={successItems} />
-              </div>
-            </div>
-          </div>
-
-          <SmartLink to="/aktualis" className={navClass}>Oktatás</SmartLink>
-          <SmartLink to="/iskolank" className={navClass}>Iskolánkról</SmartLink>
-          <SmartLink to="/galeria" className={navClass}>Galéria</SmartLink>
-          <SmartLink to="/kapcsolat" className={navClass}>Kapcsolat</SmartLink>
+          {NAVBAR_MENUS.map((menu) => (
+            <DesktopNavbarItem
+              key={menu.menuKey}
+              menu={menu}
+              items={menuItems[menu.menuKey] || []}
+            />
+          ))}
+          {dynamicNavbarItems.map((item) => (
+            <DesktopNavbarItem
+              key={item.id}
+              menu={item}
+              items={item.children || []}
+            />
+          ))}
         </nav>
 
         <button
@@ -125,38 +209,23 @@ export default function Navbar() {
 
       {mobileOpen && (
         <div className="absolute inset-x-0 top-full border-b border-stone-200 bg-[#fffefa]/98 px-5 py-4 shadow-[0_20px_45px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1" aria-label="Mobil navigáció">
-            <SmartLink to="/" onClick={closeMobile} className={mobileLinkClass}>Kezdőlap</SmartLink>
-
-            <div className="border-y border-stone-200/80 py-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="px-3 py-2 text-sm font-semibold text-slate-700">Sikereink</span>
-                {successItems.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setMobileSuccessesOpen((current) => !current)}
-                    aria-expanded={mobileSuccessesOpen}
-                    aria-label={`Sikereink almenü ${mobileSuccessesOpen ? "összecsukása" : "lenyitása"}`}
-                    className="rounded-full p-2.5 text-slate-500 transition hover:bg-stone-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-amber-700"
-                  >
-                    <span className={`inline-block text-[10px] transition-transform duration-200 ${mobileSuccessesOpen ? "rotate-180" : ""}`}>▼</span>
-                  </button>
-                )}
-              </div>
-
-              {mobileSuccessesOpen && successItems.length > 0 && (
-                <div className="mx-3 mb-2 border-l border-amber-700/25 pl-4">
-                  {successItems.map((item) => (
-                    <MobileMenuItem key={item.id} item={item} onNavigate={closeMobile} />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <SmartLink to="/aktualis" onClick={closeMobile} className={mobileLinkClass}>Oktatás</SmartLink>
-            <SmartLink to="/iskolank" onClick={closeMobile} className={mobileLinkClass}>Iskolánkról</SmartLink>
-            <SmartLink to="/galeria" onClick={closeMobile} className={mobileLinkClass}>Galéria</SmartLink>
-            <SmartLink to="/kapcsolat" onClick={closeMobile} className={mobileLinkClass}>Kapcsolat</SmartLink>
+          <nav className="mx-auto flex max-w-7xl flex-col" aria-label="Mobil navigáció">
+            {NAVBAR_MENUS.map((menu) => (
+              <MobileNavbarItem
+                key={menu.menuKey}
+                menu={menu}
+                items={menuItems[menu.menuKey] || []}
+                onNavigate={closeMobile}
+              />
+            ))}
+            {dynamicNavbarItems.map((item) => (
+              <MobileNavbarItem
+                key={item.id}
+                menu={item}
+                items={item.children || []}
+                onNavigate={closeMobile}
+              />
+            ))}
           </nav>
         </div>
       )}

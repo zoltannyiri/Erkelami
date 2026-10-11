@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
+import { NAVIGATION_MENU_GROUPS } from "../../config/navigationMenus";
 import { PAGE_TEMPLATE_OPTIONS } from "../../config/pageTemplates";
 import FileUploadField from "./FileUploadField";
 
@@ -82,6 +83,19 @@ export default function NavigationItemForm({
           (!current.title || current.title === previousLabel)
             ? value
             : current.title,
+      }));
+    }
+
+    if (name === "menuKey") {
+      setNewPage((current) => ({
+        ...current,
+        templateKey:
+          value === "SUCCESSES" && current.templateKey === "SIMPLE_INFO"
+            ? "SUCCESS_RESULT"
+            : value !== "SUCCESSES" &&
+                current.templateKey === "SUCCESS_RESULT"
+              ? "SIMPLE_INFO"
+              : current.templateKey,
       }));
     }
 
@@ -206,8 +220,16 @@ export default function NavigationItemForm({
               onChange={handleChange}
               className="w-full border border-slate-300 bg-white px-4 py-3"
             >
-              <option value="TOP_LEVEL">Fő navigáció</option>
-              <option value="SUCCESSES">Sikereink</option>
+              {NAVIGATION_MENU_GROUPS.map((menu) => (
+                <option key={menu.menuKey} value={menu.menuKey}>
+                  {menu.label}
+                </option>
+              ))}
+              {!NAVIGATION_MENU_GROUPS.some(
+                (menu) => menu.menuKey === form.menuKey
+              ) && (
+                <option value={form.menuKey}>{form.menuKey}</option>
+              )}
             </select>
           </div>
         )}

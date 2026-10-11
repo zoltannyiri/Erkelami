@@ -1,5 +1,9 @@
 import prisma from "../lib/prisma.js";
 import {
+  DYNAMIC_NAVBAR_MENU_KEY,
+  NAVBAR_MENUS,
+} from "../config/navigationMenus.js";
+import {
   createPageWithTemplate,
   PageCreationValidationError,
 } from "../services/pageCreationService.js";
@@ -71,12 +75,29 @@ export const getAdminNavigation = async (req, res) => {
       groups[item.menuKey].push(item);
     }
 
-    const result = Object.entries(groups).map(
-      ([menuKey, groupItems]) => ({
+    const configuredMenuKeys = new Set(
+      [
+        ...NAVBAR_MENUS.map(({ menuKey }) => menuKey),
+        DYNAMIC_NAVBAR_MENU_KEY,
+      ]
+    );
+    const configuredGroups = [
+      ...NAVBAR_MENUS.map(({ menuKey }) => ({
+        menuKey,
+        items: buildTree(groups[menuKey] || []),
+      })),
+      {
+        menuKey: DYNAMIC_NAVBAR_MENU_KEY,
+        items: buildTree(groups[DYNAMIC_NAVBAR_MENU_KEY] || []),
+      },
+    ];
+    const additionalGroups = Object.entries(groups)
+      .filter(([menuKey]) => !configuredMenuKeys.has(menuKey))
+      .map(([menuKey, groupItems]) => ({
         menuKey,
         items: buildTree(groupItems),
-      })
-    );
+      }));
+    const result = [...configuredGroups, ...additionalGroups];
 
     res.json(result);
   } catch (error) {
