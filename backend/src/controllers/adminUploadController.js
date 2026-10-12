@@ -18,6 +18,8 @@ const FILE_RULES = {
 
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 
+      "text/plain",
+
       "application/vnd.ms-excel",
 
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -81,4 +83,4 @@ export const uploadAdminFile = async (req, res) => {
     console.error("Fájlfeltöltési hiba:", error);
     res.status(500).json({ message: "Hiba történt a fájl feltöltése során." });
   }
-}; 
+};

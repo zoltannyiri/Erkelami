@@ -1,4 +1,5 @@
 import * as localStorage from "./localStorage.js";
+import * as supabaseStorage from "./supabaseStorage.js";
 
 const getStorageProvider = () => {
   const driver = process.env.STORAGE_DRIVER || "local";
@@ -6,6 +7,9 @@ const getStorageProvider = () => {
   switch (driver) {
     case "local":
       return localStorage;
+
+    case "supabase":
+      return supabaseStorage;
 
     default:
       throw new Error(`Ismeretlen storage driver: ${driver}`);
