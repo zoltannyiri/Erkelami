@@ -20,7 +20,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative isolate flex min-h-[22rem] items-center overflow-hidden bg-slate-950 sm:min-h-[25rem] lg:min-h-[27rem]">
+    <section className="relative isolate flex min-h-[22rem] items-center overflow-hidden bg-[#24101d] sm:min-h-[25rem] lg:min-h-[27rem]">
       {heroImages.map((image, index) => (
         <img
           key={image.src}
@@ -34,12 +34,12 @@ export default function Hero() {
         />
       ))}
 
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,15,28,0.88)_0%,rgba(8,15,28,0.62)_48%,rgba(8,15,28,0.20)_100%)]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-slate-950/10" />
+      <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(64,15,37,0.91)_0%,rgba(18,29,47,0.70)_52%,rgba(5,70,70,0.22)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(18,12,28,0.60)_0%,transparent_48%,rgba(111,40,32,0.12)_100%)]" />
 
       <div aria-hidden="true" className="absolute right-0 top-[24%] hidden w-[38%] opacity-15 lg:block">
         {[0, 1, 2, 3, 4].map((line) => (
-          <div key={line} className="mt-3 h-px bg-white" />
+          <div key={line} className="mt-3 h-px bg-gradient-to-r from-amber-200 via-white to-teal-100" />
         ))}
       </div>
 
@@ -72,6 +72,11 @@ export default function Hero() {
           />
         ))}
       </div>
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 z-20 h-1 bg-gradient-to-r from-rose-700 via-amber-400 to-teal-600"
+      />
     </section>
   );
 }

@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import {
-  DYNAMIC_NAVBAR_MENU_KEY,
-  NAVBAR_MENUS,
-} from "../config/navigationMenus";
+import { DYNAMIC_NAVBAR_MENU_KEY, NAVBAR_MENUS } from "../config/navigationMenus";
 import RecursiveMenu from "./RecursiveMenu";
 import SmartLink from "./common/SmartLink";
 
