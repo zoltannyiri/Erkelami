@@ -9,7 +9,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "Erkel Ferenc Alapfokú Művészeti Iskola";
+    document.title = "Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola";
   }, []);
 
   useEffect(() => {

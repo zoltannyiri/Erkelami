@@ -153,7 +153,7 @@ export default function DynamicPage() {
         <header className="border-b border-stone-200 bg-gradient-to-br from-stone-50 via-white to-amber-50/30 py-9 sm:py-12">
           <div className="mx-auto max-w-5xl px-5 sm:px-8">
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">
-              Erkel Ferenc Alapfokú Művészeti Iskola
+              Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola
             </p>
             <h1 className="max-w-4xl text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">
               {page.title}

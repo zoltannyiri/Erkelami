@@ -8,7 +8,7 @@ export default function NotFoundPage({
 }) {
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = "404 - Az oldal nem található | Erkel Ferenc Alapfokú Művészeti Iskola";
+    document.title = "404 - Az oldal nem található | Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola";
     return () => {
       document.title = prevTitle;
     };

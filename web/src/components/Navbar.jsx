@@ -168,10 +168,11 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-stone-200/90 bg-[#fffefa]/90 shadow-[0_1px_0_rgba(15,23,42,0.02)] backdrop-blur-xl">
       <div className="mx-auto flex h-[4.75rem] w-full max-w-7xl items-center justify-between gap-8 px-5 sm:px-8">
         <SmartLink to="/" onClick={closeMobile} className="group flex shrink-0 items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700">
-          <span aria-hidden="true" className="h-9 w-[3px] bg-amber-700 transition group-hover:h-11" />
+          <span aria-hidden="true" className="h-11 w-[3px] bg-amber-700 transition group-hover:h-12" />
           <span className="flex flex-col">
+            <span className="mb-1 text-[10px] font-semibold uppercase tracking-[0.19em] text-slate-500">Tatabányai</span>
             <span className="font-serif text-xl font-semibold leading-none tracking-[-0.02em] text-slate-950">Erkel Ferenc</span>
-            <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.19em] text-slate-500">Alapfokú Művészeti Iskola</span>
+            <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.19em] text-slate-500">Alapfokú Művészeti Iskola</span>
           </span>
         </SmartLink>
 

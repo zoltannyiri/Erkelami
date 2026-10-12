@@ -47,7 +47,7 @@ export default function Hero() {
         <div className="max-w-3xl">
           <div className="mb-5 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-amber-200 sm:text-xs">
             <span className="h-px w-8 bg-amber-300/80" />
-            Tatabánya
+            Tatabányai
           </div>
           <h1 className="font-serif text-[clamp(3rem,7vw,5.75rem)] leading-[0.9] tracking-[-0.05em] text-white">
             Erkel Ferenc

@@ -30,7 +30,7 @@ async function main() {
         sortOrder: 1,
         content: {
           heading: "Bemutatkozás",
-          text: "Az Erkel Ferenc Alapfokú Művészeti Iskola bemutatkozó szövege kerül majd ide.",
+          text: "A Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola bemutatkozó szövege kerül majd ide.",
         },
       },
       {

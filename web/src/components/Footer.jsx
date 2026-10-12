@@ -10,6 +10,10 @@ export default function Footer() {
 
           <div>
             <SmartLink to="/" className="inline-block">
+              <span className="mb-1 block text-base text-slate-400">
+                Tatabányai
+              </span>
+
               <span className="block text-2xl font-semibold text-white">
                 Erkel Ferenc
               </span>
@@ -44,7 +48,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t border-slate-800 pt-5 text-sm text-slate-500">
-          © {currentYear} Erkel Ferenc Alapfokú Művészeti Iskola
+          © {currentYear} Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola
         </div>
       </div>
     </footer>
