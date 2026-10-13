@@ -19,6 +19,12 @@ const columnClasses = {
   },
 };
 
+const wrapWidthClasses = {
+  40: "md:w-[40%]",
+  50: "md:w-1/2",
+  60: "md:w-[60%]",
+};
+
 function SectionCopy({ content, tone, inverse = false }) {
   return (
     <div className={inverse ? "text-white" : ""}>
@@ -67,7 +73,7 @@ function SectionImage({ content, editorMode, imageResizeEnabled, onContentChange
 
 export default function TextImageSection({ content = {}, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {
   const legacyLayout = content.imagePosition === "left" ? "imageLeft" : "imageRight";
-  const layout = ["imageLeft", "imageRight", "imageTop", "imageBackground"].includes(content.layout)
+  const layout = ["imageLeft", "imageRight", "imageTop", "wrapLeft", "wrapRight", "imageBackground"].includes(content.layout)
     ? content.layout
     : legacyLayout;
   const imageWidth = ["40", "50", "60"].includes(String(content.imageWidth))
@@ -97,6 +103,26 @@ export default function TextImageSection({ content = {}, editorMode = false, ima
         <div className={hasImage ? "space-y-8" : ""}>
           {hasImage && <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} />}
           <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} /></div>
+        </div>
+      </PageSectionContainer>
+    );
+  }
+
+  if (layout === "wrapLeft" || layout === "wrapRight") {
+    const imageOnLeft = layout === "wrapLeft";
+    const floatClasses = forceMobile
+      ? "mb-7"
+      : `mb-5 ${wrapWidthClasses[imageWidth]} ${imageOnLeft ? "md:float-left md:mr-9" : "md:float-right md:ml-9"}`;
+
+    return (
+      <PageSectionContainer content={content} defaults={sectionDefaults}>
+        <div className="flow-root">
+          {hasImage && (
+            <div className={floatClasses}>
+              <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} />
+            </div>
+          )}
+          <SectionCopy content={content} tone={tone} />
         </div>
       </PageSectionContainer>
     );

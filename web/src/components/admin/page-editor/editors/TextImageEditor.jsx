@@ -32,6 +32,8 @@ export default function TextImageEditor({ content, updateField }) {
             { value: "imageLeft", label: "Kép balra" },
             { value: "imageRight", label: "Kép jobbra" },
             { value: "imageTop", label: "Kép felül" },
+            { value: "wrapLeft", label: "Kép balra, körbefutó szöveg" },
+            { value: "wrapRight", label: "Kép jobbra, körbefutó szöveg" },
             { value: "imageBackground", label: "Háttérkép" },
           ]} />
           <SelectField label="Kép aránya" value={String(content.imageWidth || "50")} onChange={(value) => updateField("imageWidth", value)} options={["40", "50", "60"]} />

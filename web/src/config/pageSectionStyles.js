@@ -223,3 +223,16 @@ export function sanitizeLinkUrl(value) {
     return "";
   }
 }
+
+export function sanitizeImageUrl(value) {
+  const url = String(value || "").trim();
+  if (!url) return "";
+  if (url.startsWith("/") && !url.startsWith("//")) return url;
+
+  try {
+    const parsed = new URL(url);
+    return ["http:", "https:"].includes(parsed.protocol) ? url : "";
+  } catch {
+    return "";
+  }
+}

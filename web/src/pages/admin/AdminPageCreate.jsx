@@ -34,7 +34,7 @@ export default function AdminPageCreate() {
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/pages`, form);
-      navigate(`/admin/pages/${response.data.id}`);
+      navigate(`/admin/pages/${response.data.id}/visual`);
     } catch (error) {
       console.error(error);
       setError(
