@@ -5,6 +5,8 @@ export const NAVBAR_MENUS = [
   { menuKey: "ABOUT", label: "Iskolánkról", url: "/iskolank" },
   { menuKey: "GALLERY", label: "Galéria", url: "/galeria" },
   { menuKey: "DOCUMENTS", label: "Dokumentumok", url: "/dokumentumok" },
+  { menuKey: "FOUNDATION", label: "Alapítvány", url: "/alapitvany" },
+  { menuKey: "LINKS", label: "Linkek", url: "/linkek" },
   { menuKey: "CONTACT", label: "Kapcsolat", url: "/kapcsolat" },
 ];
 
