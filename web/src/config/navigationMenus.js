@@ -2,6 +2,7 @@ export const NAVBAR_MENUS = [
   { menuKey: "HOME", label: "Kezdőlap", url: "/" },
   { menuKey: "SUCCESSES", label: "Sikereink", url: null },
   { menuKey: "ACTUALITY", label: "Aktuális", url: "/aktualis" },
+  { menuKey: "CALENDAR", label: "Naptár", url: "/naptar" },
   { menuKey: "ABOUT", label: "Iskolánkról", url: "/iskolank" },
   { menuKey: "GALLERY", label: "Galéria", url: "/galeria" },
   { menuKey: "DOCUMENTS", label: "Dokumentumok", url: "/dokumentumok" },
