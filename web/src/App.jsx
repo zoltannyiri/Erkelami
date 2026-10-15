@@ -7,6 +7,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import HomePage from './pages/HomePage.jsx'
 import DynamicPage from './pages/DynamicPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import CalendarPage from './pages/CalendarPage.jsx'
 import AdminPages from './pages/admin/AdminPages.jsx'
 import AdminPageCreate from './pages/admin/AdminPageCreate.jsx'
 import AdminPageEdit from './pages/admin/AdminPageEdit.jsx'
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/naptar" element={<CalendarPage />} />
           <Route path="/:slug" element={<DynamicPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
