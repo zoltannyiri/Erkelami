@@ -4,14 +4,14 @@ import { getSectionTypeLabel } from "../../../config/pageSectionTypes";
 export default function VisualEditorPanel({ section, onContentChange, onVisibleChange, onSave, saving, dirty, statusText, error }) {
   if (!section) {
     return (
-      <aside className="border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-500 xl:sticky xl:top-4">
+      <aside className="rounded-2xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-500 shadow-sm xl:sticky xl:top-44">
         Jelölj ki egy blokkot az előnézetben a tartalom és a megjelenés szerkesztéséhez.
       </aside>
     );
   }
 
   return (
-    <aside className="border border-slate-200 bg-white shadow-sm xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+    <aside className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_35px_rgba(15,23,42,0.08)] xl:sticky xl:top-44 xl:max-h-[calc(100vh-12rem)] xl:overflow-y-auto">
       <form onSubmit={onSave}>
         <div className="sticky top-0 z-10 border-b border-slate-200 bg-white px-5 py-4">
           <div className="flex items-center justify-between gap-4">
@@ -19,7 +19,7 @@ export default function VisualEditorPanel({ section, onContentChange, onVisibleC
               <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">Kijelölt blokk</p>
               <h2 className="mt-1 font-semibold text-slate-950">{getSectionTypeLabel(section.type)}</h2>
             </div>
-            <button type="submit" disabled={!dirty || saving} className="bg-slate-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">
+            <button type="submit" disabled={!dirty || saving} className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-40">
               {saving ? "Mentés..." : "Mentés"}
             </button>
           </div>
@@ -34,9 +34,9 @@ export default function VisualEditorPanel({ section, onContentChange, onVisibleC
             <span className="text-sm font-medium text-slate-700">A blokk látható</span>
           </label>
 
-          {error && <div className="bg-red-50 p-4 text-sm text-red-700">{error}</div>}
+          {error && <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">{error}</div>}
 
-          <button type="submit" disabled={!dirty || saving} className="w-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">
+          <button type="submit" disabled={!dirty || saving} className="w-full rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 disabled:cursor-not-allowed disabled:opacity-40">
             {saving ? "Mentés..." : "Blokk mentése"}
           </button>
         </div>

@@ -99,7 +99,7 @@ export default function AdminHome() {
   };
 
   if (loading) {
-    return <div className="p-8">Betöltés...</div>;
+    return <div className="mx-auto h-72 max-w-7xl animate-pulse rounded-3xl bg-white shadow-sm" />;
   }
 
   return (
@@ -113,7 +113,7 @@ export default function AdminHome() {
         {sections.map((section) => (
           <section
             key={section.id}
-            className="border border-slate-200 bg-white p-8"
+            className="overflow-hidden rounded-3xl border border-white bg-white p-5 shadow-[0_10px_35px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/70 sm:p-8"
           >
             <div className="mb-6 flex items-center justify-between">
               <div>
@@ -121,7 +121,7 @@ export default function AdminHome() {
                   {section.title || section.key}
                 </h2>
 
-                <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">
+                <p className="mt-1.5 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
                   {section.key}
                 </p>
               </div>
@@ -132,14 +132,14 @@ export default function AdminHome() {
                   setEditingItem(null);
                   setCreatingForSection(section);
                 }}
-                className="bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
+                className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-slate-800"
               >
                 + Új csempe
               </button>
             </div>
 
             {section.items.length === 0 ? (
-              <div className="border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-10 text-center text-sm text-slate-500">
                 Ebben a szekcióban még nincs csempe.
               </div>
             ) : (
@@ -147,9 +147,9 @@ export default function AdminHome() {
                 {section.items.map((item, index) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-5 border border-slate-200 p-4"
+                    className="group flex flex-col gap-4 rounded-2xl border border-slate-200/80 p-4 transition hover:border-slate-300 hover:bg-slate-50/70 hover:shadow-sm sm:flex-row sm:items-center sm:gap-5"
                   >
-                    <div className="h-20 w-28 shrink-0 overflow-hidden bg-slate-100">
+                    <div className="h-24 w-full shrink-0 overflow-hidden rounded-xl bg-slate-100 sm:h-20 sm:w-28">
                       {item.imageUrl ? (
                         <img
                           src={item.imageUrl}
@@ -170,7 +170,7 @@ export default function AdminHome() {
                         </h3>
 
                         {!item.visible && (
-                          <span className="bg-slate-100 px-2 py-1 text-xs text-slate-500">
+                          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-500">
                             Rejtett
                           </span>
                         )}
@@ -181,14 +181,14 @@ export default function AdminHome() {
                       </p>
                     </div>
 
-                    <div className="flex shrink-0 items-center gap-2">
+                    <div className="flex shrink-0 flex-wrap items-center gap-2">
                       <button
                         type="button"
                         disabled={index === 0}
                         onClick={() =>
                           handleMove(section, index, "up")
                         }
-                        className="border border-slate-300 bg-white px-3 py-2 text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
+                        className="h-9 w-9 rounded-xl border border-slate-200 bg-white text-sm shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         ↑
                       </button>
@@ -201,7 +201,7 @@ export default function AdminHome() {
                         onClick={() =>
                           handleMove(section, index, "down")
                         }
-                        className="border border-slate-300 bg-white px-3 py-2 text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
+                        className="h-9 w-9 rounded-xl border border-slate-200 bg-white text-sm shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         ↓
                       </button>
@@ -212,7 +212,7 @@ export default function AdminHome() {
                           setCreatingForSection(null);
                           setEditingItem(item);
                         }}
-                        className="border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                        className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300"
                       >
                         Szerkesztés
                       </button>
@@ -220,7 +220,7 @@ export default function AdminHome() {
                       <button
                         type="button"
                         onClick={() => handleDelete(item)}
-                        className="px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+                        className="rounded-xl px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
                       >
                         Törlés
                       </button>

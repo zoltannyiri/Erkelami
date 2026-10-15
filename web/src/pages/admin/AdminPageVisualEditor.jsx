@@ -228,8 +228,8 @@ export default function AdminPageVisualEditor() {
   const statusText = selectedDirty ? "Nem mentett módosítások" : saveFeedback ? "Mentve" : "Nincs módosítás";
 
   return (
-    <main className="-m-8 min-h-[calc(100vh-4rem)] bg-slate-100">
-      <div className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 px-6 py-4 shadow-sm backdrop-blur">
+    <main className="-m-4 min-h-[calc(100vh-5rem)] bg-slate-100 sm:-m-6 lg:-m-8">
+      <div className="sticky top-20 z-30 border-b border-slate-200 bg-white/95 px-4 py-4 shadow-sm backdrop-blur sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-4">
             <button type="button" onClick={handleBack} className="shrink-0 text-sm font-medium text-slate-600 transition hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">← Vissza</button>
@@ -240,19 +240,19 @@ export default function AdminPageVisualEditor() {
           </div>
 
           <div className="flex flex-wrap items-center justify-end gap-3">
-            <button type="button" onClick={handleOpenNewBlock} className="border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">+ Új blokk</button>
-            <div className="flex border border-slate-300 bg-slate-50 p-1" aria-label="Előnézet szélessége">
+            <button type="button" onClick={handleOpenNewBlock} className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">+ Új blokk</button>
+            <div className="flex rounded-xl border border-slate-200 bg-slate-50 p-1" aria-label="Előnézet szélessége">
               {[["desktop", "Asztali"], ["mobile", "Mobil"]].map(([value, label]) => (
-                <button key={value} type="button" aria-pressed={previewMode === value} onClick={() => setPreviewMode(value)} className={`px-3 py-1.5 text-xs font-semibold transition ${previewMode === value ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>{label}</button>
+                <button key={value} type="button" aria-pressed={previewMode === value} onClick={() => setPreviewMode(value)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${previewMode === value ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"}`}>{label}</button>
               ))}
             </div>
             {page.published ? (
-              <Link to={`/${page.slug}`} target="_blank" className="border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">Publikus előnézet ↗</Link>
+              <Link to={`/${page.slug}`} target="_blank" className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">Publikus előnézet ↗</Link>
             ) : (
               <span title="Az oldal még nincs publikálva" className="cursor-not-allowed border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-400">Nincs publikálva</span>
             )}
             <span aria-live="polite" className={`text-sm font-medium ${selectedDirty ? "text-amber-700" : saveFeedback ? "text-emerald-700" : "text-slate-500"}`}>{statusText}</span>
-            <button type="button" onClick={handleSave} disabled={!selectedDirty || saving} className="bg-slate-950 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">{saving ? "Mentés..." : "Mentés"}</button>
+            <button type="button" onClick={handleSave} disabled={!selectedDirty || saving} className="rounded-xl bg-slate-950 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950">{saving ? "Mentés..." : "Mentés"}</button>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 export const inputClassName =
-  "w-full border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-slate-950";
+  "w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10";
 
 export function TextField({ label, value, onChange, placeholder = "" }) {
   return (

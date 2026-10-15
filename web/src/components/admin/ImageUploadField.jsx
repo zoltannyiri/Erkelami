@@ -13,7 +13,7 @@ export default function ImageUploadField({ value, onChange, label = "Kép feltö
       />
 
       {value && (
-        <div className="overflow-hidden border border-slate-200 bg-slate-50">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
           <img
             src={value}
             alt=""

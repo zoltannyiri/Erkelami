@@ -29,7 +29,7 @@ export default function SectionEditForm({ section, onClose, onSaved }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 border border-slate-300 bg-slate-50 p-6">
+    <form onSubmit={handleSubmit} className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-6 shadow-inner">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-lg font-semibold">Blokk szerkesztése</h3>
         <span className="text-xs font-medium uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type)}</span>
@@ -42,11 +42,11 @@ export default function SectionEditForm({ section, onClose, onSaved }) {
         <span className="text-sm">Látható</span>
       </label>
 
-      {error && <div className="mt-5 bg-red-50 p-4 text-sm text-red-700">{error}</div>}
+      {error && <div className="mt-5 rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">{error}</div>}
 
       <div className="mt-6 flex justify-end gap-3">
-        <button type="button" onClick={onClose} className="px-5 py-3 text-sm text-slate-600">Mégse</button>
-        <button type="submit" disabled={saving} className="bg-slate-950 px-5 py-3 text-sm font-medium text-white disabled:opacity-50">{saving ? "Mentés..." : "Mentés"}</button>
+        <button type="button" onClick={onClose} className="rounded-xl px-5 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100">Mégse</button>
+        <button type="submit" disabled={saving} className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 disabled:opacity-50">{saving ? "Mentés..." : "Mentés"}</button>
       </div>
     </form>
   );

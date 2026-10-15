@@ -50,7 +50,7 @@ export default function FileUploadField({ category, accept, onUploaded, label = 
         accept={accept}
         disabled={uploading}
         onChange={handleFileChange}
-        className="block w-full cursor-pointer border border-slate-300 bg-white px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+        className="block w-full cursor-pointer rounded-xl border border-dashed border-slate-300 bg-white px-4 py-3 text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-slate-950 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white hover:border-amber-400 disabled:cursor-not-allowed disabled:opacity-50"
       />
 
       {uploading && (

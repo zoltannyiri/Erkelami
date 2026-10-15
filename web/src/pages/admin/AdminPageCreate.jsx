@@ -58,7 +58,7 @@ export default function AdminPageCreate() {
 
       <form
         onSubmit={handleSubmit}
-        className="border border-slate-200 bg-white p-8"
+        className="rounded-3xl border border-white bg-white p-6 shadow-[0_12px_40px_rgba(15,23,42,0.07)] ring-1 ring-slate-200/70 sm:p-8"
       >
           <div className="space-y-7">
 
@@ -72,7 +72,7 @@ export default function AdminPageCreate() {
                 value={form.title}
                 onChange={handleChange}
                 required
-                className="w-full border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10"
                 placeholder="pl. Hegedű tanszak"
               />
             </div>
@@ -86,7 +86,7 @@ export default function AdminPageCreate() {
                 name="slug"
                 value={form.slug}
                 onChange={handleChange}
-                className="w-full border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10"
                 placeholder="Automatikusan generálódik, ha üresen hagyod"
               />
 
@@ -111,7 +111,7 @@ export default function AdminPageCreate() {
                 name="metaTitle"
                 value={form.metaTitle}
                 onChange={handleChange}
-                className="w-full border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10"
               />
             </div>
 
@@ -125,7 +125,7 @@ export default function AdminPageCreate() {
                 value={form.metaDescription}
                 onChange={handleChange}
                 rows={4}
-                className="w-full resize-none border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-900"
+                className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10"
               />
             </div>
 
@@ -135,7 +135,7 @@ export default function AdminPageCreate() {
                 name="published"
                 checked={form.published}
                 onChange={handleChange}
-                className="h-4 w-4"
+                className="h-5 w-5 rounded border-slate-300 accent-amber-500"
               />
 
               <span className="text-sm font-medium text-slate-700">
@@ -144,7 +144,7 @@ export default function AdminPageCreate() {
             </label>
 
             {error && (
-              <div className="bg-red-50 p-4 text-sm text-red-700">
+              <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -153,7 +153,7 @@ export default function AdminPageCreate() {
               <button
                 type="button"
                 onClick={() => navigate("/admin/pages")}
-                className="px-5 py-3 text-sm font-medium text-slate-600"
+                className="rounded-xl px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
               >
                 Mégse
               </button>
@@ -161,7 +161,7 @@ export default function AdminPageCreate() {
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-slate-950 px-6 py-3 text-sm font-medium text-white disabled:opacity-50"
+                className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:opacity-50"
               >
                 {saving ? "Mentés..." : "Oldal létrehozása"}
               </button>

@@ -46,10 +46,10 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
   return (
     <div>
       <div
-        className={`group flex items-center gap-3 border-l-2 px-4 py-3 transition ${
+        className={`group flex items-center gap-3 rounded-xl border px-4 py-3 transition ${
           selected
-            ? "border-slate-950 bg-slate-100"
-            : "border-transparent hover:bg-slate-50"
+            ? "border-amber-300 bg-amber-50/70 shadow-sm"
+            : "border-transparent hover:border-slate-200 hover:bg-slate-50"
         }`}
       >
         <div className="min-w-0 flex-1">
@@ -61,7 +61,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
                   event.stopPropagation();
                   setExpanded((current) => !current);
                 }}
-                className="flex h-7 w-7 shrink-0 items-center justify-center text-xs text-slate-500 hover:bg-slate-100"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs text-slate-500 hover:bg-slate-200/70"
                 title={expanded ? "Almenü bezárása" : "Almenü megnyitása"}
               >
                 {expanded ? "▼" : "▶"}
@@ -79,16 +79,14 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
               <span className="flex flex-wrap items-center gap-2">
                 <span
                   className={`font-medium ${
-                    item.visible
-                      ? "text-slate-950"
-                      : "text-slate-400"
+                    item.visible ? "text-slate-950" : "text-slate-400"
                   }`}
                 >
                   {item.label}
                 </span>
 
                 {!item.visible && (
-                  <span className="bg-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                  <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-500">
                     Rejtett
                   </span>
                 )}
@@ -124,7 +122,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
               onMove(siblings, index, "up")
             }
             title="Mozgatás felfelé"
-            className="h-9 w-9 border border-slate-200 bg-white text-sm disabled:opacity-20"
+            className="h-9 w-9 rounded-xl border border-slate-200 bg-white text-sm shadow-sm disabled:opacity-20"
           >
             ↑
           </button>
@@ -138,7 +136,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
               onMove(siblings, index, "down")
             }
             title="Mozgatás lefelé"
-            className="h-9 w-9 border border-slate-200 bg-white text-sm disabled:opacity-20"
+            className="h-9 w-9 rounded-xl border border-slate-200 bg-white text-sm shadow-sm disabled:opacity-20"
           >
             ↓
           </button>
@@ -146,7 +144,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
           <button
             type="button"
             onClick={() => onAddChild(item)}
-            className="border border-slate-200 bg-white px-3 py-2 text-xs font-medium"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm hover:border-slate-300"
           >
             + Almenüpont
           </button>
@@ -154,7 +152,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
           <button
             type="button"
             onClick={() => onSelect(item)}
-            className="border border-slate-200 bg-white px-3 py-2 text-xs font-medium"
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm hover:border-slate-300"
           >
             Szerkesztés
           </button>
@@ -162,7 +160,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
           <button
             type="button"
             onClick={() => onDelete(item)}
-            className="px-3 py-2 text-xs font-medium text-red-600"
+            className="rounded-xl px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
           >
             Törlés
           </button>
@@ -170,7 +168,7 @@ function NavigationPreviewItem({ item, siblings, index, level = 0, selectedItem,
       </div>
 
       {hasChildren && expanded && (
-        <div className="border-l border-slate-200">
+        <div className="ml-6 border-l border-slate-200 pl-2">
           {item.children.map(
             (child, childIndex) => (
               <NavigationPreviewItem
@@ -355,21 +353,19 @@ export default function AdminNavigation() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        Betöltés...
-      </div>
+      <div className="mx-auto h-72 max-w-7xl animate-pulse rounded-3xl bg-white shadow-sm" />
     );
   }
 
   if (!activeGroup) {
     return (
-      <main className="min-h-screen bg-slate-50 py-12">
+      <main className="mx-auto max-w-7xl">
         <AdminPageHeader
           title="Navigáció"
           description="A weboldal menüjének kezelése."
         />
 
-        <div className="border border-slate-200 bg-white p-8 text-sm text-slate-500">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 text-sm text-slate-500 shadow-sm">
           Nincs szerkeszthető navigáció.
         </div>
       </main>
@@ -377,15 +373,15 @@ export default function AdminNavigation() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 py-12">
+    <main className="mx-auto max-w-7xl">
       <AdminPageHeader
         title="Navigáció"
         description="Kattints arra a menüpontra, amelyet módosítani szeretnél."
       />
 
       <div className="space-y-8">
-        <section className="overflow-hidden border border-slate-200 bg-white">
-          <div className="border-b border-slate-200 px-7 py-5">
+        <section className="overflow-hidden rounded-3xl border border-white bg-white shadow-[0_10px_35px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/70">
+          <div className="border-b border-slate-100 px-5 py-5 sm:px-7">
             <div className="flex items-center justify-between gap-6">
               <div>
                 <h2 className="text-lg font-semibold text-slate-950">
@@ -410,7 +406,7 @@ export default function AdminNavigation() {
                       activeGroup.menuKey,
                   });
                 }}
-                className="bg-slate-950 px-5 py-3 text-sm font-medium text-white"
+                className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:-translate-y-0.5 hover:bg-slate-800"
               >
                 {isDynamicNavbarMenu(activeGroup.menuKey)
                   ? "+ Új főmenüpont"
@@ -419,7 +415,7 @@ export default function AdminNavigation() {
             </div>
           </div>
 
-          <div className="overflow-x-auto bg-slate-950 px-5">
+          <div className="overflow-x-auto bg-[#101828] px-5">
             <nav className="flex min-h-16 min-w-max items-center gap-1">
               {groups.map((group) => {
                 const active =
@@ -441,7 +437,7 @@ export default function AdminNavigation() {
 
                       setCreating(null);
                     }}
-                    className={`relative h-16 text-sm font-medium transition ${
+                    className={`relative h-16 rounded-none px-3 text-sm font-semibold transition ${
                       active
                         ? "text-white"
                         : "text-slate-400 hover:text-white"
@@ -458,7 +454,7 @@ export default function AdminNavigation() {
                     </span>
 
                     {active && (
-                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white" />
+                      <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-amber-400" />
                     )}
                   </button>
                 );
@@ -466,8 +462,8 @@ export default function AdminNavigation() {
             </nav>
           </div>
 
-          <div className="bg-slate-100 p-8">
-            <div className="mx-auto max-w-4xl border border-slate-200 bg-white">
+          <div className="bg-slate-100/70 p-4 sm:p-8">
+            <div className="mx-auto max-w-4xl rounded-2xl border border-white bg-white shadow-sm ring-1 ring-slate-200/70">
               <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
                 <div>
                   <div className="flex items-center gap-2">
@@ -478,13 +474,13 @@ export default function AdminNavigation() {
                     </h3>
 
                     {isFixedNavbarMenu(activeGroup.menuKey) && (
-                      <span className="bg-slate-100 px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-slate-500">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">
                         Fix főmenüpont
                       </span>
                     )}
 
                     {isDynamicNavbarMenu(activeGroup.menuKey) && (
-                      <span className="bg-amber-50 px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-amber-800">
+                      <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-800">
                         Dinamikus főmenük
                       </span>
                     )}
@@ -560,7 +556,7 @@ export default function AdminNavigation() {
 
         {(creating ||
           editingItem) && (
-          <section className="border border-slate-200 bg-white p-8">
+          <section className="rounded-3xl border border-white bg-white p-6 shadow-[0_10px_35px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/70 sm:p-8">
             <div className="mb-6">
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
                 {creating
@@ -617,7 +613,7 @@ export default function AdminNavigation() {
 
         {!creating &&
           !editingItem && (
-            <div className="border border-dashed border-slate-300 bg-white p-8 text-center">
+            <div className="rounded-3xl border border-dashed border-slate-300 bg-white/70 p-8 text-center shadow-sm">
               <p className="font-medium text-slate-700">
                 Válassz ki egy menüpontot
                 a szerkesztéshez.

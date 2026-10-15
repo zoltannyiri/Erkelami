@@ -183,7 +183,7 @@ export default function NavigationItemForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-4 border border-slate-300 bg-slate-50 p-6"
+      className="mt-4 rounded-2xl border border-slate-200 bg-slate-50/80 p-6 shadow-inner"
     >
       <h3 className="mb-6 text-lg font-semibold">
         {isEditing
@@ -204,7 +204,7 @@ export default function NavigationItemForm({
             value={form.label || ""}
             onChange={handleChange}
             required
-            className="w-full border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-950"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
           />
         </div>
 
@@ -218,7 +218,7 @@ export default function NavigationItemForm({
               name="menuKey"
               value={form.menuKey}
               onChange={handleChange}
-              className="w-full border border-slate-300 bg-white px-4 py-3"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             >
               {NAVIGATION_MENU_GROUPS.map((menu) => (
                 <option key={menu.menuKey} value={menu.menuKey}>
@@ -244,7 +244,7 @@ export default function NavigationItemForm({
               name="parentId"
               value={form.parentId || ""}
               onChange={handleChange}
-              className="w-full border border-slate-300 bg-white px-4 py-3"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             >
               <option value="">Nincs szülő</option>
               {navigationItems
@@ -271,10 +271,10 @@ export default function NavigationItemForm({
               return (
                 <label
                   key={option.value}
-                  className={`cursor-pointer border p-4 transition ${
+                  className={`cursor-pointer rounded-2xl border p-4 transition ${
                     selected
-                      ? "border-slate-950 bg-white ring-1 ring-slate-950"
-                      : "border-slate-200 bg-white/60 hover:border-slate-400"
+                      ? "border-amber-400 bg-amber-50/70 ring-2 ring-amber-400/20 shadow-sm"
+                      : "border-slate-200 bg-white/60 hover:border-slate-300 hover:bg-white hover:shadow-sm"
                   }`}
                 >
                   <span className="flex items-center gap-3">
@@ -307,7 +307,7 @@ export default function NavigationItemForm({
               value={form.pageId || ""}
               onChange={handleChange}
               required
-              className="w-full border border-slate-300 bg-white px-4 py-3"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             >
               <option value="">Válassz oldalt</option>
               {pages.map((page) => (
@@ -320,7 +320,7 @@ export default function NavigationItemForm({
         )}
 
         {targetType === "new" && (
-          <div className="space-y-5 border-l-2 border-amber-700 bg-white p-5">
+          <div className="space-y-5 rounded-2xl border border-amber-200 bg-amber-50/40 p-5 shadow-sm">
             <div>
               <h4 className="font-semibold text-slate-950">Új oldal adatai</h4>
               <p className="mt-1 text-sm leading-6 text-slate-500">
@@ -338,7 +338,7 @@ export default function NavigationItemForm({
                 value={newPage.title}
                 onChange={handleNewPageChange}
                 required
-                className="w-full border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-950"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
               />
             </div>
 
@@ -352,7 +352,7 @@ export default function NavigationItemForm({
                 value={newPage.slug}
                 onChange={handleNewPageChange}
                 placeholder="Automatikusan generálódik, ha üresen hagyod"
-                className="w-full border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-950"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
               />
             </div>
 
@@ -365,7 +365,7 @@ export default function NavigationItemForm({
                 name="templateKey"
                 value={newPage.templateKey}
                 onChange={handleNewPageChange}
-                className="w-full border border-slate-300 bg-white px-4 py-3"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
               >
                 {PAGE_TEMPLATE_OPTIONS.map((template) => (
                   <option key={template.key} value={template.key}>
@@ -457,12 +457,12 @@ export default function NavigationItemForm({
               onChange={handleChange}
               required
               placeholder="https://..."
-              className="w-full border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-slate-950"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             />
           </div>
         )}
 
-        <div className="border border-slate-200 bg-white p-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <label className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -482,13 +482,13 @@ export default function NavigationItemForm({
         </div>
 
         {error && (
-          <div className="bg-red-50 p-4 text-sm text-red-700" role="alert">
+          <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-700" role="alert">
             {error}
           </div>
         )}
 
         <div className="flex flex-wrap justify-end gap-3 border-t border-slate-200 pt-5">
-          <button type="button" onClick={onClose} className="px-5 py-3 text-sm">
+          <button type="button" onClick={onClose} className="rounded-xl px-5 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100">
             Mégse
           </button>
 
@@ -498,7 +498,7 @@ export default function NavigationItemForm({
                 type="submit"
                 value="save"
                 disabled={saving}
-                className="cursor-pointer border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                className="cursor-pointer rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 disabled:opacity-50"
               >
                 {saving ? "Mentés..." : "Csak létrehozás"}
               </button>
@@ -506,7 +506,7 @@ export default function NavigationItemForm({
                 type="submit"
                 value="create-and-edit"
                 disabled={saving}
-                className="cursor-pointer bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
+                className="cursor-pointer rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 disabled:opacity-50"
               >
                 {saving ? "Létrehozás..." : "Létrehozás és szerkesztés"}
               </button>
@@ -515,7 +515,7 @@ export default function NavigationItemForm({
             <button
               type="submit"
               disabled={saving}
-              className="cursor-pointer bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
+              className="cursor-pointer rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 disabled:opacity-50"
             >
               {saving
                 ? "Mentés..."

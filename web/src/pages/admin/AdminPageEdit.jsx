@@ -150,7 +150,7 @@ export default function AdminPageEdit() {
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Link
             to={`/admin/pages/${id}/visual`}
-            className="bg-amber-100 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-amber-200"
+            className="rounded-2xl bg-amber-400 px-5 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-amber-600/15 transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
             Vizuális szerkesztés
           </Link>
@@ -158,7 +158,7 @@ export default function AdminPageEdit() {
             <Link
               to={`/${page.slug}`}
               target="_blank"
-              className="border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300"
             >
               Oldal megtekintése ↗
             </Link>
@@ -166,24 +166,24 @@ export default function AdminPageEdit() {
         </div>
       </AdminPageHeader>
 
-      <form onSubmit={handleSavePage} className="mb-8 border border-slate-200 bg-white p-8">
+      <form onSubmit={handleSavePage} className="mb-8 rounded-3xl border border-white bg-white p-6 shadow-[0_10px_35px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/70 sm:p-8">
         <h2 className="mb-6 text-xl font-semibold text-slate-950">Oldal beállításai</h2>
         <div className="space-y-6">
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Cím</label>
-            <input name="title" value={form.title} onChange={handlePageChange} className="w-full border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
+            <input name="title" value={form.title} onChange={handlePageChange} className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10" />
           </div>
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Slug</label>
-            <input name="slug" value={form.slug} onChange={handlePageChange} className="w-full border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
+            <input name="slug" value={form.slug} onChange={handlePageChange} className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10" />
           </div>
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Meta cím</label>
-            <input name="metaTitle" value={form.metaTitle} onChange={handlePageChange} className="w-full border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
+            <input name="metaTitle" value={form.metaTitle} onChange={handlePageChange} className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10" />
           </div>
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Meta leírás</label>
-            <textarea name="metaDescription" value={form.metaDescription} onChange={handlePageChange} rows={3} className="w-full resize-none border border-slate-300 px-4 py-3 outline-none focus:border-slate-950" />
+            <textarea name="metaDescription" value={form.metaDescription} onChange={handlePageChange} rows={3} className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 outline-none transition focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10" />
           </div>
           <label className="flex items-center gap-3">
             <input type="checkbox" name="published" checked={form.published} onChange={handlePageChange} className="cursor-pointer" />
@@ -191,20 +191,20 @@ export default function AdminPageEdit() {
           </label>
           {error && <div className="bg-red-50 p-4 text-sm text-red-700">{error}</div>}
           <div className="flex justify-end">
-            <button type="submit" disabled={saving} className="cursor-pointer bg-slate-950 px-6 py-3 text-sm font-medium text-white disabled:opacity-50">
+            <button type="submit" disabled={saving} className="cursor-pointer rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 disabled:opacity-50">
               {saving ? "Mentés..." : "Változtatások mentése"}
             </button>
           </div>
         </div>
       </form>
 
-      <div className="border border-slate-200 bg-white p-8">
+      <div className="rounded-3xl border border-white bg-white p-6 shadow-[0_10px_35px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/70 sm:p-8">
         <div className="gap-4 sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="text-xl font-semibold text-slate-950">Tartalmi blokkok</h2>
             <p className="mt-1 text-sm text-slate-500">Ezekből épül fel az oldal tartalma.</p>
           </div>
-          <button type="button" onClick={() => setShowNewBlock((current) => !current)} className="mt-4 bg-slate-950 px-5 py-3 text-sm font-medium text-white sm:mt-0">
+          <button type="button" onClick={() => setShowNewBlock((current) => !current)} className="mt-4 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 sm:mt-0">
             + Új blokk
           </button>
         </div>

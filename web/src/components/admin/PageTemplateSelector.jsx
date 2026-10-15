@@ -95,7 +95,7 @@ function TemplatePreview({ template }) {
 export default function PageTemplateSelector({ value, onChange }) {
   return (
     <fieldset>
-      <legend className="text-sm font-medium text-slate-700">Oldalsablon</legend>
+      <legend className="text-sm font-semibold text-slate-800">Oldalsablon</legend>
       <p className="mt-2 text-sm leading-6 text-slate-500">
         A sablon csak a kezdeti elrendezést hozza létre. Az oldal tartalma később szabadon módosítható.
       </p>
@@ -107,10 +107,10 @@ export default function PageTemplateSelector({ value, onChange }) {
           return (
             <label
               key={template.key}
-              className={`cursor-pointer border p-4 transition ${
+              className={`cursor-pointer rounded-2xl border p-4 transition duration-200 ${
                 selected
-                  ? "border-slate-950 bg-slate-100 text-slate-950 ring-1 ring-slate-950"
-                  : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"
+                  ? "border-amber-400 bg-amber-50/70 text-slate-950 ring-2 ring-amber-400/20 shadow-sm"
+                  : "border-slate-200 bg-white text-slate-600 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
               }`}
             >
               <input

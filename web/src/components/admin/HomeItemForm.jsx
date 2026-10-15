@@ -49,7 +49,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-6 border border-slate-300 bg-slate-50 p-6"
+      className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-6 shadow-inner"
     >
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-slate-950">
@@ -72,7 +72,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
             value={form.title}
             onChange={handleChange}
             required
-            className="w-full border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-950"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             placeholder="pl. Szolfézs csoportok és órarend"
           />
         </div>
@@ -98,7 +98,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
             name="imageUrl"
             value={form.imageUrl}
             onChange={handleChange}
-            className="mt-4 w-full border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-950"
+            className="mt-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             placeholder="/uploads/images/... vagy https://..."
           />
 
@@ -113,7 +113,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
               Előnézet
             </p>
 
-            <div className="h-40 w-64 overflow-hidden border border-slate-200 bg-white">
+            <div className="h-40 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <img
                 src={form.imageUrl}
                 alt=""
@@ -132,7 +132,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
             name="linkUrl"
             value={form.linkUrl}
             onChange={handleChange}
-            className="w-full border border-slate-300 bg-white px-4 py-3 outline-none focus:border-slate-950"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             placeholder="/szolfezs vagy https://..."
           />
         </div>
@@ -160,7 +160,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-3 text-sm font-medium text-slate-600"
+            className="rounded-xl px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
           >
             Mégse
           </button>
@@ -168,7 +168,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
           <button
             type="submit"
             disabled={saving}
-            className="bg-slate-950 px-6 py-3 text-sm font-medium text-white disabled:opacity-50"
+            className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 disabled:opacity-50"
           >
             {saving
               ? "Mentés..."
