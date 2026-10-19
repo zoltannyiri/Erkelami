@@ -4,6 +4,7 @@ const cards = [
   { title: "Főoldal", description: "Csempék, kiemelések és a nyitóoldal tartalmi sorrendje.", to: "/admin/home", number: "01", color: "from-amber-400 to-orange-500", tint: "bg-amber-50 text-amber-700" },
   { title: "Oldalak", description: "Dinamikus oldalak és vizuálisan szerkeszthető tartalmi blokkok.", to: "/admin/pages", number: "02", color: "from-sky-400 to-blue-600", tint: "bg-sky-50 text-sky-700" },
   { title: "Navigáció", description: "Főmenüpontok, almenük és a teljes menühierarchia kezelése.", to: "/admin/navigation", number: "03", color: "from-violet-400 to-indigo-600", tint: "bg-violet-50 text-violet-700" },
+  { title: "Publikus naptár", description: "Koncertek, versenyek és iskolai események közzététele.", to: "/admin/calendar", number: "04", color: "from-emerald-400 to-teal-600", tint: "bg-emerald-50 text-emerald-700" },
 ];
 
 export default function AdminDashboard() {
@@ -22,7 +23,7 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
           <Link key={card.to} to={card.to} className="group relative overflow-hidden rounded-3xl border border-white bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/70 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(15,23,42,0.11)]">
             <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${card.color} opacity-75 transition group-hover:h-1.5 group-hover:opacity-100`} />
@@ -37,7 +38,7 @@ export default function AdminDashboard() {
       <section className="mt-7 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:p-7">
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Gyors elérés</p><h2 className="mt-2 text-lg font-semibold text-slate-950">Gyakori műveletek</h2></div>
-          <div className="flex flex-wrap gap-2.5"><Link to="/admin/home" className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:shadow-sm">Főoldal szerkesztése</Link><Link to="/admin/navigation" className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:shadow-sm">Navigáció kezelése</Link></div>
+          <div className="flex flex-wrap gap-2.5"><Link to="/admin/home" className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:shadow-sm">Főoldal szerkesztése</Link><Link to="/admin/navigation" className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:shadow-sm">Navigáció kezelése</Link><Link to="/admin/calendar" className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white hover:shadow-sm">Új esemény felvétele</Link></div>
         </div>
       </section>
     </main>

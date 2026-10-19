@@ -17,6 +17,15 @@ const MONTH_NAMES = [
 ];
 
 const WEEKDAYS = ["H", "K", "Sze", "Cs", "P", "Szo", "V"];
+const WEEKDAY_SHORT = ["V", "H", "K", "Sze", "Cs", "P", "Szo"];
+const CALENDAR_VIEWS = [
+  { value: "MONTH", label: "Hónap" },
+  { value: "WEEK", label: "Hét" },
+  { value: "SCHEDULE", label: "Ütemezés" },
+];
+const HOUR_START = 8;
+const HOUR_END = 22;
+const HOUR_HEIGHT = 64;
 const LONG_WEEKDAYS = [
   "vasárnap",
   "hétfő",
@@ -78,6 +87,38 @@ const formatTime = (value) => {
 const formatFullDate = (date) =>
   `${date.getFullYear()}. ${MONTH_NAMES[date.getMonth()]} ${date.getDate()}., ${LONG_WEEKDAYS[date.getDay()]}`;
 
+const startOfWeek = (date) => {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  result.setDate(result.getDate() - ((result.getDay() + 6) % 7));
+  return result;
+};
+
+const googleDate = (date, allDay = false) => {
+  if (allDay) return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`;
+  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+};
+
+const getGoogleCalendarUrl = (event) => {
+  const start = new Date(event.startAt);
+  let end = event.endAt ? new Date(event.endAt) : new Date(start);
+  if (event.allDay) {
+    end.setDate(end.getDate() + 1);
+  } else if (!event.endAt) {
+    end = new Date(start.getTime() + 60 * 60 * 1000);
+  }
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    dates: `${googleDate(start, event.allDay)}/${googleDate(end, event.allDay)}`,
+    details: event.description || "",
+    location: event.location || "",
+    ctz: "Europe/Budapest",
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
 function CalendarIcon({ className = "h-5 w-5" }) {
   return (
     <svg
@@ -93,6 +134,23 @@ function CalendarIcon({ className = "h-5 w-5" }) {
       <path d="M6 3v3M18 3v3M4 9h16M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z" />
       <path d="M7 13h3M14 13h3M7 17h3" />
     </svg>
+  );
+}
+
+function GoogleCalendarLink({ event, compact = false }) {
+  return (
+    <a
+      href={getGoogleCalendarUrl(event)}
+      target="_blank"
+      rel="noreferrer"
+      onClick={(clickEvent) => clickEvent.stopPropagation()}
+      className={compact
+        ? "shrink-0 px-2 py-1 text-[11px] font-semibold text-blue-700 transition hover:bg-blue-50 hover:text-blue-900"
+        : "inline-flex items-center justify-center gap-2 border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-blue-500 hover:text-blue-700"}
+    >
+      <CalendarIcon className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
+      {compact ? "Google Naptár" : "Hozzáadás a Google Naptárhoz"}
+    </a>
   );
 }
 
@@ -214,8 +272,201 @@ function EventDetails({ event, onClose }) {
               {event.description}
             </p>
           )}
+          <div className="mt-7 border-t border-stone-200 pt-5">
+            <GoogleCalendarLink event={event} />
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function WeekView({ days, eventsByDay, today, onEventClick }) {
+  const hours = Array.from({ length: HOUR_END - HOUR_START }, (_, index) => HOUR_START + index);
+  const timelineHeight = hours.length * HOUR_HEIGHT;
+  const hasAllDayEvents = days.some((day) =>
+    (eventsByDay[dateKey(day)] || []).some((event) => event.allDay),
+  );
+
+  const eventPosition = (event, day) => {
+    const eventStart = new Date(event.startAt);
+    const eventEnd = event.endAt ? new Date(event.endAt) : new Date(eventStart.getTime() + 60 * 60 * 1000);
+    const dayStart = new Date(day);
+    dayStart.setHours(HOUR_START, 0, 0, 0);
+    const totalMinutes = (HOUR_END - HOUR_START) * 60;
+    const rawStartMinutes = (eventStart - dayStart) / 60000;
+    const rawEndMinutes = (eventEnd - dayStart) / 60000;
+    const startMinutes = Math.min(totalMinutes - 30, Math.max(0, rawStartMinutes));
+    const endMinutes = Math.min(totalMinutes, Math.max(startMinutes + 30, rawEndMinutes));
+    const durationMinutes = endMinutes - startMinutes;
+
+    return {
+      top: (startMinutes / 60) * HOUR_HEIGHT + 2,
+      height: Math.max(28, (durationMinutes / 60) * HOUR_HEIGHT - 4),
+    };
+  };
+
+  return (
+    <div className="overflow-x-auto border border-stone-300 bg-[#fffefa]">
+      <div className="min-w-[920px]">
+        <div
+          className="grid border-b border-stone-300 bg-stone-50"
+          style={{ gridTemplateColumns: "72px repeat(7, minmax(0, 1fr))" }}
+        >
+          <div className="border-r border-stone-300 px-3 py-4 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+            Idő
+          </div>
+          {days.map((day) => {
+            const isToday = sameDay(day, today);
+            return (
+              <div
+                key={dateKey(day)}
+                className={`flex items-center justify-center gap-2 border-r border-stone-200 px-2 py-3 last:border-r-0 ${isToday ? "bg-amber-50" : ""}`}
+              >
+                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
+                  {WEEKDAY_SHORT[day.getDay()]}
+                </span>
+                <span className={`grid h-8 w-8 place-items-center text-sm font-bold ${isToday ? "bg-amber-700 text-white" : "text-slate-900"}`}>
+                  {day.getDate()}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {MONTH_NAMES[day.getMonth()].slice(0, 3)}.
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {hasAllDayEvents && (
+          <div
+            className="grid border-b border-stone-300"
+            style={{ gridTemplateColumns: "72px repeat(7, minmax(0, 1fr))" }}
+          >
+            <div className="border-r border-stone-300 bg-stone-50 px-2 py-3 text-center text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400">
+              Egész nap
+            </div>
+            {days.map((day) => (
+              <div
+                key={dateKey(day)}
+                className="min-h-12 space-y-1 border-r border-stone-200 p-1.5 last:border-r-0"
+              >
+                {(eventsByDay[dateKey(day)] || []).filter((event) => event.allDay).map((event) => {
+                  const category = getCategory(event.category);
+                  return (
+                    <button
+                      key={event.id}
+                      type="button"
+                      onClick={() => onEventClick(event)}
+                      title={event.title}
+                      className={`flex w-full items-center gap-1.5 overflow-hidden border px-2 py-1.5 text-left text-[10px] font-semibold transition hover:brightness-95 ${category.chip}`}
+                    >
+                      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${category.dot}`} />
+                      <span className="truncate">{event.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div
+          className="grid"
+          style={{ gridTemplateColumns: "72px repeat(7, minmax(0, 1fr))" }}
+        >
+          <div className="relative border-r border-stone-300 bg-stone-50" style={{ height: timelineHeight }}>
+            {hours.map((hour, index) => (
+              <span
+                key={hour}
+                className="absolute right-3 text-[10px] font-semibold text-slate-400"
+                style={{ top: index * HOUR_HEIGHT + 5 }}
+              >
+                {pad(hour)}:00
+              </span>
+            ))}
+          </div>
+
+          {days.map((day) => {
+            const timedEvents = (eventsByDay[dateKey(day)] || []).filter((event) => !event.allDay);
+            const isToday = sameDay(day, today);
+
+            return (
+              <div
+                key={dateKey(day)}
+                className={`relative border-r border-stone-200 last:border-r-0 ${isToday ? "bg-amber-50/30" : ""}`}
+                style={{
+                  height: timelineHeight,
+                  backgroundImage: "linear-gradient(to bottom, rgba(214,211,209,.78) 1px, transparent 1px)",
+                  backgroundSize: `100% ${HOUR_HEIGHT}px`,
+                }}
+              >
+                {timedEvents.map((event, index) => {
+                  const position = eventPosition(event, day);
+                  const category = getCategory(event.category);
+                  const offset = Math.min(index, 2) * 3;
+
+                  return (
+                    <button
+                      key={event.id}
+                      type="button"
+                      onClick={() => onEventClick(event)}
+                      title={event.title}
+                      className={`absolute z-[1] overflow-hidden border px-2 py-1 text-left text-[10px] font-semibold shadow-sm transition hover:z-10 hover:brightness-95 ${category.chip}`}
+                      style={{
+                        top: position.top,
+                        height: position.height,
+                        left: 4 + offset,
+                        right: 4,
+                      }}
+                    >
+                      <span className="block truncate">{event.title}</span>
+                      <span className="mt-0.5 block truncate text-[9px] font-medium opacity-75">
+                        {formatTime(event.startAt)}{event.endAt ? `–${formatTime(event.endAt)}` : ""}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScheduleView({ days, eventsByDay, today, onEventClick }) {
+  const daysWithEvents = days.filter((day) => (eventsByDay[dateKey(day)] || []).length > 0);
+
+  if (daysWithEvents.length === 0) {
+    return <div className="border border-stone-300 bg-stone-50 px-6 py-16 text-center"><p className="font-semibold text-slate-700">Ebben a hónapban még nincs esemény.</p><p className="mt-2 text-sm text-slate-500">Az új programok itt, dátum szerint rendezve jelennek majd meg.</p></div>;
+  }
+
+  return (
+    <div className="border border-stone-300 bg-[#fffefa]">
+      {daysWithEvents.map((day) => {
+        const dayEvents = eventsByDay[dateKey(day)] || [];
+        const isToday = sameDay(day, today);
+        return (
+          <section key={dateKey(day)} className="grid border-b border-stone-200 last:border-b-0 md:grid-cols-[130px_minmax(0,1fr)]">
+            <div className={`border-b border-stone-200 px-5 py-5 md:border-b-0 md:border-r ${isToday ? "bg-amber-50" : "bg-stone-50/70"}`}>
+              <div className="flex items-baseline gap-2 md:block"><span className={`text-2xl font-semibold ${isToday ? "text-amber-800" : "text-slate-900"}`}>{day.getDate()}</span><span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 md:mt-1 md:block">{MONTH_NAMES[day.getMonth()]}, {WEEKDAY_SHORT[day.getDay()]}</span></div>
+            </div>
+            <div className="divide-y divide-stone-100">
+              {dayEvents.map((event) => {
+                const category = getCategory(event.category);
+                return (
+                  <div key={event.id} className="grid items-center gap-3 px-5 py-4 transition hover:bg-stone-50 sm:grid-cols-[125px_minmax(0,1fr)_auto]">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-500"><span className={`h-2 w-2 rounded-full ${category.dot}`} /><span>{event.allDay ? "Egész nap" : `${formatTime(event.startAt)}${event.endAt ? `–${formatTime(event.endAt)}` : ""}`}</span></div>
+                    <button type="button" onClick={() => onEventClick(event)} className="min-w-0 text-left"><span className="block truncate text-sm font-semibold text-slate-900 hover:text-amber-800">{event.title}</span>{event.location && <span className="mt-1 block truncate text-xs text-slate-400">{event.location}</span>}</button>
+                    <GoogleCalendarLink event={event} compact />
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -231,6 +482,7 @@ export default function CalendarPage() {
   const [loadError, setLoadError] = useState(false);
   const [activeCategory, setActiveCategory] = useState("ALL");
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [calendarView, setCalendarView] = useState("MONTH");
 
   useEffect(() => {
     document.title = "Eseménynaptár | Erkel Ferenc Alapfokú Művészeti Iskola";
@@ -303,6 +555,20 @@ export default function CalendarPage() {
     });
   }, [visibleMonth]);
 
+  const weekDays = useMemo(() => {
+    const firstDay = startOfWeek(selectedDate);
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(firstDay);
+      date.setDate(firstDay.getDate() + index);
+      return date;
+    });
+  }, [selectedDate]);
+
+  const scheduleDays = useMemo(
+    () => calendarDays.filter((date) => date.getMonth() === visibleMonth.getMonth()),
+    [calendarDays, visibleMonth],
+  );
+
   const filteredEvents = useMemo(
     () =>
       events
@@ -320,9 +586,19 @@ export default function CalendarPage() {
   const eventsByDay = useMemo(
     () =>
       filteredEvents.reduce((result, event) => {
-        const key = dateKey(new Date(event.startAt));
-        if (!result[key]) result[key] = [];
-        result[key].push(event);
+        const currentDay = new Date(event.startAt);
+        currentDay.setHours(0, 0, 0, 0);
+        const lastDay = new Date(event.endAt || event.startAt);
+        lastDay.setHours(0, 0, 0, 0);
+
+        let dayCount = 0;
+        while (currentDay <= lastDay && dayCount < 370) {
+          const key = dateKey(currentDay);
+          if (!result[key]) result[key] = [];
+          result[key].push(event);
+          currentDay.setDate(currentDay.getDate() + 1);
+          dayCount += 1;
+        }
         return result;
       }, {}),
     [filteredEvents],
@@ -341,7 +617,20 @@ export default function CalendarPage() {
     )
     .slice(0, 5);
 
-  const changeMonth = (offset) => {
+  const changePeriod = (offset) => {
+    if (calendarView === "WEEK") {
+      const nextDate = new Date(selectedDate);
+      nextDate.setDate(nextDate.getDate() + offset * 7);
+      const nextMonth = new Date(nextDate.getFullYear(), nextDate.getMonth(), 1);
+      if (nextMonth.getTime() !== visibleMonth.getTime()) {
+        setLoading(true);
+        setLoadError(false);
+        setVisibleMonth(nextMonth);
+      }
+      setSelectedDate(nextDate);
+      return;
+    }
+
     const next = new Date(
       visibleMonth.getFullYear(),
       visibleMonth.getMonth() + offset,
@@ -352,6 +641,12 @@ export default function CalendarPage() {
     setVisibleMonth(next);
     setSelectedDate(next);
   };
+
+  const periodTitle = calendarView === "WEEK"
+    ? weekDays[0].getMonth() === weekDays[6].getMonth()
+      ? `${MONTH_NAMES[weekDays[0].getMonth()]} ${weekDays[0].getDate()}–${weekDays[6].getDate()}. ${weekDays[6].getFullYear()}`
+      : `${MONTH_NAMES[weekDays[0].getMonth()]} ${weekDays[0].getDate()}. – ${MONTH_NAMES[weekDays[6].getMonth()]} ${weekDays[6].getDate()}. ${weekDays[6].getFullYear()}`
+    : `${MONTH_NAMES[visibleMonth.getMonth()]} ${visibleMonth.getFullYear()}`;
 
   const jumpToToday = () => {
     setLoading(true);
@@ -397,30 +692,36 @@ export default function CalendarPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => changeMonth(-1)}
-              aria-label="Előző hónap"
+              onClick={() => changePeriod(-1)}
+              aria-label={calendarView === "WEEK" ? "Előző hét" : "Előző hónap"}
               className="cursor-pointer grid h-10 w-10 place-items-center rounded-2xl border border-stone-300 bg-white text-base text-slate-600 transition hover:border-slate-800 hover:text-slate-950"
             >
               ←
             </button>
             <button
               type="button"
-              onClick={() => changeMonth(1)}
-              aria-label="Következő hónap"
+              onClick={() => changePeriod(1)}
+              aria-label={calendarView === "WEEK" ? "Következő hét" : "Következő hónap"}
               className="cursor-pointer grid h-10 w-10 place-items-center rounded-2xl border border-stone-300 bg-white text-base text-slate-600 transition hover:border-slate-800 hover:text-slate-950"
             >
               →
             </button>
-            <h2 className="ml-3 min-w-44 text-2xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-3xl">
-              <span className="capitalize">
-                {MONTH_NAMES[visibleMonth.getMonth()]}
-              </span>{" "}
-              <span className="font-normal text-slate-400">
-                {visibleMonth.getFullYear()}
-              </span>
-            </h2>
+            <h2 className="ml-3 min-w-44 text-2xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-3xl"><span className="capitalize">{periodTitle}</span></h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <div className="flex border border-stone-300 bg-white p-1" aria-label="Naptárnézet">
+              {CALENDAR_VIEWS.map((view) => (
+                <button
+                  key={view.value}
+                  type="button"
+                  aria-pressed={calendarView === view.value}
+                  onClick={() => setCalendarView(view.value)}
+                  className={`px-3 py-2 text-xs font-semibold transition sm:px-4 ${calendarView === view.value ? "bg-slate-950 text-white" : "text-slate-500 hover:bg-stone-100 hover:text-slate-900"}`}
+                >
+                  {view.label}
+                </button>
+              ))}
+            </div>
             {availableCategories.length > 0 && (
               <div className="flex flex-wrap gap-1 border border-stone-200 bg-white p-1">
                 {["ALL", ...availableCategories].map((category) => (
@@ -451,6 +752,7 @@ export default function CalendarPage() {
           </div>
         )}
 
+        {calendarView === "MONTH" ? (
         <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_290px]">
           <div className="overflow-hidden border border-stone-300 bg-[#fffefa]">
             <div className="hidden grid-cols-7 border-b border-stone-200 bg-stone-50/80 md:grid">
@@ -601,6 +903,11 @@ export default function CalendarPage() {
             </div>
           </aside>
         </div>
+        ) : calendarView === "WEEK" ? (
+          <WeekView days={weekDays} eventsByDay={eventsByDay} today={today} onEventClick={setSelectedEvent} />
+        ) : (
+          <ScheduleView days={scheduleDays} eventsByDay={eventsByDay} today={today} onEventClick={setSelectedEvent} />
+        )}
       </section>
 
       <EventDetails

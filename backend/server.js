@@ -17,6 +17,8 @@ import adminSectionRoutes from './src/routes/adminSectionRoutes.js';
 import adminHomeRoutes from './src/routes/adminHomeRoutes.js';
 import adminNavigationRoutes from './src/routes/adminNavigationRoutes.js';
 import adminUploadRoutes from './src/routes/adminUploadRoutes.js';
+import calendarRoutes from './src/routes/calendarRoutes.js';
+import adminCalendarRoutes from './src/routes/adminCalendarRoutes.js';
 
 const app = express(); 
 app.set('trust proxy', 1);
@@ -43,7 +45,9 @@ app.use('/uploads', express.static(UPLOADS_DIR, { dotfiles: 'ignore', index: fal
 app.use('/api/navigation', navigationRoutes);
 app.use('/api/home', homeRoutes);
 app.use('/api/pages', pageRoutes);
+app.use('/api/calendar', calendarRoutes);
 app.use('/api/admin/pages', adminPageRoutes);
+app.use('/api/admin/calendar', adminCalendarRoutes);
 app.use('/api/admin', adminSectionRoutes);
 app.use('/api/admin/home', adminHomeRoutes);
 app.use('/api/admin/navigation', adminNavigationRoutes);

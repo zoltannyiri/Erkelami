@@ -14,6 +14,7 @@ import AdminPageEdit from './pages/admin/AdminPageEdit.jsx'
 import AdminPageVisualEditor from './pages/admin/AdminPageVisualEditor.jsx'
 import AdminHome from './pages/admin/AdminHome.jsx'
 import AdminNavigation from './pages/admin/AdminNavigation.jsx'
+import AdminCalendar from './pages/admin/AdminCalendar.jsx'
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="pages/:id/visual" element={<AdminPageVisualEditor />} />
           <Route path="home" element={<AdminHome />} />
           <Route path="navigation" element={<AdminNavigation />} />
+          <Route path="calendar" element={<AdminCalendar />} />
         </Route>
         {/* <Route path="/" element={<HomePage />} />
         <Route path="/:slug" element={<DynamicPage />} />

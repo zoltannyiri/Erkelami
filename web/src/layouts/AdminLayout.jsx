@@ -6,6 +6,7 @@ const icons = {
   home: <path d="m3 11 9-8 9 8M5.5 9.5V21h13V9.5M9 21v-7h6v7" />,
   pages: <path d="M6 3.5h8l4 4V21H6V3.5Zm8 0v4h4M9 12h6M9 16h6" />,
   navigation: <path d="M4 6h16M4 12h10M4 18h13M18 10l2 2-2 2" />,
+  calendar: <path d="M6 3v3M18 3v3M4 9h16M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2ZM7.5 13h3M13.5 13h3M7.5 17h3" />,
 };
 
 const navItems = [
@@ -13,6 +14,7 @@ const navItems = [
   { label: "Főoldal", to: "/admin/home", icon: "home" },
   { label: "Oldalak", to: "/admin/pages", icon: "pages" },
   { label: "Navigáció", to: "/admin/navigation", icon: "navigation" },
+  { label: "Publikus naptár", to: "/admin/calendar", icon: "calendar" },
 ];
 
 function Icon({ name, className = "h-5 w-5" }) {
