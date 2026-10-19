@@ -173,7 +173,7 @@ export default function Navbar() {
           </span>
         </SmartLink>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Fő navigáció">
+        <nav className="hidden items-center gap-1 2xl:flex" aria-label="Fő navigáció">
           {NAVBAR_MENUS.map((menu) => (
             <DesktopNavbarItem
               key={menu.menuKey}
@@ -195,7 +195,7 @@ export default function Navbar() {
           onClick={() => setMobileOpen((current) => !current)}
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? "Menü bezárása" : "Menü megnyitása"}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 bg-white text-slate-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700 lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 bg-white text-slate-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700 2xl:hidden"
         >
           <span className="relative h-4 w-5" aria-hidden="true">
             <span className={`absolute left-0 top-0 h-[1.5px] w-5 bg-current transition ${mobileOpen ? "translate-y-[7px] rotate-45" : ""}`} />
@@ -206,7 +206,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-full border-b border-stone-200 bg-[#fffefa]/98 px-5 py-4 shadow-[0_20px_45px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:hidden">
+        <div className="absolute inset-x-0 top-full border-b border-stone-200 bg-[#fffefa]/98 px-5 py-4 shadow-[0_20px_45px_rgba(15,23,42,0.12)] backdrop-blur-xl 2xl:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col" aria-label="Mobil navigáció">
             {NAVBAR_MENUS.map((menu) => (
               <MobileNavbarItem
