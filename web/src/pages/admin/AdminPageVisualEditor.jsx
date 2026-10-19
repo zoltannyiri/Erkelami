@@ -259,7 +259,7 @@ export default function AdminPageVisualEditor() {
 
       <div className="grid items-start gap-6 p-6 xl:grid-cols-[minmax(0,1fr)_390px]">
         <div className="min-w-0 overflow-x-auto rounded-sm border border-slate-200 bg-slate-200/70 p-3 sm:p-6">
-          <div className={`mx-auto overflow-hidden bg-white shadow-[0_18px_55px_rgba(15,23,42,0.12)] transition-[max-width] duration-300 ${previewMode === "mobile" ? "max-w-[390px]" : "max-w-[1440px]"}`}>
+          <div className={`mx-auto overflow-hidden bg-white shadow-[0_18px_55px_rgba(15,23,42,0.12)] transition-[max-width] duration-300 ${previewMode === "mobile" ? "w-full max-w-[390px]" : "w-full min-w-[1024px] max-w-[1440px]"}`}>
             {!startsWithHero && (
               <header className="border-b border-stone-200 bg-gradient-to-br from-stone-50 via-white to-amber-50/30 py-9 sm:py-12">
                 <div className="mx-auto max-w-5xl px-5 sm:px-8">

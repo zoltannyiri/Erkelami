@@ -22,11 +22,13 @@ export default function VisualSectionWrapper({
   return (
     <div
       onDragOver={(event) => {
+        if (event.target.closest(".rich-text-editor")) return;
         event.preventDefault();
         event.dataTransfer.dropEffect = "move";
         onDragOver();
       }}
       onDrop={(event) => {
+        if (event.target.closest(".rich-text-editor")) return;
         event.preventDefault();
         event.stopPropagation();
         onDrop();
@@ -39,6 +41,7 @@ export default function VisualSectionWrapper({
       tabIndex={0}
       aria-label={`${section.type} blokk${selected ? ", kijelölve" : ""}`}
       onKeyDown={(event) => {
+        if (event.target.closest("[contenteditable='true'], input, textarea, select, button")) return;
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           onSelect();

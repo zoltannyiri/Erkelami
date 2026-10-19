@@ -46,10 +46,12 @@ function ToolbarButton({ active = false, disabled = false, onClick, children, ti
   );
 }
 
-export default function RichTextEditor({ value, fallbackText, onChange }) {
+export default function RichTextEditor({ value, fallbackText, onChange, variant = "panel" }) {
   const imageInputRef = useRef(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imageError, setImageError] = useState("");
+  const [, setToolbarRevision] = useState(0);
+  const isCanvas = variant === "canvas";
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -68,10 +70,13 @@ export default function RichTextEditor({ value, fallbackText, onChange }) {
     ],
     content: value?.type === "doc" ? value : plainTextDocument(fallbackText),
     immediatelyRender: false,
-    onUpdate: ({ editor: currentEditor }) => onChange(currentEditor.getJSON()),
+    onUpdate: ({ editor: currentEditor }) => onChange?.(currentEditor.getJSON()),
+    onSelectionUpdate: () => setToolbarRevision((revision) => revision + 1),
     editorProps: {
       attributes: {
-        class: "rich-text rich-text-editor min-h-44 px-4 py-3 outline-none",
+        class: isCanvas
+          ? "rich-text rich-text-editor rich-text-editor--canvas outline-none"
+          : "rich-text rich-text-editor min-h-44 px-4 py-3 outline-none",
       },
     },
   });
@@ -165,8 +170,21 @@ export default function RichTextEditor({ value, fallbackText, onChange }) {
   const imageSelected = editor.isActive("image");
 
   return (
-    <div className="border border-slate-300 bg-white focus-within:border-slate-950">
-      <div className="flex flex-wrap gap-1.5 border-b border-slate-200 bg-slate-50 p-2">
+    <div className={isCanvas
+      ? "rich-text-canvas-frame relative bg-transparent outline outline-2 outline-dashed outline-amber-400 outline-offset-4 transition focus-within:outline-amber-600 focus-within:ring-4 focus-within:ring-amber-500/10"
+      : "border border-slate-300 bg-white focus-within:border-slate-950"}
+    >
+      {isCanvas && (
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200 bg-amber-50 px-3 py-2.5">
+          <span className="text-xs font-bold uppercase tracking-[0.12em] text-amber-900">
+            Közvetlen szerkesztés
+          </span>
+          <span className="text-xs text-amber-800">
+            A szöveget helyben írhatod, a képet kijelölve húzhatod és méretezheted.
+          </span>
+        </div>
+      )}
+      <div className={`flex flex-wrap gap-1.5 border-b p-2 ${isCanvas ? "border-amber-200 bg-white" : "border-slate-200 bg-slate-50"}`}>
         <ToolbarButton active={editor.isActive("paragraph")} onClick={() => editor.chain().focus().setParagraph().run()} title="Bekezdés">P</ToolbarButton>
         <ToolbarButton active={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} title="Címsor 2">H2</ToolbarButton>
         <ToolbarButton active={editor.isActive("heading", { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} title="Címsor 3">H3</ToolbarButton>
@@ -199,8 +217,8 @@ export default function RichTextEditor({ value, fallbackText, onChange }) {
       )}
       <EditorContent editor={editor} />
       <input ref={imageInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" onChange={uploadAndInsertImage} />
-      <div className="border-t border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-500">
-        A képet kijelölve átméretezheted a sarkainál, és húzással másik szövegrészhez mozgathatod. Balra vagy jobbra igazítva a szöveg körbefutja.
+      <div className={`border-t px-3 py-2 text-xs leading-5 ${isCanvas ? "border-amber-200 bg-amber-50 text-amber-900" : "border-slate-200 bg-slate-50 text-slate-500"}`}>
+        A képet kijelölve a sarkainál átméretezheted, húzással másik szövegrészhez mozgathatod. A „Balra + körbefuttatás” vagy „Jobbra + körbefuttatás” gombbal a szöveg a kép mellé rendeződik.
       </div>
       {imageError && <p className="border-t border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{imageError}</p>}
     </div>

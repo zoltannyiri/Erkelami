@@ -1,4 +1,5 @@
 import { getImageClassNames, getSectionTone } from "../../config/pageSectionStyles";
+import LazyRichTextEditor from "../admin/page-editor/LazyRichTextEditor";
 import PageSectionContainer from "./PageSectionContainer";
 import ResizableImageFrame from "./ResizableImageFrame";
 import RichTextContent from "./RichTextContent";
@@ -25,7 +26,15 @@ const wrapWidthClasses = {
   60: "md:w-[60%]",
 };
 
-function SectionCopy({ content, tone, inverse = false }) {
+const imageLayoutOptions = [
+  ["imageLeft", "Bal oldalon"],
+  ["imageRight", "Jobb oldalon"],
+  ["imageTop", "Szöveg fölött"],
+  ["wrapLeft", "Balra, körbefuttatva"],
+  ["wrapRight", "Jobbra, körbefuttatva"],
+];
+
+function SectionCopy({ content, tone, inverse = false, directEditing = false, onRichTextChange }) {
   return (
     <div className={inverse ? "text-white" : ""}>
       {content.heading && (
@@ -33,16 +42,29 @@ function SectionCopy({ content, tone, inverse = false }) {
           {content.heading}
         </h2>
       )}
-      <RichTextContent
-        document={content.richText}
-        fallbackText={content.text}
-        className={`mt-5 ${inverse ? "text-slate-100" : tone.body}`}
-      />
+      <div className="mt-5">
+        {directEditing && !inverse ? (
+          <div className={tone.body}>
+            <LazyRichTextEditor
+              variant="canvas"
+              value={content.richText}
+              fallbackText={content.text}
+              onChange={onRichTextChange}
+            />
+          </div>
+        ) : (
+          <RichTextContent
+            document={content.richText}
+            fallbackText={content.text}
+            className={inverse ? "text-slate-100" : tone.body}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
-function SectionImage({ content, editorMode, imageResizeEnabled, onContentChange }) {
+function SectionImage({ content, editorMode, imageResizeEnabled, layout, onLayoutChange, onContentChange }) {
   const classes = getImageClassNames(content.imageStyle, imageDefaults);
 
   if (!content.imageUrl && !editorMode) return null;
@@ -67,6 +89,24 @@ function SectionImage({ content, editorMode, imageResizeEnabled, onContentChange
       ) : (
         <div className="flex h-full min-h-60 items-center justify-center text-sm text-slate-400">Kép helye</div>
       )}
+      {imageResizeEnabled && content.imageUrl && onLayoutChange && (
+        <label
+          className="absolute left-3 top-3 z-40 flex items-center gap-2 rounded-lg border border-white/80 bg-slate-950/90 px-2.5 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur"
+          onClick={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+        >
+          <span>Kép helye</span>
+          <select
+            value={layout}
+            onChange={(event) => onLayoutChange(event.target.value)}
+            className="rounded-md border border-white/25 bg-white px-2 py-1 text-xs font-semibold text-slate-900 outline-none"
+          >
+            {imageLayoutOptions.map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        </label>
+      )}
     </ResizableImageFrame>
   );
 }
@@ -82,6 +122,9 @@ export default function TextImageSection({ content = {}, editorMode = false, ima
   const tone = getSectionTone(content.style, sectionDefaults);
   const hasImage = Boolean(content.imageUrl) || editorMode;
   const forceMobile = previewMode === "mobile";
+  const directEditing = editorMode && imageResizeEnabled;
+  const updateLayout = (nextLayout) => onContentChange?.({ ...content, layout: nextLayout });
+  const updateRichText = (richText) => onContentChange?.({ ...content, richText });
 
   if (layout === "imageBackground") {
     const backgroundStyle = content.imageUrl
@@ -101,8 +144,8 @@ export default function TextImageSection({ content = {}, editorMode = false, ima
     return (
       <PageSectionContainer content={content} defaults={sectionDefaults}>
         <div className={hasImage ? "space-y-8" : ""}>
-          {hasImage && <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} />}
-          <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} /></div>
+          {hasImage && <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} layout={layout} onLayoutChange={updateLayout} onContentChange={onContentChange} />}
+          <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} directEditing={directEditing} onRichTextChange={updateRichText} /></div>
         </div>
       </PageSectionContainer>
     );
@@ -119,10 +162,10 @@ export default function TextImageSection({ content = {}, editorMode = false, ima
         <div className="flow-root">
           {hasImage && (
             <div className={floatClasses}>
-              <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} />
+              <SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} layout={layout} onLayoutChange={updateLayout} onContentChange={onContentChange} />
             </div>
           )}
-          <SectionCopy content={content} tone={tone} />
+          <SectionCopy content={content} tone={tone} directEditing={directEditing} onRichTextChange={updateRichText} />
         </div>
       </PageSectionContainer>
     );
@@ -134,7 +177,7 @@ export default function TextImageSection({ content = {}, editorMode = false, ima
   if (!hasImage) {
     return (
       <PageSectionContainer content={content} defaults={sectionDefaults}>
-        <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} /></div>
+        <div className="mx-auto max-w-3xl"><SectionCopy content={content} tone={tone} directEditing={directEditing} onRichTextChange={updateRichText} /></div>
       </PageSectionContainer>
     );
   }
@@ -142,8 +185,8 @@ export default function TextImageSection({ content = {}, editorMode = false, ima
   return (
     <PageSectionContainer content={content} defaults={sectionDefaults}>
       <div className={`grid gap-8 ${forceMobile ? "" : `md:gap-12 ${columnClasses[layout][imageWidth]}`} ${alignClass}`}>
-        <div className={forceMobile ? "" : imageFirst ? "md:order-1" : "md:order-2"}><SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} onContentChange={onContentChange} /></div>
-        <div className={forceMobile ? "" : imageFirst ? "md:order-2" : "md:order-1"}><SectionCopy content={content} tone={tone} /></div>
+        <div className={forceMobile ? "" : imageFirst ? "md:order-1" : "md:order-2"}><SectionImage content={content} editorMode={editorMode} imageResizeEnabled={imageResizeEnabled} layout={layout} onLayoutChange={updateLayout} onContentChange={onContentChange} /></div>
+        <div className={forceMobile ? "" : imageFirst ? "md:order-2" : "md:order-1"}><SectionCopy content={content} tone={tone} directEditing={directEditing} onRichTextChange={updateRichText} /></div>
       </div>
     </PageSectionContainer>
   );
