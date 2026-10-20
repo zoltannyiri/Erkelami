@@ -1,6 +1,24 @@
 @import "tailwindcss";
 
 @layer components {
+  .contact-info-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-content-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 64rem) {
+    .contact-info-grid {
+      grid-template-columns: minmax(0, 3fr) minmax(20rem, 2fr);
+    }
+
+    .contact-content-grid {
+      grid-template-columns: minmax(0, 0.82fr) minmax(28rem, 1.18fr);
+    }
+  }
+
   .rich-text {
     color: inherit;
     font-size: 1.0625rem;

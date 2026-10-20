@@ -9,6 +9,7 @@ import TextImageEditor from "./page-editor/editors/TextImageEditor";
 import DownloadsEditor from "./page-editor/editors/DownloadsEditor";
 import PdfViewerEditor from "./page-editor/editors/PdfViewerEditor";
 import StaffDirectoryEditor from "./page-editor/editors/StaffDirectoryEditor";
+import ContactInfoEditor from "./page-editor/editors/ContactInfoEditor";
 
 const editors = {
   TEXT: TextEditor,
@@ -21,6 +22,7 @@ const editors = {
   DOWNLOADS: DownloadsEditor,
   PDF_VIEWER: PdfViewerEditor,
   STAFF_DIRECTORY: StaffDirectoryEditor,
+  CONTACT_INFO: ContactInfoEditor,
 };
 
 export default function SectionFields({ type, content = {}, onChange }) {

@@ -9,6 +9,7 @@ export const PAGE_SECTION_TYPES = [
   { value: "DOWNLOADS", label: "Dokumentumok / Letöltések" },
   { value: "PDF_VIEWER", label: "PDF megjelenítő" },
   { value: "STAFF_DIRECTORY", label: "Munkatársi névsor" },
+  { value: "CONTACT_INFO", label: "Kapcsolati adatok" },
 ];
 
 export function createEmptySectionContent(type) {
@@ -118,6 +119,25 @@ export function createEmptySectionContent(type) {
         ],
         style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
       };
+    case "CONTACT_INFO":
+      return {
+        institutionName: "Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola",
+        address: "2800 Tatabánya, Fő tér 34.",
+        coordinates: "47.582289, 18.398334",
+        phones: ["34/311-238", "30/214-3243"],
+        generalEmail: "info@erkelzistb.hu",
+        website: "www.erkelzistb.hu",
+        contacts: [
+          { position: "Intézményvezető", name: "", email: "" },
+        ],
+        privacyOfficer: {
+          name: "",
+          organization: "",
+          address: "",
+          email: "",
+        },
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+      };
     default:
       return {};
   }
@@ -132,6 +152,9 @@ export function getSectionTypeLabel(type) {
   }
   if (type === "STAFF_DIRECTORY") {
     return "Munkatársi névsor";
+  }
+  if (type === "CONTACT_INFO") {
+    return "Kapcsolati adatok";
   }
   const option = PAGE_SECTION_TYPES.find(({ value }) => value === type);
   return option ? option.label : type;
