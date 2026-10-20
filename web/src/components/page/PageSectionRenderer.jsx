@@ -9,6 +9,7 @@ import DownloadsSection from "./DownloadsSection";
 import PdfViewerSection from "./PdfViewerSection";
 import StaffDirectorySection from "./StaffDirectorySection";
 import ContactInfoSection from "./ContactInfoSection";
+import LinkDirectorySection from "./LinkDirectorySection";
 
 const renderers = {
   TEXT: TextSection,
@@ -22,6 +23,7 @@ const renderers = {
   PDF_VIEWER: PdfViewerSection,
   STAFF_DIRECTORY: StaffDirectorySection,
   CONTACT_INFO: ContactInfoSection,
+  LINK_DIRECTORY: LinkDirectorySection,
 };
 
 export default function PageSectionRenderer({ section, pageTitle, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {

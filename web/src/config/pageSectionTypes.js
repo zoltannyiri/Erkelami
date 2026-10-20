@@ -10,6 +10,7 @@ export const PAGE_SECTION_TYPES = [
   { value: "PDF_VIEWER", label: "PDF megjelenítő" },
   { value: "STAFF_DIRECTORY", label: "Munkatársi névsor" },
   { value: "CONTACT_INFO", label: "Kapcsolati adatok" },
+  { value: "LINK_DIRECTORY", label: "Hasznos linkek" },
 ];
 
 export function createEmptySectionContent(type) {
@@ -138,6 +139,13 @@ export function createEmptySectionContent(type) {
         },
         style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
       };
+    case "LINK_DIRECTORY":
+      return {
+        heading: "Fontos linkek",
+        intro: "Hasznos oktatási, zenei és kulturális oldalak egy helyen.",
+        links: [{ title: "", url: "", description: "" }],
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+      };
     default:
       return {};
   }
@@ -155,6 +163,9 @@ export function getSectionTypeLabel(type) {
   }
   if (type === "CONTACT_INFO") {
     return "Kapcsolati adatok";
+  }
+  if (type === "LINK_DIRECTORY") {
+    return "Hasznos linkek";
   }
   const option = PAGE_SECTION_TYPES.find(({ value }) => value === type);
   return option ? option.label : type;
