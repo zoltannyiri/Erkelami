@@ -307,7 +307,7 @@ function WeekView({ days, eventsByDay, today, onEventClick }) {
   };
 
   return (
-    <div className="overflow-x-auto border border-stone-300 bg-[#fffefa]">
+    <div className="rounded-2xl overflow-x-auto border border-stone-300 bg-[#fffefa]">
       <div className="min-w-[920px]">
         <div
           className="grid border-b border-stone-300 bg-stone-50"
@@ -443,7 +443,7 @@ function ScheduleView({ days, eventsByDay, today, onEventClick }) {
   }
 
   return (
-    <div className="border border-stone-300 bg-[#fffefa]">
+    <div className="rounded-2xl overflow-hidden border border-stone-300 bg-[#fffefa]">
       {daysWithEvents.map((day) => {
         const dayEvents = eventsByDay[dateKey(day)] || [];
         const isToday = sameDay(day, today);
@@ -644,8 +644,8 @@ export default function CalendarPage() {
 
   const periodTitle = calendarView === "WEEK"
     ? weekDays[0].getMonth() === weekDays[6].getMonth()
-      ? `${MONTH_NAMES[weekDays[0].getMonth()]} ${weekDays[0].getDate()}–${weekDays[6].getDate()}. ${weekDays[6].getFullYear()}`
-      : `${MONTH_NAMES[weekDays[0].getMonth()]} ${weekDays[0].getDate()}. – ${MONTH_NAMES[weekDays[6].getMonth()]} ${weekDays[6].getDate()}. ${weekDays[6].getFullYear()}`
+      ? `${MONTH_NAMES[weekDays[0].getMonth()]} ${weekDays[0].getDate()}-${weekDays[6].getDate()}. ${weekDays[6].getFullYear()}`
+      : `${MONTH_NAMES[weekDays[0].getMonth()]} ${weekDays[0].getDate()}. - ${MONTH_NAMES[weekDays[6].getMonth()]} ${weekDays[6].getDate()}. ${weekDays[6].getFullYear()}`
     : `${MONTH_NAMES[visibleMonth.getMonth()]} ${visibleMonth.getFullYear()}`;
 
   const jumpToToday = () => {
@@ -754,7 +754,7 @@ export default function CalendarPage() {
 
         {calendarView === "MONTH" ? (
         <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,1fr)_290px]">
-          <div className="overflow-hidden border border-stone-300 bg-[#fffefa]">
+          <div className="rounded-2xl overflow-hidden border border-stone-300 bg-[#fffefa]">
             <div className="hidden grid-cols-7 border-b border-stone-200 bg-stone-50/80 md:grid">
               {WEEKDAYS.map((day, index) => (
                 <div
