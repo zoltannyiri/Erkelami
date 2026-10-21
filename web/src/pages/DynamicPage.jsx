@@ -82,15 +82,9 @@ export default function DynamicPage() {
   if (loading) {
     return (
       <main className="min-h-[60vh] bg-[#f8f1e8]">
-        <header className="border-b border-stone-200 bg-gradient-to-br from-[#f8f1e8] via-[#fffaf3] to-amber-50/40 py-9 sm:py-12">
-          <div className="mx-auto max-w-5xl px-5 sm:px-8">
-            <div className="mb-3 h-3 w-48 animate-pulse rounded bg-amber-200/70" />
-            <div className="h-10 w-2/3 animate-pulse rounded bg-slate-200" />
-          </div>
-        </header>
-        <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
+        <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
           <div className="space-y-4 animate-pulse">
-            <div className="h-5 w-1/3 rounded bg-slate-200" />
+            <div className="h-10 w-2/3 rounded bg-slate-200" />
             <div className="h-4 w-full rounded bg-slate-100" />
             <div className="h-4 w-5/6 rounded bg-slate-100" />
             <div className="h-4 w-4/6 rounded bg-slate-100" />
@@ -149,18 +143,21 @@ export default function DynamicPage() {
 
   return (
     <main className="bg-[#f8f1e8]">
-      {!startsWithHero && (
-        <header className="border-b border-stone-200 bg-gradient-to-br from-[#f8f1e8] via-[#fffaf3] to-amber-50/40 py-9 sm:py-12">
-          <div className="mx-auto max-w-5xl px-5 sm:px-8">
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">
-              Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola
-            </p>
-            <h1 className="max-w-4xl text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">
-              {page.title}
-            </h1>
-          </div>
-        </header>
-      )}
+      {/*
+        {!startsWithHero && (
+          <header className="border-b border-stone-200 bg-gradient-to-br from-[#f8f1e8] via-[#fffaf3] to-amber-50/40 py-9 sm:py-12">
+            <div className="mx-auto max-w-5xl px-5 sm:px-8">
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">
+                Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola
+              </p>
+              <h1 className="max-w-4xl text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">
+                {page.title}
+              </h1>
+            </div>
+          </header>
+        )}
+      */}
+      {!startsWithHero && <h1 className="sr-only">{page.title}</h1>}
 
       {page.sections?.map((section, index) => (
         <PageSectionRenderer

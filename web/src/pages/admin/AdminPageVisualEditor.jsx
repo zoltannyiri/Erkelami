@@ -259,15 +259,19 @@ export default function AdminPageVisualEditor() {
 
       <div className="grid items-start gap-6 p-6 xl:grid-cols-[minmax(0,1fr)_390px]">
         <div className="min-w-0 overflow-x-auto rounded-sm border border-slate-200 bg-slate-200/70 p-3 sm:p-6">
-          <div className={`mx-auto overflow-hidden bg-white shadow-[0_18px_55px_rgba(15,23,42,0.12)] transition-[max-width] duration-300 ${previewMode === "mobile" ? "w-full max-w-[390px]" : "w-full min-w-[1024px] max-w-[1440px]"}`}>
-            {!startsWithHero && (
-              <header className="border-b border-stone-200 bg-gradient-to-br from-stone-50 via-white to-amber-50/30 py-9 sm:py-12">
-                <div className="mx-auto max-w-5xl px-5 sm:px-8">
-                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola</p>
-                  <h1 className="max-w-4xl text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">{page.title}</h1>
-                </div>
-              </header>
-            )}
+          <div className={`mx-auto overflow-hidden bg-[#f8f1e8] shadow-[0_18px_55px_rgba(15,23,42,0.12)] transition-[max-width] duration-300 ${previewMode === "mobile" ? "w-full max-w-[390px]" : "w-full min-w-[1024px] max-w-[1440px]"}`}>
+            {/*
+
+              {!startsWithHero && (
+                <header className="border-b border-stone-200 bg-gradient-to-br from-[#f8f1e8] via-[#fffaf3] to-amber-50/40 py-9 sm:py-12">
+                  <div className="mx-auto max-w-5xl px-5 sm:px-8">
+                    <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola</p>
+                    <h1 className="max-w-4xl text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-5xl">{page.title}</h1>
+                  </div>
+                </header>
+              )}
+            */}
+            {!startsWithHero && <h1 className="sr-only">{page.title}</h1>}
             {page.sections.length === 0 && (
               <div className="p-12 text-center">
                 <p className="text-sm leading-6 text-slate-500">Az oldal még nem tartalmaz blokkot.</p>
