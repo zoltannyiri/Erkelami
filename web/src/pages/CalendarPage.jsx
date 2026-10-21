@@ -163,7 +163,7 @@ function EventCard({ event, compact = false, onClick }) {
     <button
       type="button"
       onClick={() => onClick(event)}
-      className={`group w-full text-left transition ${compact ? "px-1.5 py-1 hover:bg-stone-100" : "border-t border-stone-200 py-4 first:border-t-0 hover:bg-stone-50"}`}
+      className={`group w-full cursor-pointer text-left transition ${compact ? "px-1.5 py-1 hover:bg-stone-100" : "border-t border-stone-200 py-4 first:border-t-0 hover:bg-stone-50"}`}
     >
       <div className="flex items-start gap-3">
         {!compact && (
@@ -656,8 +656,8 @@ export default function CalendarPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#fffefa]">
-      <header className="border-b border-stone-200 bg-[#fffefa]">
+    <main className="min-h-screen bg-[#f8f1e8]">
+      <header className="border-b border-stone-200 bg-[#f8f1e8]">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-7 px-5 py-9 sm:px-8 sm:py-12 lg:flex-row lg:items-end">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">
@@ -709,27 +709,27 @@ export default function CalendarPage() {
             <h2 className="ml-3 min-w-44 text-2xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-3xl"><span className="capitalize">{periodTitle}</span></h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex border border-stone-300 bg-white p-1" aria-label="Naptárnézet">
+            <div className="flex border rounded-2xl border-stone-300 bg-white p-1" aria-label="Naptárnézet">
               {CALENDAR_VIEWS.map((view) => (
                 <button
                   key={view.value}
                   type="button"
                   aria-pressed={calendarView === view.value}
                   onClick={() => setCalendarView(view.value)}
-                  className={`px-3 py-2 text-xs font-semibold transition sm:px-4 ${calendarView === view.value ? "bg-slate-950 text-white" : "text-slate-500 hover:bg-stone-100 hover:text-slate-900"}`}
+                  className={`px-3 py-2 text-xs font-semibold rounded-2xl cursor-pointer transition sm:px-4 ${calendarView === view.value ? "bg-slate-950 text-white" : "text-slate-500 hover:bg-stone-100 hover:text-slate-900"}`}
                 >
                   {view.label}
                 </button>
               ))}
             </div>
             {availableCategories.length > 0 && (
-              <div className="flex flex-wrap gap-1 border border-stone-200 bg-white p-1">
+              <div className="flex flex-wrap rounded-2xl gap-1 border border-stone-200 bg-white p-1">
                 {["ALL", ...availableCategories].map((category) => (
                   <button
                     key={category}
                     type="button"
                     onClick={() => setActiveCategory(category)}
-                    className={`px-3 py-2 text-xs font-semibold transition ${activeCategory === category ? "bg-slate-950 text-white" : "text-slate-500 hover:bg-stone-100 hover:text-slate-900"}`}
+                    className={`px-3 py-2 text-xs font-semibold rounded-2xl cursor-pointer transition ${activeCategory === category ? "bg-slate-950 text-white" : "text-slate-500 hover:bg-stone-100 hover:text-slate-900"}`}
                   >
                     {category === "ALL" ? "Mind" : getCategory(category).label}
                   </button>
@@ -860,7 +860,7 @@ export default function CalendarPage() {
             </div>
           </div>
 
-          <aside className="border-t-2 border-slate-950 bg-[#fffefa] pt-5 text-slate-950 xl:sticky xl:top-24">
+          <aside className="rounded-2xl border-t-4 border-b-4 border-gray-300 bg-[#fffefa] pt-5 text-slate-950 xl:sticky xl:top-24 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-800">

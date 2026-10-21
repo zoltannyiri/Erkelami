@@ -81,8 +81,8 @@ export default function DynamicPage() {
 
   if (loading) {
     return (
-      <main className="min-h-[60vh] bg-[#fffefa]">
-        <header className="border-b border-stone-200 bg-gradient-to-br from-stone-50 via-white to-amber-50/30 py-9 sm:py-12">
+      <main className="min-h-[60vh] bg-[#f8f1e8]">
+        <header className="border-b border-stone-200 bg-gradient-to-br from-[#f8f1e8] via-[#fffaf3] to-amber-50/40 py-9 sm:py-12">
           <div className="mx-auto max-w-5xl px-5 sm:px-8">
             <div className="mb-3 h-3 w-48 animate-pulse rounded bg-amber-200/70" />
             <div className="h-10 w-2/3 animate-pulse rounded bg-slate-200" />
@@ -148,9 +148,9 @@ export default function DynamicPage() {
   const startsWithHero = page.sections?.[0]?.type === "HERO";
 
   return (
-    <main className="bg-[#fffefa]">
+    <main className="bg-[#f8f1e8]">
       {!startsWithHero && (
-        <header className="border-b border-stone-200 bg-gradient-to-br from-stone-50 via-white to-amber-50/30 py-9 sm:py-12">
+        <header className="border-b border-stone-200 bg-gradient-to-br from-[#f8f1e8] via-[#fffaf3] to-amber-50/40 py-9 sm:py-12">
           <div className="mx-auto max-w-5xl px-5 sm:px-8">
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-800">
               Tatabányai Erkel Ferenc Alapfokú Művészeti Iskola

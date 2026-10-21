@@ -48,8 +48,8 @@ export const SECTION_STYLE_DEFAULTS_BY_TYPE = {
 
 const sectionClasses = {
   background: {
-    white: "bg-[#fffefa]",
-    soft: "bg-stone-50/80",
+    white: "bg-[#f8f1e8]",
+    soft: "bg-[#f4ece1]",
     muted: "bg-slate-100/75",
     dark: "bg-slate-950 text-white",
     accent: "bg-amber-50/70",
