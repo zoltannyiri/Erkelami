@@ -52,10 +52,7 @@ export default function HomePage() {
           </div>
         </section>
       ) : highlights ? (
-        <HomeHighlights
-          title={highlights.title}
-          items={highlights.items}
-        />
+        <HomeHighlights items={highlights.items} />
       ) : null}
     </main>
   );

@@ -127,7 +127,7 @@ function HomeTile({ item, index }) {
     : <article className={className}>{content}</article>;
 }
 
-export default function HomeHighlights({ title, items = [] }) {
+export default function HomeHighlights({ items = [] }) {
   if (items.length === 0) return null;
 
   return (
@@ -145,7 +145,7 @@ export default function HomeHighlights({ title, items = [] }) {
               Az iskola életéből
             </p>
             <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">
-              {title || "Hírek és tudnivalók"}
+              Hírek és tudnivalók
             </h2>
           </div>
           <span className="mt-4 inline-flex rounded-full bg-teal-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm sm:mt-0">
