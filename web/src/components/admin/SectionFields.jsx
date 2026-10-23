@@ -11,6 +11,9 @@ import PdfViewerEditor from "./page-editor/editors/PdfViewerEditor";
 import StaffDirectoryEditor from "./page-editor/editors/StaffDirectoryEditor";
 import ContactInfoEditor from "./page-editor/editors/ContactInfoEditor";
 import LinkDirectoryEditor from "./page-editor/editors/LinkDirectoryEditor";
+import ConcertArchiveEditor from "./page-editor/editors/ConcertArchiveEditor";
+import { resolveSectionType } from "../../config/pageSectionTypes";
+import { normalizeConcertArchiveContent } from "../../config/concertArchive";
 
 const editors = {
   TEXT: TextEditor,
@@ -25,11 +28,16 @@ const editors = {
   STAFF_DIRECTORY: StaffDirectoryEditor,
   CONTACT_INFO: ContactInfoEditor,
   LINK_DIRECTORY: LinkDirectoryEditor,
+  CONCERT_ARCHIVE: ConcertArchiveEditor,
 };
 
 export default function SectionFields({ type, content = {}, onChange }) {
-  const Editor = editors[type];
-  const updateField = (field, value) => onChange({ ...content, [field]: value });
+  const resolvedType = resolveSectionType(type, content);
+  const Editor = editors[resolvedType];
+  const changeBase = resolvedType === "CONCERT_ARCHIVE"
+    ? normalizeConcertArchiveContent(content)
+    : content;
+  const updateField = (field, value) => onChange({ ...changeBase, [field]: value });
 
   if (!Editor) return null;
 
@@ -37,7 +45,7 @@ export default function SectionFields({ type, content = {}, onChange }) {
     <div className="space-y-6">
       <Editor content={content} updateField={updateField} />
       <SectionStyleControls
-        type={type}
+        type={resolvedType}
         value={content.style}
         onChange={(style) => updateField("style", style)}
       />

@@ -10,6 +10,8 @@ import PdfViewerSection from "./PdfViewerSection";
 import StaffDirectorySection from "./StaffDirectorySection";
 import ContactInfoSection from "./ContactInfoSection";
 import LinkDirectorySection from "./LinkDirectorySection";
+import ConcertArchiveSection from "./ConcertArchiveSection";
+import { resolveSectionType } from "../../config/pageSectionTypes";
 
 const renderers = {
   TEXT: TextSection,
@@ -24,10 +26,11 @@ const renderers = {
   STAFF_DIRECTORY: StaffDirectorySection,
   CONTACT_INFO: ContactInfoSection,
   LINK_DIRECTORY: LinkDirectorySection,
+  CONCERT_ARCHIVE: ConcertArchiveSection,
 };
 
 export default function PageSectionRenderer({ section, pageTitle, editorMode = false, imageResizeEnabled = editorMode, previewMode, onContentChange }) {
-  const Renderer = renderers[section.type];
+  const Renderer = renderers[resolveSectionType(section.type, section.content)];
   if (!Renderer) return null;
 
   return (

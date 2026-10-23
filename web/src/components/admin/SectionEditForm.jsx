@@ -32,7 +32,7 @@ export default function SectionEditForm({ section, onClose, onSaved }) {
     <form onSubmit={handleSubmit} className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-6 shadow-inner">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-lg font-semibold">Blokk szerkesztése</h3>
-        <span className="text-xs font-medium uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type)}</span>
+        <span className="text-xs font-medium uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type, section.content)}</span>
       </div>
 
       <SectionFields type={section.type} content={content} onChange={setContent} />

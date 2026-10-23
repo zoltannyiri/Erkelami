@@ -44,6 +44,7 @@ export const SECTION_STYLE_DEFAULTS_BY_TYPE = {
   STAFF_DIRECTORY: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
   CONTACT_INFO: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
   LINK_DIRECTORY: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+  CONCERT_ARCHIVE: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
 };
 
 const sectionClasses = {

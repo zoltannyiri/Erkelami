@@ -53,7 +53,7 @@ export default function VisualSectionWrapper({
     >
       <div className={`absolute right-2 top-2 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center justify-end gap-1 border bg-white/90 p-1 shadow-sm backdrop-blur transition ${selected ? "border-amber-600 opacity-100" : "border-slate-200 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"}`}>
         <span className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-600">
-          {getSectionTypeLabel(section.type)}{section.visible ? "" : " · rejtett"}
+          {getSectionTypeLabel(section.type, section.content)}{section.visible ? "" : " · rejtett"}
         </span>
         <button type="button" onClick={(event) => { event.stopPropagation(); onSelect(); }} className="bg-slate-950 px-2.5 py-1.5 text-xs font-medium text-white">Kijelölés</button>
         <button

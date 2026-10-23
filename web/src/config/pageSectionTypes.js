@@ -1,3 +1,5 @@
+import { isConcertArchiveContent } from "./concertArchive";
+
 export const PAGE_SECTION_TYPES = [
   { value: "TEXT", label: "Szöveg" },
   { value: "IMAGE", label: "Kép" },
@@ -11,6 +13,7 @@ export const PAGE_SECTION_TYPES = [
   { value: "STAFF_DIRECTORY", label: "Munkatársi névsor" },
   { value: "CONTACT_INFO", label: "Kapcsolati adatok" },
   { value: "LINK_DIRECTORY", label: "Hasznos linkek" },
+  { value: "CONCERT_ARCHIVE", label: "Koncertlista" },
 ];
 
 export function createEmptySectionContent(type) {
@@ -146,39 +149,62 @@ export function createEmptySectionContent(type) {
         links: [{ title: "", url: "", description: "" }],
         style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
       };
+    case "CONCERT_ARCHIVE":
+      return {
+        heading: "Zeneiskolai koncertjeink",
+        intro: "Hangversenyeink, iskolai rendezvényeink és növendékeink fellépéseinek felvételei tanévenként.",
+        groups: [
+          {
+            label: "2026/2027",
+            events: [
+              { date: "", title: "", location: "", description: "", imageUrl: "", linkUrl: "", buttonText: "Felvétel megtekintése", visible: true },
+            ],
+          },
+        ],
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+      };
     default:
       return {};
   }
 }
 
-export function getSectionTypeLabel(type) {
-  if (type === "DOWNLOADS") {
+export function resolveSectionType(type, content) {
+  return type === "TEXT" && isConcertArchiveContent(content) ? "CONCERT_ARCHIVE" : type;
+}
+
+export function getSectionTypeLabel(type, content) {
+  const resolvedType = resolveSectionType(type, content);
+  if (resolvedType === "DOWNLOADS") {
     return "Dokumentumok";
   }
-  if (type === "PDF_VIEWER") {
+  if (resolvedType === "PDF_VIEWER") {
     return "PDF megjelenítő";
   }
-  if (type === "STAFF_DIRECTORY") {
+  if (resolvedType === "STAFF_DIRECTORY") {
     return "Munkatársi névsor";
   }
-  if (type === "CONTACT_INFO") {
+  if (resolvedType === "CONTACT_INFO") {
     return "Kapcsolati adatok";
   }
-  if (type === "LINK_DIRECTORY") {
+  if (resolvedType === "LINK_DIRECTORY") {
     return "Hasznos linkek";
   }
-  const option = PAGE_SECTION_TYPES.find(({ value }) => value === type);
-  return option ? option.label : type;
+  if (resolvedType === "CONCERT_ARCHIVE") {
+    return "Koncertlista";
+  }
+  const option = PAGE_SECTION_TYPES.find(({ value }) => value === resolvedType);
+  return option ? option.label : resolvedType;
 }
 
 export function getSectionDisplayName(section) {
-  if (section.type === "DOWNLOADS") {
+  const resolvedType = resolveSectionType(section.type, section.content);
+  if (resolvedType === "DOWNLOADS") {
     return section.content?.heading || "Dokumentumok";
   }
-  if (section.type === "PDF_VIEWER") {
+  if (resolvedType === "PDF_VIEWER") {
     return section.content?.heading || "PDF megjelenítő";
   }
-  const label = PAGE_SECTION_TYPES.find(({ value }) => value === section.type)?.label;
+  const label = PAGE_SECTION_TYPES.find(({ value }) => value === resolvedType)?.label;
 
   return section.content?.heading || section.content?.alt || label || "Tartalmi blokk";
 }

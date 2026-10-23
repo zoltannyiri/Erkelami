@@ -11,7 +11,7 @@ export default function SectionList({ sections, onMove, onEdit, onDelete }) {
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-sm font-bold text-white shadow-sm">{index + 1}</div>
         <div className="min-w-0">
           <p className="truncate font-medium text-slate-950">{getSectionDisplayName(section)}</p>
-          <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type)}{section.visible ? "" : " · rejtett"}</p>
+          <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{getSectionTypeLabel(section.type, section.content)}{section.visible ? "" : " · rejtett"}</p>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2 sm:mt-0 sm:flex-nowrap">
