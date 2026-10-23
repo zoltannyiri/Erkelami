@@ -120,7 +120,7 @@ function HomeTile({ item, index }) {
     </>
   );
 
-  const className = `group flex h-full flex-col overflow-hidden border border-stone-200 bg-white shadow-[0_10px_30px_rgba(51,38,34,0.07)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(51,38,34,0.14)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700 ${palette.hoverBorder}`;
+  const className = `group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-[0_10px_30px_rgba(51,38,34,0.07)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(51,38,34,0.14)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700 ${palette.hoverBorder}`;
 
   return item.linkUrl
     ? <SmartLink to={item.linkUrl} className={className}>{content}</SmartLink>
