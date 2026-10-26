@@ -5,7 +5,7 @@ const defaults = {
   background: "soft",
   width: "normal",
   spacing: "normal",
-  textAlign: "left",
+  textAlign: "center",
 };
 
 export default function DownloadsSection({ content = {}, editorMode = false }) {
@@ -60,7 +60,7 @@ export default function DownloadsSection({ content = {}, editorMode = false }) {
       )}
 
       {hasFiles && (
-        <div className="grid gap-4">
+        <div className="grid gap-4 text-left">
           {files.map((file, index) => {
             const hasUrl = Boolean(file.fileUrl && file.fileUrl.trim());
             const fileType = (file.fileType || "PDF").toUpperCase();

@@ -1,4 +1,4 @@
-import { EditorGroup, SelectField, TextField } from "../FormControls";
+import { EditorGroup, SelectField, TextField, TextAlignField } from "../FormControls";
 import ImageStyleControls from "../ImageStyleControls";
 import ImageUploadField from "../../ImageUploadField";
 
@@ -14,6 +14,16 @@ export default function GalleryEditor({ content, updateField }) {
     <>
       <EditorGroup title="Galéria">
         <TextField label="Cím" value={content.heading} onChange={(value) => updateField("heading", value)} />
+        <TextAlignField
+          label="Cím igazítása"
+          value={content.style?.textAlign || "center"}
+          onChange={(align) =>
+            updateField("style", {
+              ...(content.style || {}),
+              textAlign: align,
+            })
+          }
+        />
         <div className="grid gap-4 sm:grid-cols-2">
           <SelectField label="Elrendezés" value={content.layout || "grid"} onChange={(value) => updateField("layout", value)} options={[
             { value: "grid", label: "Rács" },

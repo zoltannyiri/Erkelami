@@ -28,23 +28,23 @@ export const DEFAULT_SECTION_STYLE = {
   background: "white",
   width: "normal",
   spacing: "normal",
-  textAlign: "left",
+  textAlign: "center",
 };
 
 export const SECTION_STYLE_DEFAULTS_BY_TYPE = {
-  TEXT: { background: "white", width: "narrow", spacing: "normal", textAlign: "left" },
+  TEXT: { background: "white", width: "narrow", spacing: "normal", textAlign: "center" },
   IMAGE: { background: "white", width: "wide", spacing: "compact", textAlign: "left" },
   TEXT_IMAGE: { background: "soft", width: "wide", spacing: "normal", textAlign: "left" },
-  CARD_GRID: { background: "soft", width: "wide", spacing: "normal", textAlign: "left" },
-  GALLERY: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
-  HERO: { background: "dark", width: "full", spacing: "compact", textAlign: "left" },
-  CTA: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
-  DOWNLOADS: { background: "soft", width: "normal", spacing: "normal", textAlign: "left" },
-  PDF_VIEWER: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
-  STAFF_DIRECTORY: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
-  CONTACT_INFO: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
-  LINK_DIRECTORY: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
-  CONCERT_ARCHIVE: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+  CARD_GRID: { background: "soft", width: "wide", spacing: "normal", textAlign: "center" },
+  GALLERY: { background: "white", width: "wide", spacing: "normal", textAlign: "center" },
+  HERO: { background: "dark", width: "full", spacing: "compact", textAlign: "center" },
+  CTA: { background: "white", width: "wide", spacing: "normal", textAlign: "center" },
+  DOWNLOADS: { background: "soft", width: "normal", spacing: "normal", textAlign: "center" },
+  PDF_VIEWER: { background: "white", width: "wide", spacing: "normal", textAlign: "center" },
+  STAFF_DIRECTORY: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
+  CONTACT_INFO: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
+  LINK_DIRECTORY: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
+  CONCERT_ARCHIVE: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
 };
 
 const sectionClasses = {
@@ -167,7 +167,7 @@ export function resolveSectionStyle(style = {}, defaults = {}) {
     background: safeToken(merged.background, sectionClasses.background, "white"),
     width: safeToken(merged.width, sectionClasses.width, "normal"),
     spacing: safeToken(merged.spacing, sectionClasses.spacing, "normal"),
-    textAlign: safeToken(merged.textAlign, sectionClasses.textAlign, "left"),
+    textAlign: safeToken(merged.textAlign, sectionClasses.textAlign, "center"),
   };
 }
 

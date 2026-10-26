@@ -1,4 +1,4 @@
-const style = (background, width, spacing, textAlign = "left") => ({
+const style = (background, width, spacing, textAlign = "center") => ({
   background,
   width,
   spacing,
@@ -29,7 +29,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Bevezető",
           text: "",
-          style: style("white", "narrow", "normal", "left"),
+          style: style("white", "narrow", "normal", "center"),
         },
       },
       {
@@ -37,7 +37,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "További információk",
           text: "",
-          style: style("soft", "narrow", "normal"),
+          style: style("soft", "narrow", "normal", "center"),
         },
       },
     ],
@@ -53,7 +53,7 @@ export const PAGE_TEMPLATES = {
           description: "",
           pdfUrl: "",
           height: "large",
-          style: style("white", "wide", "normal", "left"),
+          style: style("white", "wide", "normal", "center"),
         },
       },
     ],
@@ -67,7 +67,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Tájékoztató",
           text: "",
-          style: style("white", "wide", "normal", "left"),
+          style: style("white", "wide", "normal", "center"),
         },
       },
       {
@@ -77,7 +77,7 @@ export const PAGE_TEMPLATES = {
           description: "",
           pdfUrl: "",
           height: "large",
-          style: style("soft", "wide", "normal", "left"),
+          style: style("soft", "wide", "normal", "center"),
         },
       },
     ],
@@ -91,7 +91,7 @@ export const PAGE_TEMPLATES = {
         content: {
           heading: "Eredmények",
           text: "",
-          style: style("white", "narrow", "normal", "left"),
+          style: style("white", "narrow", "normal", "center"),
         },
       },
       {
@@ -100,7 +100,7 @@ export const PAGE_TEMPLATES = {
           heading: "Kapcsolódó dokumentumok",
           description: "",
           files: [],
-          style: style("soft", "normal", "normal", "left"),
+          style: style("soft", "normal", "normal", "center"),
         },
       },
     ],

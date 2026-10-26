@@ -22,7 +22,7 @@ export function createEmptySectionContent(type) {
       return {
         heading: "",
         text: "",
-        style: { background: "white", width: "narrow", spacing: "normal", textAlign: "left" },
+        style: { background: "white", width: "narrow", spacing: "normal", textAlign: "center" },
       };
     case "IMAGE":
       return {
@@ -53,7 +53,7 @@ export function createEmptySectionContent(type) {
         cardStyle: "bordered",
         imageRatio: "4:3",
         imageStyle: { aspectRatio: "4:3", height: "auto", fit: "cover", position: "center", radius: "none", width: "full" },
-        style: { background: "soft", width: "wide", spacing: "large", textAlign: "left" },
+        style: { background: "soft", width: "wide", spacing: "large", textAlign: "center" },
       };
     case "GALLERY":
       return {
@@ -64,7 +64,7 @@ export function createEmptySectionContent(type) {
         imageRatio: "4:3",
         gap: "normal",
         imageStyle: { aspectRatio: "4:3", height: "auto", fit: "cover", position: "center", radius: "small", width: "full" },
-        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
       };
     case "HERO":
       return {
@@ -95,7 +95,7 @@ export function createEmptySectionContent(type) {
         heading: "",
         description: "",
         files: [],
-        style: { background: "soft", width: "normal", spacing: "normal", textAlign: "left" },
+        style: { background: "soft", width: "normal", spacing: "normal", textAlign: "center" },
       };
     case "PDF_VIEWER":
       return {
@@ -103,7 +103,7 @@ export function createEmptySectionContent(type) {
         description: "",
         pdfUrl: "",
         height: "large",
-        style: { background: "white", width: "wide", spacing: "normal", textAlign: "left" },
+        style: { background: "white", width: "wide", spacing: "normal", textAlign: "center" },
       };
     case "STAFF_DIRECTORY":
       return {
@@ -121,7 +121,7 @@ export function createEmptySectionContent(type) {
             members: [{ name: "", role: "" }],
           },
         ],
-        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
       };
     case "CONTACT_INFO":
       return {
@@ -140,14 +140,14 @@ export function createEmptySectionContent(type) {
           address: "",
           email: "",
         },
-        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
       };
     case "LINK_DIRECTORY":
       return {
         heading: "Fontos linkek",
         intro: "Hasznos oktatási, zenei és kulturális oldalak egy helyen.",
         links: [{ title: "", url: "", description: "" }],
-        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
       };
     case "CONCERT_ARCHIVE":
       return {
@@ -161,7 +161,7 @@ export function createEmptySectionContent(type) {
             ],
           },
         ],
-        style: { background: "white", width: "wide", spacing: "large", textAlign: "left" },
+        style: { background: "white", width: "wide", spacing: "large", textAlign: "center" },
       };
     default:
       return {};

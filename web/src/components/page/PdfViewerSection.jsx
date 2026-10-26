@@ -5,7 +5,7 @@ const defaults = {
   background: "white",
   width: "wide",
   spacing: "normal",
-  textAlign: "left",
+  textAlign: "center",
 };
 
 const heightClasses = {
@@ -54,7 +54,7 @@ export default function PdfViewerSection({ content = {}, editorMode = false }) {
       )}
 
       {hasUrl ? (
-        <div className="space-y-3">
+        <div className="space-y-3 text-left">
 
           <div className="overflow-hidden rounded-b-sm border border-slate-200 bg-white shadow-sm">
             <iframe

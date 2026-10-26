@@ -1,4 +1,4 @@
-import { EditorGroup, SelectField, TextAreaField, TextField } from "../FormControls";
+import { EditorGroup, SelectField, TextAreaField, TextField, TextAlignField } from "../FormControls";
 import ImageStyleControls from "../ImageStyleControls";
 import ImageUploadField from "../../ImageUploadField";
 
@@ -14,6 +14,16 @@ export default function CardGridEditor({ content, updateField }) {
     <>
       <EditorGroup title="Kártyarács">
         <TextField label="Cím" value={content.heading} onChange={(value) => updateField("heading", value)} />
+        <TextAlignField
+          label="Cím igazítása"
+          value={content.style?.textAlign || "center"}
+          onChange={(align) =>
+            updateField("style", {
+              ...(content.style || {}),
+              textAlign: align,
+            })
+          }
+        />
         <div className="grid gap-4 sm:grid-cols-3">
           <SelectField label="Oszlopok" value={String(content.columns || "3")} onChange={(value) => updateField("columns", value)} options={["2", "3", "4"]} />
           <SelectField label="Kártyastílus" value={content.cardStyle || "bordered"} onChange={(value) => updateField("cardStyle", value)} options={[

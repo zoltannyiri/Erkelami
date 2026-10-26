@@ -1,4 +1,4 @@
-import { EditorGroup, SelectField, TextAreaField, TextField } from "../FormControls";
+import { EditorGroup, SelectField, TextAreaField, TextField, TextAlignField } from "../FormControls";
 import FileUploadField from "../../FileUploadField";
 
 const FILE_TYPE_OPTIONS = [
@@ -45,6 +45,16 @@ export default function DownloadsEditor({ content, updateField }) {
           value={content.heading}
           onChange={(value) => updateField("heading", value)}
           placeholder="pl. Dokumentumok / Letöltések"
+        />
+        <TextAlignField
+          label="Cím igazítása"
+          value={content.style?.textAlign || "center"}
+          onChange={(align) =>
+            updateField("style", {
+              ...(content.style || {}),
+              textAlign: align,
+            })
+          }
         />
         <TextAreaField
           label="Leírás"

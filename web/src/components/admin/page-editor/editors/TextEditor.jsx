@@ -1,10 +1,20 @@
-import { EditorGroup, TextField } from "../FormControls";
+import { EditorGroup, TextField, TextAlignField } from "../FormControls";
 import RichTextEditor from "../LazyRichTextEditor";
 
 export default function TextEditor({ content, updateField }) {
   return (
     <EditorGroup title="Tartalom">
       <TextField label="Blokk címe" value={content.heading} onChange={(value) => updateField("heading", value)} />
+      <TextAlignField
+        label="Cím igazítása"
+        value={content.style?.textAlign || "center"}
+        onChange={(align) =>
+          updateField("style", {
+            ...(content.style || {}),
+            textAlign: align,
+          })
+        }
+      />
       <div>
         <span className="mb-2 block text-sm font-medium text-slate-700">Formázott szöveg</span>
         <RichTextEditor value={content.richText} fallbackText={content.text} onChange={(value) => updateField("richText", value)} />
