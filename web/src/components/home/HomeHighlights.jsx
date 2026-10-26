@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import SmartLink from "../common/SmartLink";
 import ScrollReveal from "../ScrollReveal";
+import ImageLightbox from "../common/ImageLightbox";
 
 const tilePalettes = [
   {
@@ -75,11 +76,34 @@ function ImageFallback({ title, palette }) {
   );
 }
 
-function TileImage({ item, palette }) {
+function TileImage({ item, palette, isPoster }) {
   const [failed, setFailed] = useState(false);
 
   if (!item.imageUrl || failed) {
     return <ImageFallback title={item.title} palette={palette} />;
+  }
+
+  // Plakát esetén: az elmosott háttér kitölti a 4:3 keretet,
+  // előtte pedig a teljes álló plakát arányosan, levágás nélkül látszik
+  if (isPoster) {
+    return (
+      <div className="relative h-full w-full overflow-hidden bg-slate-950">
+        <img
+          src={item.imageUrl}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-md"
+        />
+        <img
+          src={item.imageUrl}
+          alt={item.title || "Plakát"}
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+          className="relative z-10 h-full w-full object-contain p-2 transition duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
+        />
+      </div>
+    );
   }
 
   return (
@@ -100,21 +124,38 @@ function TileImage({ item, palette }) {
   );
 }
 
-function HomeTile({ item, index }) {
+function HomeTile({ item, index, onOpenPoster }) {
   const palette = tilePalettes[index % tilePalettes.length];
-  const isPdf = Boolean(
-    item.linkUrl &&
-      (/\.pdf($|\?)/i.test(item.linkUrl) || item.linkUrl.includes("/documents/"))
+
+  const isPoster = Boolean(
+    item.imageUrl &&
+      (item.linkUrl === item.imageUrl ||
+        item.linkUrl === "#poster" ||
+        /\.(jpg|jpeg|png|webp)($|\?)/i.test(item.linkUrl || ""))
   );
+
+  const isPdf =
+    !isPoster &&
+    Boolean(
+      item.linkUrl &&
+        (/\.pdf($|\?)/i.test(item.linkUrl) || item.linkUrl.includes("/documents/"))
+    );
 
   const content = (
     <>
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-900">
-        <TileImage item={item} palette={palette} />
-        <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-1 ${palette.accent}`} />
+        <TileImage item={item} palette={palette} isPoster={isPoster} />
+        <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 z-20 h-1 ${palette.accent}`} />
+
+        {isPoster && (
+          <span className="absolute right-3 top-3 z-20 rounded-md border border-white/15 bg-slate-950/85 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white shadow-sm backdrop-blur-sm">
+            PLAKÁT
+          </span>
+        )}
+
         {isPdf && (
-          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-md bg-slate-950/80 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white shadow-sm backdrop-blur-sm">
-            <span>📄</span> PDF
+          <span className="absolute right-3 top-3 z-20 rounded-md border border-white/15 bg-slate-950/85 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white shadow-sm backdrop-blur-sm">
+            PDF
           </span>
         )}
       </div>
@@ -124,13 +165,65 @@ function HomeTile({ item, index }) {
         <h3 className={`text-lg font-semibold leading-snug tracking-[-0.015em] text-slate-900 transition-colors sm:text-xl ${palette.hoverText}`}>
           {item.title}
         </h3>
-        {item.linkUrl && (
+
+        {(item.linkUrl || isPoster) && (
           <span
             aria-hidden="true"
-            className={`ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg transition duration-300 group-hover:translate-x-1 ${palette.arrow}`}
-            title={isPdf ? "PDF megnyitása" : "Megnyitás"}
+            className={`ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition duration-300 group-hover:translate-x-1 ${palette.arrow}`}
+            title={
+              isPoster
+                ? "Plakát megnyitása"
+                : isPdf
+                ? "PDF megnyitása"
+                : "Megnyitás"
+            }
           >
-            {isPdf ? "↓" : "→"}
+            {isPoster ? (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                />
+              </svg>
+            ) : isPdf ? (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            )}
           </span>
         )}
       </div>
@@ -139,51 +232,78 @@ function HomeTile({ item, index }) {
 
   const className = `group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-[0_10px_30px_rgba(51,38,34,0.07)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(51,38,34,0.14)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-700 ${palette.hoverBorder}`;
 
+  if (isPoster) {
+    return (
+      <button
+        type="button"
+        onClick={() => onOpenPoster(item)}
+        className={`${className} cursor-pointer text-left w-full`}
+      >
+        {content}
+      </button>
+    );
+  }
+
   return item.linkUrl
     ? <SmartLink to={item.linkUrl} className={className}>{content}</SmartLink>
     : <article className={className}>{content}</article>;
 }
 
 export default function HomeHighlights({ items = [] }) {
+  const [activePoster, setActivePoster] = useState(null);
+
   if (items.length === 0) return null;
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#f8f1e8] py-14 sm:py-16 lg:py-20">
-      <div aria-hidden="true" className="absolute -left-24 top-10 -z-10 h-72 w-72 rounded-full bg-rose-200/35 blur-3xl" />
-      <div aria-hidden="true" className="absolute -right-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-teal-200/35 blur-3xl" />
-      <div aria-hidden="true" className="absolute bottom-0 left-1/3 -z-10 h-64 w-64 rounded-full bg-amber-200/30 blur-3xl" />
+    <>
+      <section className="relative isolate overflow-hidden bg-[#f8f1e8] py-14 sm:py-16 lg:py-20">
+        <div aria-hidden="true" className="absolute -left-24 top-10 -z-10 h-72 w-72 rounded-full bg-rose-200/35 blur-3xl" />
+        <div aria-hidden="true" className="absolute -right-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-teal-200/35 blur-3xl" />
+        <div aria-hidden="true" className="absolute bottom-0 left-1/3 -z-10 h-64 w-64 rounded-full bg-amber-200/30 blur-3xl" />
 
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <ScrollReveal direction="up" threshold={0.05}>
-          <div className="mb-9 sm:mb-10">
-            <div aria-hidden="true" className="mb-5 h-px w-full bg-gradient-to-r from-rose-700 via-amber-500 to-teal-700" />
-            <div className="sm:flex sm:items-end sm:justify-between">
-              <div>
-                <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">
-                  Hírek és tudnivalók
-                </h2>
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <ScrollReveal direction="up" threshold={0.05}>
+            <div className="mb-9 sm:mb-10">
+              <div aria-hidden="true" className="mb-5 h-px w-full bg-gradient-to-r from-rose-700 via-amber-500 to-teal-700" />
+              <div className="sm:flex sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">
+                    Hírek és tudnivalók
+                  </h2>
+                </div>
+                <span className="mt-4 inline-flex rounded-full bg-teal-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm sm:mt-0">
+                  Aktuális
+                </span>
               </div>
-              <span className="mt-4 inline-flex rounded-full bg-teal-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm sm:mt-0">
-                Aktuális
-              </span>
             </div>
-          </div>
-        </ScrollReveal>
+          </ScrollReveal>
 
-        <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {items.map((item, index) => (
-            <ScrollReveal
-              key={item.id}
-              direction="up"
-              delay={index * 120}
-              threshold={0.05}
-              className="h-full"
-            >
-              <HomeTile item={item} index={index} />
-            </ScrollReveal>
-          ))}
+          <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {items.map((item, index) => (
+              <ScrollReveal
+                key={item.id}
+                direction="up"
+                delay={index * 120}
+                threshold={0.05}
+                className="h-full"
+              >
+                <HomeTile
+                  item={item}
+                  index={index}
+                  onOpenPoster={(posterItem) => setActivePoster(posterItem)}
+                />
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <ImageLightbox
+        isOpen={Boolean(activePoster)}
+        onClose={() => setActivePoster(null)}
+        imageUrl={activePoster?.imageUrl}
+        title={activePoster?.title}
+      />
+    </>
   );
 }

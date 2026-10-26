@@ -5,6 +5,13 @@ import FileUploadField from "./FileUploadField";
 const isPdfUrl = (url) =>
   Boolean(url && (/\.pdf($|\?)/i.test(url) || url.includes("/documents/")));
 
+const isPosterUrl = (url, imageUrl) =>
+  Boolean(
+    (url && imageUrl && url === imageUrl) ||
+      url === "#poster" ||
+      (url && /\.(jpg|jpeg|png|webp)($|\?)/i.test(url))
+  );
+
 export default function HomeItemForm({ sectionId, item = null, onClose, onSaved }) {
   const isEditing = Boolean(item);
 
@@ -15,9 +22,11 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
     visible: item?.visible ?? true,
   });
 
-  const [targetType, setTargetType] = useState(
-    isPdfUrl(item?.linkUrl) ? "pdf" : "url"
-  );
+  const [targetType, setTargetType] = useState(() => {
+    if (isPosterUrl(item?.linkUrl, item?.imageUrl)) return "poster";
+    if (isPdfUrl(item?.linkUrl)) return "pdf";
+    return "url";
+  });
 
   const [saving, setSaving] = useState(false);
   const [generatingCover, setGeneratingCover] = useState(false);
@@ -31,6 +40,21 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
       ...current,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleSelectTargetType = (type) => {
+    setTargetType(type);
+    if (type === "poster") {
+      setForm((current) => ({
+        ...current,
+        linkUrl: current.imageUrl || "#poster",
+      }));
+    } else if (targetType === "poster" && form.linkUrl === (form.imageUrl || "#poster")) {
+      setForm((current) => ({
+        ...current,
+        linkUrl: "",
+      }));
+    }
   };
 
   const generateAndSetCoverFromPdf = async (pdfSource) => {
@@ -56,12 +80,13 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
         setForm((current) => ({
           ...current,
           imageUrl: response.data.url,
+          ...(targetType === "poster" ? { linkUrl: response.data.url } : {}),
         }));
-        setCoverNotice("A borítókép sikeresen elkészült a PDF 1. oldalából!");
+        setCoverNotice("A borítókép sikeresen elkészült a PDF 1. oldalából.");
       }
     } catch (err) {
       console.error("PDF borítókép generálási hiba:", err);
-      setCoverNotice("Nem sikerült automatikusan kinyerni a borítóképet a PDF-ből. Tölts fel egy képet kézzel.");
+      setCoverNotice("Nem sikerült a borítóképet kinyerni a PDF-ből. Tölts fel egy képet kézzel.");
     } finally {
       setGeneratingCover(false);
     }
@@ -73,10 +98,18 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
       linkUrl: uploadedFile.url,
     }));
 
-    // Ha még nincs borítókép megadva, automatikusan legeneráljuk a PDF 1. oldalából!
     if (!form.imageUrl) {
       await generateAndSetCoverFromPdf(rawFile || uploadedFile.url);
     }
+  };
+
+  const handleImageUploaded = (uploadedFile) => {
+    setForm((current) => ({
+      ...current,
+      imageUrl: uploadedFile.url,
+      ...(targetType === "poster" ? { linkUrl: uploadedFile.url } : {}),
+    }));
+    setCoverNotice(null);
   };
 
   const handleSubmit = async (event) => {
@@ -86,10 +119,18 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
     setError(null);
 
     try {
+      const payload = {
+        ...form,
+        linkUrl:
+          targetType === "poster"
+            ? form.imageUrl || "#poster"
+            : form.linkUrl,
+      };
+
       if (isEditing) {
-        await axios.patch(`${import.meta.env.VITE_API_URL}/api/admin/home/items/${item.id}`, form);
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/admin/home/items/${item.id}`, payload);
       } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/home/sections/${sectionId}/items`, form);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/home/sections/${sectionId}/items`, payload);
       }
 
       await onSaved();
@@ -128,14 +169,14 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
             onChange={handleChange}
             required
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
-            placeholder="pl. Szolfézs csoportok és órarend"
+            placeholder="pl. Tavaszi Hangverseny 2026"
           />
         </div>
 
         <div>
           <div className="mb-2 flex items-center justify-between">
             <label className="block text-sm font-medium text-slate-700">
-              Borítókép
+              Kép / Plakát
             </label>
 
             {isPdfUrl(form.linkUrl) && (
@@ -145,12 +186,11 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
                 onClick={() => generateAndSetCoverFromPdf(form.linkUrl)}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-slate-950 disabled:opacity-50"
               >
-                <span>📸</span>
                 {generatingCover
                   ? "Generálás..."
                   : form.imageUrl
-                  ? "Borítókép újragenerálása PDF-ből"
-                  : "Borítókép kinyerése a PDF 1. oldalából"}
+                  ? "Kép újragenerálása PDF-ből"
+                  : "Kép kinyerése a PDF 1. oldalából"}
               </button>
             )}
           </div>
@@ -158,31 +198,33 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
           <FileUploadField
             category="image"
             accept=".jpg,.jpeg,.png,.webp"
-            label="Kép feltöltése"
-            onUploaded={(uploadedFile) => {
-              setForm((current) => ({
-                ...current,
-                imageUrl: uploadedFile.url,
-              }));
-              setCoverNotice(null);
-            }}
+            label="Kép vagy plakát feltöltése"
+            onUploaded={handleImageUploaded}
           />
 
           <input
             name="imageUrl"
             value={form.imageUrl}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              if (targetType === "poster") {
+                setForm((current) => ({
+                  ...current,
+                  imageUrl: e.target.value,
+                  linkUrl: e.target.value || "#poster",
+                }));
+              }
+            }}
             className="mt-4 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
             placeholder="/uploads/images/... vagy https://..."
           />
 
           <p className="mt-2 text-xs text-slate-500">
-            Feltölthetsz fotót, megadhatsz kép URL-t, vagy PDF feltöltésekor automatikusan létrejön az 1. oldalból.
+            Feltölthetsz fotót, álló plakátot, vagy PDF esetén automatikusan létrejön az 1. oldalból.
           </p>
 
           {generatingCover && (
             <div className="mt-3 flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs font-medium text-amber-900 animate-pulse">
-              <span>⏳</span>
               <span>A PDF első oldalának feldolgozása borítóképnek...</span>
             </div>
           )}
@@ -198,22 +240,28 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
           <div>
             <div className="mb-2 flex items-center justify-between">
               <p className="text-sm font-medium text-slate-700">
-                Borítókép előnézete
+                Kép előnézete
               </p>
               <button
                 type="button"
-                onClick={() => setForm((current) => ({ ...current, imageUrl: "" }))}
+                onClick={() =>
+                  setForm((current) => ({
+                    ...current,
+                    imageUrl: "",
+                    ...(targetType === "poster" ? { linkUrl: "" } : {}),
+                  }))
+                }
                 className="text-xs font-semibold text-red-600 hover:text-red-800"
               >
                 Kép eltávolítása
               </button>
             </div>
 
-            <div className="h-44 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="h-44 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 p-1 shadow-sm">
               <img
                 src={form.imageUrl}
                 alt=""
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
             </div>
           </div>
@@ -224,35 +272,67 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
             Hivatkozás / Cél
           </label>
           <p className="mb-3 text-xs text-slate-500">
-            Válaszd ki, hogy a csempére kattintva egy belső/külső oldal nyíljon meg, vagy egy feltöltött PDF dokumentum.
+            Válaszd ki, hogy mi történjen, ha a látogató a csempére kattint a főoldalon.
           </p>
 
-          <div className="mb-4 inline-flex rounded-xl bg-slate-100 p-1">
+          <div className="mb-4 inline-flex flex-wrap gap-1 rounded-xl bg-slate-100 p-1">
             <button
               type="button"
-              onClick={() => setTargetType("url")}
+              onClick={() => handleSelectTargetType("url")}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                 targetType === "url"
                   ? "bg-white text-slate-950 shadow-sm"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              🌐 Oldal vagy külső link
+              Oldal vagy külső link
             </button>
             <button
               type="button"
-              onClick={() => setTargetType("pdf")}
+              onClick={() => handleSelectTargetType("pdf")}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                 targetType === "pdf"
                   ? "bg-white text-slate-950 shadow-sm"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              📄 PDF feltöltése
+              PDF dokumentum
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSelectTargetType("poster")}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                targetType === "poster"
+                  ? "bg-white text-slate-950 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Plakát nagyítása
             </button>
           </div>
 
-          {targetType === "pdf" ? (
+          {targetType === "poster" ? (
+            <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-950">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 rounded bg-amber-200/80 px-2 py-0.5 font-bold tracking-wider text-amber-900">
+                  PLAKÁT
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold text-sm">
+                    Kattintásra felugró Lightbox nézet
+                  </p>
+                  <p className="leading-relaxed text-amber-900/90">
+                    A feltöltött borítókép a főoldalon levágás nélkül jelenik meg. Amikor a látogató rákattint, a plakát egy elegáns, nagy felbontású felugró ablakban nyílik meg.
+                  </p>
+                  {!form.imageUrl && (
+                    <p className="mt-2 font-medium text-amber-800">
+                      Figyelem: tölts fel egy plakátképet a fenti Kép / Plakát mezőben!
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : targetType === "pdf" ? (
             <div className="space-y-3">
               <FileUploadField
                 category="document"
@@ -274,7 +354,7 @@ export default function HomeItemForm({ sectionId, item = null, onClose, onSaved 
                       rel="noreferrer"
                       className="font-semibold underline hover:text-emerald-950"
                     >
-                      Megnyitás ↗
+                      Megnyitás
                     </a>
                     <button
                       type="button"

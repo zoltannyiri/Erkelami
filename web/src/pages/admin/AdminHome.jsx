@@ -12,6 +12,13 @@ const sectionLabels = {
 const isPdfUrl = (url) =>
   Boolean(url && (/\.pdf($|\?)/i.test(url) || url.includes("/documents/")));
 
+const isPosterUrl = (url, imageUrl) =>
+  Boolean(
+    (url && imageUrl && url === imageUrl) ||
+      url === "#poster" ||
+      (url && /\.(jpg|jpeg|png|webp)($|\?)/i.test(url))
+  );
+
 export default function AdminHome() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -153,7 +160,8 @@ export default function AdminHome() {
             ) : (
               <div className="space-y-3">
                 {section.items.map((item, index) => {
-                  const isPdf = isPdfUrl(item.linkUrl);
+                  const isPoster = isPosterUrl(item.linkUrl, item.imageUrl);
+                  const isPdf = !isPoster && isPdfUrl(item.linkUrl);
 
                   return (
                     <div
@@ -180,6 +188,12 @@ export default function AdminHome() {
                             {item.title}
                           </h3>
 
+                          {isPoster && (
+                            <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-amber-800">
+                              PLAKÁT
+                            </span>
+                          )}
+
                           {isPdf && (
                             <span className="rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-bold tracking-wider text-rose-700">
                               PDF
@@ -193,12 +207,11 @@ export default function AdminHome() {
                           )}
                         </div>
 
-                        <div className="mt-1 flex items-center gap-2 text-sm text-slate-500">
-                          {isPdf && <span aria-hidden="true">📄</span>}
-                          <p className="truncate">
-                            {item.linkUrl || "Nincs link"}
-                          </p>
-                        </div>
+                        <p className="mt-1 truncate text-sm text-slate-500">
+                          {isPoster
+                            ? "Plakát (Lightbox felugró ablak)"
+                            : item.linkUrl || "Nincs link"}
+                        </p>
                       </div>
 
                       <div className="flex shrink-0 flex-wrap items-center gap-2">
