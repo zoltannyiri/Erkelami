@@ -23,7 +23,9 @@ export default function SmartLink({
   const isExternal =
     /^https?:\/\//i.test(destination) ||
     destination.startsWith("mailto:") ||
-    destination.startsWith("tel:");
+    destination.startsWith("tel:") ||
+    destination.startsWith("/uploads/") ||
+    /\.(pdf|doc|docx|xls|xlsx|zip)($|\?)/i.test(destination);
 
   if (isExternal) {
     return (

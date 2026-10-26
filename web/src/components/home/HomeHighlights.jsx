@@ -102,11 +102,21 @@ function TileImage({ item, palette }) {
 
 function HomeTile({ item, index }) {
   const palette = tilePalettes[index % tilePalettes.length];
+  const isPdf = Boolean(
+    item.linkUrl &&
+      (/\.pdf($|\?)/i.test(item.linkUrl) || item.linkUrl.includes("/documents/"))
+  );
+
   const content = (
     <>
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-900">
         <TileImage item={item} palette={palette} />
         <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-1 ${palette.accent}`} />
+        {isPdf && (
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-md bg-slate-950/80 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white shadow-sm backdrop-blur-sm">
+            <span>📄</span> PDF
+          </span>
+        )}
       </div>
 
       <div className={`flex min-h-28 flex-1 items-center gap-4 border-t border-white/80 px-5 py-5 sm:px-6 ${palette.surface}`}>
@@ -115,8 +125,12 @@ function HomeTile({ item, index }) {
           {item.title}
         </h3>
         {item.linkUrl && (
-          <span aria-hidden="true" className={`ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg transition duration-300 group-hover:translate-x-1 ${palette.arrow}`}>
-            →
+          <span
+            aria-hidden="true"
+            className={`ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg transition duration-300 group-hover:translate-x-1 ${palette.arrow}`}
+            title={isPdf ? "PDF megnyitása" : "Megnyitás"}
+          >
+            {isPdf ? "↓" : "→"}
           </span>
         )}
       </div>

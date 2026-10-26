@@ -25,7 +25,7 @@ export default function FileUploadField({ category, accept, onUploaded, label = 
         formData
       );
 
-      onUploaded(response.data);
+      onUploaded(response.data, file);
     } catch (error) {
       console.error("Fájlfeltöltési hiba:", error);
 
