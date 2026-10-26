@@ -76,34 +76,11 @@ function ImageFallback({ title, palette }) {
   );
 }
 
-function TileImage({ item, palette, isPoster }) {
+function TileImage({ item, palette }) {
   const [failed, setFailed] = useState(false);
 
   if (!item.imageUrl || failed) {
     return <ImageFallback title={item.title} palette={palette} />;
-  }
-
-  // Plakát esetén: az elmosott háttér kitölti a 4:3 keretet,
-  // előtte pedig a teljes álló plakát arányosan, levágás nélkül látszik
-  if (isPoster) {
-    return (
-      <div className="relative h-full w-full overflow-hidden bg-slate-950">
-        <img
-          src={item.imageUrl}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-md"
-        />
-        <img
-          src={item.imageUrl}
-          alt={item.title || "Plakát"}
-          loading="lazy"
-          decoding="async"
-          onError={() => setFailed(true)}
-          className="relative z-10 h-full w-full object-contain p-2 transition duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
-        />
-      </div>
-    );
   }
 
   return (
@@ -114,7 +91,7 @@ function TileImage({ item, palette, isPoster }) {
         loading="lazy"
         decoding="async"
         onError={() => setFailed(true)}
-        className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] motion-reduce:transition-none"
+        className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
       />
       <div
         aria-hidden="true"
@@ -143,8 +120,8 @@ function HomeTile({ item, index, onOpenPoster }) {
 
   const content = (
     <>
-      <div className="relative aspect-[4/3] overflow-hidden bg-slate-900">
-        <TileImage item={item} palette={palette} isPoster={isPoster} />
+      <div className="relative aspect-[4/3] overflow-hidden bg-slate-950">
+        <TileImage item={item} palette={palette} />
         <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 z-20 h-1 ${palette.accent}`} />
 
         {isPoster && (

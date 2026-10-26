@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from "axios";
+import { trimTransparentEdges } from "../../utils/imageTrim";
 
 export default function FileUploadField({ category, accept, onUploaded, label = "Fájl feltöltése" }) {
   const [uploading, setUploading] = useState(false);
@@ -7,7 +8,7 @@ export default function FileUploadField({ category, accept, onUploaded, label = 
 
   const handleFileChange = async (event) => {
     const input = event.currentTarget;
-    const file = input.files?.[0];
+    let file = input.files?.[0];
 
     if (!file) return;
 
@@ -15,6 +16,14 @@ export default function FileUploadField({ category, accept, onUploaded, label = 
     setError(null);
 
     try {
+      if (category === "image") {
+        try {
+          file = await trimTransparentEdges(file);
+        } catch (trimErr) {
+          console.warn("Kép átlátszó margók ellenőrzése sikertelen, folytatás eredeti fájllal:", trimErr);
+        }
+      }
+
       const formData = new FormData();
 
       formData.append("file", file);
