@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import SmartLink from "../common/SmartLink";
+import ScrollReveal from "../ScrollReveal";
 
 const tilePalettes = [
   {
@@ -86,6 +87,8 @@ function TileImage({ item, palette }) {
       <img
         src={item.imageUrl}
         alt=""
+        loading="lazy"
+        decoding="async"
         onError={() => setFailed(true)}
         className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] motion-reduce:transition-none"
       />
@@ -137,26 +140,33 @@ export default function HomeHighlights({ items = [] }) {
       <div aria-hidden="true" className="absolute bottom-0 left-1/3 -z-10 h-64 w-64 rounded-full bg-amber-200/30 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="mb-9 sm:mb-10">
-          <div aria-hidden="true" className="mb-5 h-px w-full bg-gradient-to-r from-rose-700 via-amber-500 to-teal-700" />
-          <div className="sm:flex sm:items-end sm:justify-between">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-rose-800 sm:text-[11px]">
-              Az iskola életéből
-            </p>
-            <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">
-              Hírek és tudnivalók
-            </h2>
+        <ScrollReveal direction="up" threshold={0.05}>
+          <div className="mb-9 sm:mb-10">
+            <div aria-hidden="true" className="mb-5 h-px w-full bg-gradient-to-r from-rose-700 via-amber-500 to-teal-700" />
+            <div className="sm:flex sm:items-end sm:justify-between">
+              <div>
+                <h2 className="mt-2 font-serif text-3xl leading-tight tracking-[-0.025em] text-slate-950 sm:text-4xl">
+                  Hírek és tudnivalók
+                </h2>
+              </div>
+              <span className="mt-4 inline-flex rounded-full bg-teal-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm sm:mt-0">
+                Aktuális
+              </span>
+            </div>
           </div>
-          <span className="mt-4 inline-flex rounded-full bg-teal-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm sm:mt-0">
-            Aktuális
-          </span>
-          </div>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {items.map((item, index) => (
-            <HomeTile key={item.id} item={item} index={index} />
+            <ScrollReveal
+              key={item.id}
+              direction="up"
+              delay={index * 120}
+              threshold={0.05}
+              className="h-full"
+            >
+              <HomeTile item={item} index={index} />
+            </ScrollReveal>
           ))}
         </div>
       </div>
